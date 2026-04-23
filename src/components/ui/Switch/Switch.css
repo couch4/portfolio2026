@@ -1,0 +1,32 @@
+.switch {
+  &__wrapper {
+    @apply relative
+        w-10 
+        h-6 
+        bg-black/50
+        rounded-full
+        shadow-sm;
+
+    &[data-state='checked'] {
+      @apply bg-black;
+    }
+  }
+
+  &__thumb {
+    @apply absolute
+         top-0.5
+         left-0.5
+         w-5
+         h-5
+         bg-white
+         rounded-full
+         shadow-sm
+         transition-transform
+         duration-100
+         will-change-transform;
+
+    &[data-state='checked'] {
+      @apply translate-x-4;
+    }
+  }
+}

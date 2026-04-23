@@ -1,0 +1,24 @@
+.three {
+  &-wrapper {
+    @apply !absolute
+        top-0
+        left-0
+        w-full
+        h-full
+        bg-transparent;
+  }
+}
+
+.stats {
+  @apply absolute
+    flex
+    top-0
+    left-0
+    z-10;
+}
+
+.renderer-label {
+  @apply flex
+  p-4
+  justify-end;
+}

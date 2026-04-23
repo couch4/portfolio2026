@@ -1,0 +1,12 @@
+.footer {
+  &__wrapper {
+    @apply absolute
+    bottom-0
+    left-0
+    w-full
+    min-h-24
+    bg-black/30
+    backdrop-blur-lg
+    border-t border-white/10;
+  }
+}

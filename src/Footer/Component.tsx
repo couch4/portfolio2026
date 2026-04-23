@@ -1,6 +1,7 @@
 import { getCachedGlobal } from '@/utilities/getGlobals'
 import Link from 'next/link'
 import React from 'react'
+import './Footer.css'
 
 import type { Footer } from '@/payload-types'
 
@@ -14,8 +15,8 @@ export async function Footer() {
   const navItems = footerData?.navItems || []
 
   return (
-    <footer className="mt-auto border-t border-border bg-black dark:bg-card text-white">
-      <div className="container py-8 gap-8 flex flex-col md:flex-row md:justify-between">
+    <footer className="footer__wrapper">
+      {/* <div className="container py-8 gap-8 flex flex-col md:flex-row md:justify-between">
         <Link className="flex items-center" href="/">
           <Logo />
         </Link>
@@ -28,7 +29,7 @@ export async function Footer() {
             })}
           </nav>
         </div>
-      </div>
+      </div> */}
     </footer>
   )
 }

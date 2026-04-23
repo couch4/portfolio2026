@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:docs.threejswaterpro.com)",
+      "Bash(pnpm add:*)",
+      "Bash(npx pnpm:*)",
+      "Bash(node_modules/.bin/tsc --noEmit --skipLibCheck)",
+      "WebFetch(domain:sparkjs.dev)",
+      "WebFetch(domain:www.npmjs.com)",
+      "WebFetch(domain:github.com)",
+      "Bash(/Volumes/Trevor/Users/billy/.npm-global/bin/pnpm add:*)",
+      "Bash(npx --yes pnpm add @sparkjsdev/spark)",
+      "Bash(npx tsc:*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:tympanus.net)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\({**d.get\\('dependencies',{}\\), **d.get\\('devDependencies',{}\\)}, indent=2\\)\\)\")",
+      "Read(//Volumes/Trevor/Users/billy/.claude/projects/-Volumes-Trevor-Users-billy-Documents-TheWayward-portfolio2026_2-web/memory/**)",
+      "Bash(node -e \"const pkg = require\\('./node_modules/@react-three/fiber/package.json'\\); console.log\\(JSON.stringify\\(Object.keys\\(pkg.exports || {}\\), null, 2\\)\\)\")",
+      "Bash(node -e ' *)",
+      "Bash(node -e \"console.log\\(require\\('./node_modules/vite/package.json'\\).version\\)\")",
+      "Bash(node -e \"const m = require\\('./node_modules/zustand/esm/index.mjs'\\); console.log\\(Object.keys\\(m\\)\\)\")",
+      "Bash(node --input-type=module -e \"import * as m from './node_modules/zustand/esm/index.mjs'; console.log\\(Object.keys\\(m\\)\\)\")",
+      "Bash(node --input-type=module -e ' *)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('peerDependencies',{}\\), indent=2\\)\\)\")",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\('version:', d['version']\\); print\\('peerDeps:', json.dumps\\(d.get\\('peerDependencies',{}\\)\\)\\)\")",
+      "Bash(python3 -c ' *)"
+    ]
+  }
+}
