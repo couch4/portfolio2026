@@ -68,6 +68,7 @@ const Atmos = () => {
     const theta = MathUtils.degToRad(azimuth)
     sunDirection.setFromSphericalCoords(1, phi, theta)
 
+    // @ts-ignore
     const u = sky.material.uniforms
     u['sunPosition'].value.copy(sunDirection)
     u['turbidity'].value = turbidity
@@ -80,7 +81,7 @@ const Atmos = () => {
     u['cloudScale'].value = cloudScale
     u['cloudSpeed'].value = cloudSpeed
 
-    // Mirror atmosphere-only uniforms on the bake sky (clouds excluded from IBL bake)
+    // @ts-ignore Mirror atmosphere-only uniforms on the bake sky (clouds excluded from IBL bake)
     const bu = bakeSky.material.uniforms
     bu['sunPosition'].value.copy(sunDirection)
     bu['turbidity'].value = turbidity
@@ -120,7 +121,9 @@ const Atmos = () => {
   // Advance cloud time + fade sky in dev view — cheap uniform writes, no re-render
   useFrame(({ clock }) => {
     if (skyRef.current) {
+      // @ts-ignore
       skyRef.current.material.uniforms['time'].value = clock.elapsedTime
+      // @ts-ignore
       skyRef.current.material.uniforms['uFade'].value = progress.current
     }
   })

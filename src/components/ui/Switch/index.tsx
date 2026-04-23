@@ -4,10 +4,11 @@ import './Switch.css'
 
 interface SwitchProps {
   onSwitch: (checked: boolean) => void
+  value?: boolean
 }
 
-const SwitchComponent: FC<SwitchProps> = ({ onSwitch }) => (
-  <Switch.Root className="switch__wrapper" onCheckedChange={onSwitch}>
+const SwitchComponent: FC<SwitchProps> = ({ onSwitch, value }) => (
+  <Switch.Root className="switch__wrapper" checked={value} onCheckedChange={onSwitch}>
     <Switch.Thumb className="switch__thumb" />
   </Switch.Root>
 )

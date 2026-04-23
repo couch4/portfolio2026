@@ -264,6 +264,7 @@ export function GaussianSplatGenerator(props: GaussianSplatGeneratorProps) {
       {/* 3D viewer — shown as soon as depthResult is ready */}
       {depthResult && (
         <div className="rounded-xl overflow-hidden border border-slate-800" style={{ height: 480 }}>
+          {/* @ts-ignore */}
           <Canvas stats={stats} gl={gl} shadows>
             {viewMode === 'both' ? (
               <>

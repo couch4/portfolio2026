@@ -12,7 +12,7 @@ const TreePlane: FC<TreePlaneProps> = ({ url, ...props }) => {
   return (
     <mesh {...props}>
       <planeGeometry args={[10, 10]} />
-      <meshBasicMaterial map={tex} transparent side={THREE.DoubleSide} alphaTest={true} />
+      <meshBasicMaterial map={tex} transparent side={THREE.DoubleSide} alphaTest={1} />
     </mesh>
   )
 }

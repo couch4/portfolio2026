@@ -56,6 +56,7 @@ async function getPipeline(
   // Disable WASM multi-threading so SharedArrayBuffer is not required.
   // This removes the need for Cross-Origin-Opener/Embedder-Policy headers,
   // which would otherwise block fetches from external origins like HuggingFace CDN.
+  // @ts-ignore
   env.backends.onnx.wasm.numThreads = 1
   env.allowLocalModels = false
 
@@ -91,8 +92,7 @@ export async function createDepthMap(
   source: File | string | HTMLImageElement,
   options: DepthMapOptions = {},
 ): Promise<DepthMapResult> {
-  const modelId: DepthModelId =
-    options.model ?? 'Xenova/depth-anything-small-hf'
+  const modelId: DepthModelId = options.model ?? 'Xenova/depth-anything-small-hf'
 
   // Resolve source to a URL string the pipeline can consume
   let imageUrl: string

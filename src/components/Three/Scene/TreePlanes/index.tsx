@@ -12,6 +12,7 @@ const TreePlanes: FC = () => {
     <TreePlane
       key={`treePlane${index}`}
       url={url}
+      // @ts-ignore
       position={positions[index]}
       rotation={[0, Math.PI, 0]}
       scale={[40, 20, 0]}

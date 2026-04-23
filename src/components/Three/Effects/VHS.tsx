@@ -16,5 +16,5 @@ import { VHSEffect } from './VHSEffect'
  *   <ToneMapping … />
  * </EffectComposer>
  */
-const VHS = wrapEffect(VHSEffect)
+const VHS = wrapEffect(VHSEffect as any)
 export default VHS

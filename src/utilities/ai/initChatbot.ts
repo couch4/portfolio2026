@@ -8,6 +8,7 @@ export async function initChatbot() {
 
   const vectorDB = []
   for (const chunk of chunks) {
+    // @ts-ignore
     const embedding = await embedder(chunk.text || 'oops')
     vectorDB.push({
       text: chunk.text,

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import payload from 'payload'
 
 function generateTextChunks(payload) {

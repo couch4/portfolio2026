@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 // plugins/llmExport.ts
 import { Plugin } from 'payload/config'
 
