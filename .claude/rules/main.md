@@ -14,22 +14,27 @@ Graceful degradation to 30 FPS on integrated graphics via dynamic quality scalin
 
 ## Technology stack
 
-| Layer | Library |
-|---|---|
-| Renderer | `@react-three/fiber` (WebGPU renderer, WebGL2 fallback) |
-| Helpers | `@react-three/drei` |
+| Layer          | Library                                                   |
+| -------------- | --------------------------------------------------------- |
+| Renderer       | `@react-three/fiber` (WebGPU renderer, WebGL2 fallback)   |
+| Helpers        | `@react-three/drei`                                       |
 | Postprocessing | `@react-three/postprocessing` + `postprocessing` (pmndrs) |
-| Physics | `@react-three/rapier` (Rapier WASM, runs off main thread) |
-| UI animation | `motion/react` |
-| R3F animation | 'r3f-motion' |
-| State | `zustand` 
-| CSS | embedded SCSS style tailwind using @apply
+| Physics        | `@react-three/rapier` (Rapier WASM, runs off main thread) |
+| UI animation   | `motion/react`                                            |
+| R3F animation  | 'r3f-motion'                                              |
+| State          | `zustand`                                                 |
+| CSS            | embedded SCSS style tailwind using @apply                 |
+| CMS            | Payload 3.0                                               |
+| DB             | Turso SQLite                                              |
+| AI/LLM/Chat    | Vercel AI SDK                                             |
+| task runner    | bun                                                       |
 
 ---
 
 ## Architecture rules — read before touching any file
 
 ### Thread model
+
 The main thread budget is **≤2ms JS per frame**. Everything else must be off-thread or GPU-side.
 
 - **Main thread**: R3F render loop, React reconciler, Framer Motion CSS transforms, buffer uploads
@@ -44,6 +49,7 @@ Workers communicate via `SharedArrayBuffer` (zero-copy Float32Arrays) for per-fr
 `postMessage` is for control signals only (pause, quality tier change, dispose).
 
 ### GPU pipeline order
+
 1. Shadow pass
 2. Opaque geometry (terrain, trees via `InstancedMesh`, rocks)
 3. Water (displacement from Worker 1 heightmap texture)
@@ -53,6 +59,7 @@ Workers communicate via `SharedArrayBuffer` (zero-copy Float32Arrays) for per-fr
 7. UI composite (drei `<Html>` — separate compositor layer, never blocks render)
 
 ### WebGPU / WebGL fallback strategy
+
 - Detect at startup via `navigator.gpu`
 - WebGPU path: WGSL shaders in `src/components/three/shaders/tsl/`, full feature set
 - WebGL2 fallback: GLSL shaders in `src/components/three/shaders/glsl/`, simplified clouds (billboard),
@@ -60,14 +67,15 @@ Workers communicate via `SharedArrayBuffer` (zero-copy Float32Arrays) for per-fr
 - Use `useDetectGPU` hook from `detect-gpu` to tier hardware and set initial quality preset
 
 ### Quality tiers
+
 Defined in `src/store/qualityStore.ts`. Set at startup, adjustable at runtime.
 
-| Tier | Target | Cloud | AO | Particles | Shadow |
-|---|---|---|---|---|---|
-| `ultra` | 60fps discrete | Volumetric raymarch | GTAO | 50k | 4096 CSM |
-| `high` | 60fps discrete | Volumetric raymarch | GTAO | 20k | 2048 CSM |
-| `medium` | 40fps integrated | Billboard + shader | SSAO | 5k | 1024 |
-| `low` | 30fps mobile | Skybox only | None | 1k | 512 |
+| Tier     | Target           | Cloud               | AO   | Particles | Shadow   |
+| -------- | ---------------- | ------------------- | ---- | --------- | -------- |
+| `ultra`  | 60fps discrete   | Volumetric raymarch | GTAO | 50k       | 4096 CSM |
+| `high`   | 60fps discrete   | Volumetric raymarch | GTAO | 20k       | 2048 CSM |
+| `medium` | 40fps integrated | Billboard + shader  | SSAO | 5k        | 1024     |
+| `low`    | 30fps mobile     | Skybox only         | None | 1k        | 512      |
 
 Dynamic resolution scaling: render at 75% then upscale if frame time > 20ms for 3 consecutive frames.
 
@@ -146,13 +154,13 @@ src/
 
 ## Do not do these things
 
-- Do not use `drei`'s `<Html>` without `transform` prop
 - Do not import Three.js directly — use R3F's `useThree` / `extend` pattern
 - Do not put physics or heavy computation in `useFrame` on the main thread
-- Do not animate CSS layout properties with Framer Motion
 - Do not create new `BufferGeometry` instances inside `useFrame`
 - Do not use `useState` for per-frame values — use refs
 - Do not forget to dispose: geometries, materials, textures, render targets on unmount
+- Do not use 'pnpm/npm/yarn' — use 'bun'
+- Do not use 'motion/react' for 3D animation. use 'r3f-motion' first and foremost
 
 ---
 

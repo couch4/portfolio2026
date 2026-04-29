@@ -1,0 +1,153 @@
+@layer components {
+  .text {
+    &.primary {
+      @apply font-primary;
+    }
+
+    &.secondary {
+      @apply font-secondary
+    font-medium
+    !tracking-[-0.01em]
+    italic;
+    }
+
+    &-display {
+      &-lg {
+        @apply text-7xl sm:text-8xl lg:text-10xl xl:text-13xl 2xl:text-16xl
+        !tracking-[-0.025em]
+        !leading-[0.8em];
+
+        &[class*='primary'] {
+          @apply font-black
+          font-primaryBold
+        uppercase;
+        }
+
+        &[class*='secondary'] {
+          @apply text-9xl sm:text-10xl lg:text-12xl xl:text-15xl 2xl:text-16xl
+          font-normal
+          not-italic
+          !leading-[0.95];
+        }
+      }
+      &-sm {
+        @apply text-6xl sm:text-8xl lg:text-10xl xl:text-11xl 2xl:text-14xl;
+
+        &[class*='primary'] {
+          @apply font-black
+          font-primaryBold
+        uppercase;
+        }
+
+        &[class*='secondary'] {
+          @apply text-8xl sm:text-10xl lg:text-11xl xl:text-13xl 2xl:text-15xl
+          font-normal
+          not-italic
+          !leading-[0.95];
+        }
+      }
+    }
+    &-h1 {
+      @apply text-5xl sm:text-7xl lg:text-9xl xl:text-12xl
+    font-medium;
+
+      &[class*='secondary'] {
+        @apply text-6xl sm:text-8xl lg:text-10xl xl:text-13xl
+        font-normal
+        !leading-[1.05];
+      }
+    }
+    &-h2 {
+      @apply text-4xl sm:text-5xl lg:text-7xl xl:text-9xl
+    font-medium;
+
+      &[class*='secondary'] {
+        @apply text-5xl sm:text-6xl lg:text-8xl xl:text-10xl
+        font-normal
+        !leading-[1.1];
+      }
+    }
+    &-h3 {
+      @apply text-3xl lg:text-5xl xl:text-7xl
+    font-light;
+
+      &[class*='secondary'] {
+        @apply text-4xl lg:text-6xl xl:text-8xl
+        font-normal
+        !leading-[1.1];
+      }
+    }
+    &-h4 {
+      @apply text-2xl xl:text-3xl
+    font-extralight;
+
+      &[class*='secondary'] {
+        @apply text-3xl xl:text-4xl
+        font-normal
+        !leading-[1.15];
+      }
+    }
+    &-h5 {
+      @apply text-xl xl:text-2xl
+     font-extralight;
+
+      &[class*='secondary'] {
+        @apply text-2xl xl:text-3xl
+        font-normal;
+      }
+    }
+    &-h6 {
+      @apply text-lg sm:text-xl
+     font-extralight;
+
+      &[class*='secondary'] {
+        @apply text-xl sm:text-2xl
+        font-normal;
+      }
+    }
+    &-p-lg {
+      @apply text-md lg:text-lg
+     font-light;
+    }
+    &-p {
+      @apply text-md
+     font-light;
+    }
+    &-p-sm {
+      @apply text-sm
+     font-light;
+    }
+    &-label,
+    &.system {
+      @apply text-md
+    font-primaryBold
+    tracking-[0.15em]
+    font-normal
+    uppercase;
+    }
+
+    &-a {
+      @apply text-accent;
+
+      &:hover {
+        @apply underline;
+      }
+    }
+
+    &-a,
+    &-button {
+      @apply flex
+    items-center
+    gap-2;
+
+      svg {
+        @apply w-4
+      -mb-[0.15rem];
+      }
+    }
+
+    span {
+      @apply block;
+    }
+  }
+}

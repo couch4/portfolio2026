@@ -1,0 +1,12 @@
+{
+  "image": {
+    "src": "https://plus.unsplash.com/premium_photo-1737392497152-9e37fafcb9f7",
+    "alt": "placeholder"
+  },
+  "video": {
+    "src": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+    "autoplay": false,
+    "loop": true,
+    "allowSound": null
+  }
+}

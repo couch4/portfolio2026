@@ -1,0 +1,45 @@
+<style>
+  .sb-show-main {
+    height: 100%;
+    overflow-x: hidden;
+  }
+
+  #storybook-preview-wrapper iframe {
+    overflow-x: hidden;
+  }
+
+  .sb-bar button[title='Change the background of the preview'] {
+    display: none;
+  }
+
+  :root .sb-show-main {
+    background: rgb(var(--background));
+  }
+
+  :root {
+    --columns: 2;
+    --gap: 1rem;
+    --gutter: 1rem;
+    --maxWidth: 1440px;
+  }
+
+  @media (min-width: 768px) {
+    :root {
+      --columns: 6;
+      --gap: 2rem;
+      --gutter: 2rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    :root {
+      --columns: 12;
+    }
+  }
+
+  @media (min-width: 1920px) {
+    :root {
+      --maxWidth: 1800px;
+    }
+  }
+</style>

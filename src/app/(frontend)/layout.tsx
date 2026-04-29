@@ -1,7 +1,4 @@
 import type { Metadata } from 'next'
-import { Barlow_Condensed, Instrument_Serif, JetBrains_Mono } from 'next/font/google'
-
-import { cn } from '@/utilities/ui'
 import React from 'react'
 import { AdminBar } from '@/components/AdminBar'
 import { Footer } from '@/Footer/Component'
@@ -14,37 +11,13 @@ import ThreeClientWrapper from '@/components/Three/ClientWrapper'
 
 import '@/styles/globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
-
-const barlowCondensed = Barlow_Condensed({
-  weight: ['400', '500', '600', '700'],
-  subsets: ['latin'],
-  variable: '--font-barlow-condensed',
-  display: 'swap',
-})
-
-const instrumentSerif = Instrument_Serif({
-  weight: '400',
-  subsets: ['latin'],
-  variable: '--font-instrument-serif',
-  display: 'swap',
-})
-
-const jetBrainsMono = JetBrains_Mono({
-  weight: ['400', '500', '700'],
-  subsets: ['latin'],
-  variable: '--font-jetbrains-mono',
-  display: 'swap',
-})
+import { fontImports } from '@/styles/fonts'
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const { isEnabled } = await draftMode()
 
   return (
-    <html
-      className={cn(barlowCondensed.variable, instrumentSerif.variable, jetBrainsMono.variable)}
-      lang="en"
-      suppressHydrationWarning
-    >
+    <html className={fontImports} lang="en" suppressHydrationWarning>
       <head>
         <InitTheme />
         <link href="/favicon.ico" rel="icon" sizes="32x32" />

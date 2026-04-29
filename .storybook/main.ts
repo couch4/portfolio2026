@@ -1,6 +1,6 @@
 import path from 'path'
 import type { StorybookConfig } from '@storybook/nextjs-vite'
-import { Barlow_Condensed, Instrument_Serif, JetBrains_Mono } from 'next/font/google'
+import svgr from 'vite-plugin-svgr'
 
 const SHIMS = path.resolve(process.cwd(), '.storybook/shims')
 
@@ -11,10 +11,14 @@ const config: StorybookConfig = {
     '@storybook/addon-vitest',
     '@storybook/addon-a11y',
     '@storybook/addon-docs',
+    'storybook-addon-grid-overlay',
   ],
   framework: '@storybook/nextjs-vite',
   staticDirs: ['../public'],
   viteFinal: async (config) => {
+    config.plugins ??= []
+    config.plugins.push(svgr())
+
     // Deduplicate packages that must be singletons in the WebGL pipeline.
     // pnpm's virtual store gives @react-three/postprocessing its own copy of
     // postprocessing/three, while bun put a separate real copy at the top level.

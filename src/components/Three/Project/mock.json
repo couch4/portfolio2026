@@ -1,0 +1,17 @@
+{
+  "title": "Project Left Title",
+  "subTitle": "This is an example of a project subtitle",
+  "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+  "gltf": "/gltf/balloon.glb",
+  "accent": "tertiary",
+  "modelSettings": {
+    "scale": 0.2,
+    "position": [2, 0, 0],
+    "clipBottom": true,
+    "spinY": true,
+    "floatY": true
+  },
+  "align": "left",
+  "background": "/images/dreamdroid.png",
+  "preTitle": "AI Project"
+}

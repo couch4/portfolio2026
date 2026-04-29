@@ -36,7 +36,8 @@
       ],
       "@styles": [
         "./src/styles/globals.css"
-      ]
+      ],
+       "waywardUI": ["./src/components/waywardUI"],
     }
   },
   "include": [

@@ -1,0 +1,49 @@
+[
+  {
+    "title": "British Army",
+    "subTitle": "Visualising artillery for modern warfare.",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    "gltf": "/gltf/tank.glb",
+    "accent": "primary",
+    "modelSettings": {
+      "scale": 0.1,
+      "position": [1.5, -1.2, 0],
+      "rotation": [0, -0.2, -0.1]
+    },
+    "align": "left",
+    "background": "/images/britishArmy.avif",
+    "preTitle": "Virtual Battlefield"
+  },
+  {
+    "title": "Dreamdroid",
+    "subTitle": "Unlock the hidden meaning behind your dreams.",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    "gltf": "/gltf/balloon.glb",
+    "accent": "secondary",
+    "modelSettings": {
+      "scale": 0.2,
+      "position": [2, 0, 0],
+      "clipBottom": true,
+      "clipBottomOffset": -0.5,
+      "spinY": true,
+      "floatY": true
+    },
+    "align": "right",
+    "background": "/images/dreamdroid.png",
+    "preTitle": "AI Dream analyser"
+  },
+  {
+    "title": "Morris Electric",
+    "subTitle": "A retro classic...electrified.",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    "gltf": "/gltf/van.glb",
+    "accent": "primary",
+    "modelSettings": {
+      "scale": 0.13,
+      "position": [1.5, -1.3, 0]
+    },
+    "align": "right",
+    "background": "/images/morris-je.webp",
+    "preTitle": "3D Car configurator"
+  }
+]

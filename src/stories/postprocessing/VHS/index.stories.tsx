@@ -31,6 +31,24 @@ function WebGPUUnavailable() {
   )
 }
 
+function WebGPUEffectUnsupported() {
+  return (
+    <div
+      style={{
+        ...overlayStyle,
+        alignItems: 'flex-end',
+        justifyContent: 'flex-start',
+        padding: 12,
+        background: 'transparent',
+      }}
+    >
+      <span style={{ background: 'rgba(0,0,0,0.55)', padding: '4px 8px', borderRadius: 4 }}>
+        VHS effect requires WebGL2 — postprocessing is not supported on WebGPU.
+      </span>
+    </div>
+  )
+}
+
 // ---------------------------------------------------------------------------
 // Minimal test scene — no leva deps, no extra useFrame store subscriptions
 // ---------------------------------------------------------------------------
@@ -97,13 +115,18 @@ function VHSCanvas({ globals, ...vhsProps }: VHSStoryProps) {
   if (backend === 'webgpu' && !navigator.gpu) return <WebGPUUnavailable />
 
   return (
-    <Canvas gl={backend} stats={globals?.stats === 'true'}>
-      <PerspectiveCamera makeDefault position={[0, 1, 5]} fov={55} />
-      <TestScene />
-      <EffectComposer>
-        <VHS {...vhsProps} />
-      </EffectComposer>
-    </Canvas>
+    <>
+      <Canvas gl={backend} stats={globals?.stats === 'true'}>
+        <PerspectiveCamera makeDefault position={[0, 1, 5]} fov={55} />
+        <TestScene />
+        {backend !== 'webgpu' && (
+          <EffectComposer>
+            <VHS {...vhsProps} />
+          </EffectComposer>
+        )}
+      </Canvas>
+      {backend === 'webgpu' && <WebGPUEffectUnsupported />}
+    </>
   )
 }
 

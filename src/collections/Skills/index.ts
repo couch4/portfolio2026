@@ -15,9 +15,7 @@ export const Skills: CollectionConfig = {
       name: 'category',
       type: 'select',
       options: [
-        { label: 'Frontend', value: 'frontend' },
-        { label: 'Backend', value: 'backend' },
-        { label: 'DevOps', value: 'devops' },
+        { label: 'Development', value: 'development' },
         { label: 'Design', value: 'design' },
       ],
     },
