@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useMemo } from 'react'
 import { Html } from '@react-three/drei'
 import { Text } from '@/components/waywardUI'
 import { getLeadingNumber, capitalise } from '@/utilities/formatting'
@@ -17,6 +17,9 @@ const ProjectItemCopy = ({
   index: number
 }) => {
   const { accent, align, title, subTitle, description, preTitle } = data
+
+  const indexText = useMemo(() => `${getLeadingNumber(index)} / ${title}`, [index, title])
+
   return (
     <Html center className="project-container" {...props}>
       <div data-align={align} className={clsx('project-wrapper')}>
@@ -40,10 +43,21 @@ const ProjectItemCopy = ({
           variant="primaryBold"
           textStyle="label"
           className="project-index"
-          animate={{ y: isActive ? 50 : 0, opacity: isActive ? 0 : 1 }}
-          transition={spring}
+          animate={isActive ? 'active' : 'inactive'}
+          variants={{
+            inactive: {
+              y: 0,
+              opacity: 1,
+              transition: spring,
+            },
+            active: {
+              y: 50,
+              opacity: 0,
+              transition: spring,
+            },
+          }}
         >
-          {`${getLeadingNumber(index)} / ${title}`}
+          {indexText}
         </Text>
       </div>
     </Html>

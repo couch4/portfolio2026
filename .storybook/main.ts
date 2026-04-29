@@ -53,6 +53,9 @@ const config: StorybookConfig = {
       { find: /^zustand$/, replacement: path.join(SHIMS, 'zustand.mjs') },
     ]
 
+    config.build ??= {}
+    config.build.chunkSizeWarningLimit = 2000
+
     return config
   },
 }
