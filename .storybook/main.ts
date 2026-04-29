@@ -56,6 +56,20 @@ const config: StorybookConfig = {
     config.build ??= {}
     config.build.chunkSizeWarningLimit = 2000
 
+    // Vite 8 / Rolldown worker threads don't terminate after build, causing
+    // the process to hang. Force-exit once all bundles are closed.
+    config.plugins.push({
+      name: 'force-exit-after-build',
+      apply: 'build',
+      closeBundle: {
+        order: 'post',
+        sequential: true,
+        handler() {
+          setTimeout(() => process.exit(0), 500)
+        },
+      },
+    })
+
     return config
   },
 }

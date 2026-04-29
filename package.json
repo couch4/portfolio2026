@@ -23,7 +23,7 @@
     "test:e2e": "cross-env NODE_OPTIONS=\"--no-deprecation --import=tsx/esm\" playwright test --config=playwright.config.ts",
     "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts",
     "storybook": "node node_modules/.bin/storybook dev -p 6006",
-    "build-storybook": "node node_modules/.bin/storybook build --disable-telemetry"
+    "build-storybook": "node scripts/build-storybook.mjs"
   },
   "dependencies": {
     "@huggingface/transformers": "^4.0.1",
@@ -120,5 +120,8 @@
       "esbuild",
       "unrs-resolver"
     ]
+  },
+  "overrides": {
+    "@joshwooding/vite-plugin-react-docgen-typescript": "0.7.0"
   }
 }

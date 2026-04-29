@@ -47,7 +47,7 @@ const preview: Preview = {
     stats: {
       name: 'Show Stats',
       description: 'perf stats overlay',
-      defaultValue: 'true',
+      defaultValue: false,
       toolbar: {
         icon: 'graphbar',
         items: [
@@ -60,7 +60,7 @@ const preview: Preview = {
     orbit: {
       name: 'Show Orbit Controls',
       description: 'Show orbit controls',
-      defaultValue: 'true',
+      defaultValue: false,
       toolbar: {
         icon: 'camera',
         items: [
