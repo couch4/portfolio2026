@@ -17,7 +17,6 @@ const meta: Meta = {
       return (
         // @ts-ignore
         <Canvas gl={renderer} stats={stats} clearColor="#05080F">
-          <fog attach="fog" args={['#05080F', 0, 45]} />
           <Environment preset="warehouse" />
           <Story />
           {orbit && <OrbitControls />}

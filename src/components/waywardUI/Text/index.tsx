@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useMemo } from 'react'
 import clsx from 'clsx'
 import DOMPurify from 'isomorphic-dompurify'
 import Link from 'next/link'
@@ -19,6 +19,11 @@ const Text: FC<TextProps> = ({
   children,
   ...props
 }) => {
+  const textTag: TextTag =
+    textStyle === 'animatedSpan' ? motion.span : usePTag.includes(textStyle) ? 'p' : textStyle
+  const MotionTag = useMemo(() => motion.create(textTag as any), [textTag])
+  const MotionLink = useMemo(() => motion.create(Link), [])
+
   if (!children || (typeof children === 'string' && children.length === 0)) return null
 
   const isAnimated: boolean = Boolean(
@@ -35,15 +40,13 @@ const Text: FC<TextProps> = ({
   let motionProps = {}
 
   if (href) {
-    const LinkComponent = isAnimated ? motion.create(Link) : Link
+    const LinkComponent = isAnimated ? MotionLink : Link
     return <LinkComponent href={href} {...allProps} />
   }
 
-  const textTag: TextTag =
-    textStyle === 'animatedSpan' ? motion.span : usePTag.includes(textStyle) ? 'p' : textStyle
   let Component: any = textTag
   if (isAnimated) {
-    Component = motion.create(Component)
+    Component = MotionTag
     motionProps = {
       initial,
       animate,

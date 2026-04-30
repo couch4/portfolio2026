@@ -1,4 +1,7 @@
 @import '@/components/waywardUI/Text/Text.css';
+@import '@/components/waywardUI/Button/Button.css';
+@import '@/components/waywardUI/Scrollbars/Scrollbars.css';
+@import '@/components/Three/Project/Project.css';
 
 @tailwind base;
 @tailwind components;
@@ -14,16 +17,18 @@
   :root {
     --background: 5 8 15;
     --copy: 245 247 248;
-    --copy-secondary: 13 20 38;
-    --primary: 60 115 142;
-    --secondary: 88 116 68;
-    --tertiary: 58 70 89;
-    --accent: 61 238 245;
-    --accent-secondary: 255 31 146;
+    --copy-secondary: 24 28 38;
+    --primary: 62 139 179;
+    --secondary: 57 139 101;
+    --tertiary: 132 140 150;
+    /* --accent: 61 238 245; */
+    --accent: 61 245 219;
+    /* --accent-secondary: 255 31 146; */
+    --accent-secondary: 230 60 144;
     --accent-tertiary: 245 162 58;
     --success: 52 211 153;
-    --error: 248 113 113;
-    --warning: 251 191 36;
+    --error: 222 46 80;
+    --warning: 243 200 83;
   }
 
   html {

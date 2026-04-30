@@ -46,7 +46,7 @@ export const CarouselLoop: StoryObj = {
     defaultValue: { control: 'number' },
   },
   args: {
-    debug: true,
+    debug: false,
     gap: 0.5,
     defaultValue: 0,
   },

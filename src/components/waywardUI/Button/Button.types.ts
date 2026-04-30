@@ -2,7 +2,7 @@ export interface ButtonProps {
   asChild?: boolean
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'link' | 'iconArrow' | 'icon'
   size?: 'sm' | 'lg'
-  text?: string
+  children?: React.ReactNode
   ref?: React.Ref<HTMLButtonElement>
   href?: string
   onClick?: () => void

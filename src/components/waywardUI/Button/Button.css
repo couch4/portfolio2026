@@ -1,0 +1,132 @@
+.btn {
+  @apply flex
+    p-[10px]
+    px-6
+    /* rounded-sm */
+    bg-accent 
+    text-copySecondary 
+    text-xl
+    text-center
+    justify-center
+    cursor-pointer
+    pointer-events-auto;
+
+  .text {
+    @apply !font-primaryBold
+    !font-semibold
+    tracking-[0.1em];
+  }
+
+  &-primary {
+    @apply bg-accent
+    text-copySecondary;
+
+    &:hover {
+      @apply bg-accent
+      text-white;
+    }
+
+    &Outline {
+      @apply bg-transparent
+      border-2
+      text-accent 
+      border-accent;
+
+      &:hover {
+        @apply text-copySecondary
+        bg-accent
+        border-accent;
+      }
+    }
+  }
+
+  &-secondary {
+    @apply bg-accentSecondary
+    text-copy;
+    &:hover {
+      @apply bg-accent;
+    }
+
+    &Outline {
+      @apply bg-transparent
+      border-2
+      text-accentSecondary 
+      border-accentSecondary;
+
+      &:hover {
+        @apply text-copy
+        bg-accentSecondary
+        border-accentSecondary;
+      }
+    }
+  }
+
+  &-tertiary {
+    @apply bg-accentTertiary
+    text-copy;
+    &:hover {
+      @apply bg-copy;
+    }
+
+    &Outline {
+      @apply bg-transparent
+      border-2
+      text-accentTertiary 
+      border-accentTertiary;
+
+      &:hover {
+        @apply text-copy
+        bg-accentTertiary
+        border-accentTertiary;
+      }
+    }
+  }
+
+  &-link {
+    @apply bg-transparent
+    p-0
+    text-copy
+    underline;
+
+    &:hover {
+      @apply text-accent;
+    }
+
+    &.size-sm,
+    &.size-lg {
+      @apply !p-0;
+    }
+  }
+
+  &.size {
+    &-sm {
+      @apply text-lg
+            p-2
+            px-4;
+    }
+    &-lg {
+      @apply text-2xl
+            p-3
+            px-8;
+    }
+  }
+
+  &-icon {
+    @apply bg-transparent
+    rounded-none;
+
+    svg {
+      @apply w-6 h-6;
+    }
+    &.size {
+      &-sm {
+        svg {
+          @apply w-4 h-4;
+        }
+      }
+      &-lg {
+        @apply w-14 h-14;
+      }
+    }
+  }
+}

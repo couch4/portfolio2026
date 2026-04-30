@@ -6,6 +6,7 @@
     grid grid-cols-12 gap-x-4
     select-none
     pointer-events-none;
+    perspective: 1200px;
   }
 
   &-wrapper {
@@ -42,6 +43,16 @@
     @apply text-copy/80
     mix-blend-overlay
     mb-6;
+  }
+
+  &-scrollbox {
+    @apply w-full
+    pointer-events-auto;
+  }
+
+  &-standfirst {
+    @apply !font-normal
+    mb-4;
   }
 
   &-description {

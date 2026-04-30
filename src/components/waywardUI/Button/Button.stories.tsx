@@ -35,56 +35,70 @@ type Story =
 export const Primary: Story = {
   args: {
     variant: 'primary',
-    text: 'Button',
+    children: 'Button',
   },
 }
 
 export const PrimaryOutline: Story = {
   args: {
     variant: 'primaryOutline',
-    text: 'Button',
+    children: 'Button',
   },
 }
 
 export const Secondary: Story = {
   args: {
     variant: 'secondary',
-    text: 'Button',
+    children: 'Button',
   },
 }
 
-export const Faded: Story = {
+export const SecondaryOutline: Story = {
   args: {
-    variant: 'faded',
-    text: 'Button',
+    variant: 'secondaryOutline',
+    children: 'Button',
+  },
+}
+
+export const Tertiary: Story = {
+  args: {
+    variant: 'tertiary',
+    children: 'Button',
+  },
+}
+
+export const TertiaryOutline: Story = {
+  args: {
+    variant: 'tertiaryOutline',
+    children: 'Button',
   },
 }
 
 export const Large: Story = {
   args: {
     size: 'lg',
-    text: 'Button',
+    children: 'Button',
   },
 }
 
 export const Small: Story = {
   args: {
     size: 'sm',
-    text: 'Button',
+    children: 'Button',
   },
 }
 
 export const Link: Story = {
   args: {
     variant: 'link',
-    text: 'Button',
+    children: 'Button',
   },
 }
 
 export const ButtonWithIcon: Story = {
   args: {
     variant: 'primary',
-    text: 'Button',
+    children: 'Button',
     icons: {
       iconAfter: <Arrow />,
     },
@@ -94,7 +108,7 @@ export const ButtonWithIcon: Story = {
 export const LinkWithIcon: Story = {
   args: {
     variant: 'link',
-    text: 'Button',
+    children: 'Button',
     icons: {
       iconAfter: <Arrow />,
     },

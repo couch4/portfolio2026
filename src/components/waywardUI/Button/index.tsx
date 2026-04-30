@@ -5,22 +5,18 @@ import { ButtonProps } from './Button.types'
 import { buttonWrapper } from './Button.styles'
 import { Text } from 'waywardUI'
 import { motion } from 'motion/react'
-import { useRouter } from 'next/navigation'
 
 const Button: React.FC<ButtonProps> = ({
-  asChild = false,
   size,
-  variant = 'primary',
-  text,
+  variant = 'primaryBold',
   href,
   onClick,
   icons = {},
   ref,
+  children,
   ...props
 }) => {
-  const router = useRouter()
-
-  if (!text && !href && !icons?.icon) return null
+  if (!children && !href && !icons?.icon) return null
   // @ts-ignore
   const isAnimated = props?.initial || props?.animate || props?.variants
 
@@ -29,11 +25,15 @@ const Button: React.FC<ButtonProps> = ({
       onClick()
     }
     if (href) {
-      router.push(href)
+      // router.push(href)
     }
   }
 
-  let btnContent: ReactNode = <Text text={text} icons={icons} textStyle="button" />
+  let btnContent: ReactNode = (
+    <Text icons={icons} textStyle="button">
+      {children}
+    </Text>
+  )
   if (variant === 'icon') {
     btnContent = icons?.icon || icons?.iconBefore || icons?.iconAfter
   }

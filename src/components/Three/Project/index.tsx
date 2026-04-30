@@ -1,6 +1,8 @@
-import { memo } from 'react'
+import { memo, useEffect } from 'react'
 import type { MutableRefObject, RefObject } from 'react'
 import { ContactShadows } from '@react-three/drei'
+import { useThree } from '@react-three/fiber'
+import { Fog } from 'three'
 import type { Group } from 'three'
 import Backdrop from '@/components/Three/Backdrop'
 import { useSceneStore } from '@/store/sceneStore'
@@ -15,6 +17,8 @@ const Project = ({
   currXMotion,
   outerRef,
   isActive,
+  fogStart = 0,
+  fogEnd = 45,
   ...props
 }: {
   data: any
@@ -24,9 +28,19 @@ const Project = ({
   inPortal?: boolean
   outerRef?: RefObject<Group | null>
   isActive?: boolean
+  fogStart?: number
+  fogEnd?: number
 }) => {
   const isDevView = useSceneStore((s) => s.isDevView)
   const { align, background } = data
+  const scene = useThree((s) => s.scene)
+
+  useEffect(() => {
+    scene.fog = new Fog('#05080F', fogStart, fogEnd)
+    return () => {
+      scene.fog = null
+    }
+  }, [fogStart, fogEnd, scene])
 
   return (
     <group {...props}>
@@ -47,6 +61,7 @@ const Project = ({
         color="#000000"
         position-y={-3.5}
       /> */}
+      <fog attach="fog" args={['#05080F', fogStart, fogEnd]} />
       <Backdrop textureUrl={background} align={align} />
     </group>
   )

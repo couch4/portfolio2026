@@ -27,7 +27,7 @@ const Carousel = ({
   defaultValue = 0,
   onSwitch,
 }: CarouselProps) => {
-  const { viewport } = useThree()
+  const vpHeight = useThree((s) => s.viewport.height)
   const { cardWidth } = useCardSize()
   const [zoomed, setZoomed] = useState<number | null>(null)
   const slideWidth = cardWidth + gap
@@ -123,20 +123,20 @@ const Carousel = ({
           <group key={`carouselItem-${i}`} position-x={wrappedPos * slideWidth}>
             <ProjectItem
               data={data}
-              currXMotion={currXMotion}
               index={wrappedPos}
               currItem={currItem}
               projectIndex={(i % items.length) + 1}
               debug={debug}
               isActive={zoomed === wrappedPos}
-              onClick={() => handleClick(wrappedPos)}
+              isZoomed={zoomed}
+              onClick={handleClick}
             />
             <mesh
               position-z={-0.01}
               onPointerDown={handlePointerDown}
               onPointerUp={handlePointerUp}
             >
-              <planeGeometry args={[cardWidth, viewport.height]} />
+              <planeGeometry args={[cardWidth, vpHeight]} />
               <meshBasicMaterial transparent opacity={0} depthWrite={false} />
             </mesh>
           </group>

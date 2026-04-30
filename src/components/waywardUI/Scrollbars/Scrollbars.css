@@ -1,0 +1,62 @@
+.ScrollbarsCustom {
+  &:after,
+  &:before {
+    @apply transition-shadow
+        duration-200
+        content-['']
+        absolute
+        w-full
+        h-full
+        pr-4
+        pointer-events-none;
+  }
+
+  &-Track {
+    @apply !bg-white/30;
+  }
+
+  &-Thumb {
+    @apply !bg-white
+        transition-colors
+        duration-300;
+
+    &.dragging,
+    &:hover {
+      @apply !bg-tertiary;
+    }
+  }
+
+  &-TrackX {
+    @apply !h-2
+        !bottom-1;
+  }
+
+  &-TrackY {
+    @apply !w-2
+        !right-1;
+  }
+
+  &__under-top {
+    &:before {
+      @apply top-0
+            left-0
+            duration-500
+            shadow-[inset_0_60px_60px_-60px_rgba(0,0,0,.12)];
+    }
+  }
+
+  &__under-bottom {
+    &:after {
+      @apply bottom-0
+            left-0
+            duration-500
+            shadow-[inset_0_-60px_60px_-60px_rgba(0,0,0,.12)];
+    }
+  }
+}
+
+.scrollbars {
+  &__wrapper {
+    @apply mr-5;
+  }
+}

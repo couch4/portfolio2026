@@ -1,17 +1,16 @@
-import { memo, useMemo, useRef } from 'react'
-import type { MotionValue } from 'motion/react'
+import { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { motion } from 'r3f-motion'
-import { Environment, MeshPortalMaterial } from '@react-three/drei'
-import { extend, useFrame, useThree } from '@react-three/fiber'
+import { MeshPortalMaterial } from '@react-three/drei'
+import { extend, useFrame } from '@react-three/fiber'
+import type { Material } from 'three'
 import { Plane, PlaneHelper, Vector3 } from 'three'
 import type { Group } from 'three'
-import Project from '@/components/Three/Project'
+import PortalScene from './PortalScene'
 import ProjectHero from './ProjectHero'
-import ProjectItemContent from './ProjectItemCopy'
+import ProjectItemCopy from './ProjectItemCopy'
 import { geometry } from 'maath'
 import { spring } from '@/styles/motion'
 import { useCardSize } from '@/components/Three/Carousel/useCardSize'
-import '../Project.css'
 
 extend({ RoundedPlaneGeometry: geometry.RoundedPlaneGeometry })
 
@@ -27,21 +26,21 @@ const ProjectItem = ({
   currItem = 0,
   debug = false,
   isActive = false,
+  isZoomed = false,
   projectIndex = 1,
+  onClick,
   ...props
 }: {
-  currXMotion?: MotionValue<number>
   data: any
   index?: number
   currItem?: number
   debug?: boolean
   isActive?: boolean
+  isZoomed?: boolean
   projectIndex?: number
-  onClick?: () => void
+  onClick?: (index: number) => void
 }) => {
-  const { modelSettings } = data
-  const { viewport } = useThree()
-  const { dpr } = viewport
+  const { align, modelSettings } = data
   const { cardWidth, cardHeight } = useCardSize()
   const floatY = useRef(0)
   const spinY = useRef(0)
@@ -64,6 +63,17 @@ const ProjectItem = ({
     [debug, clippingPlanes],
   )
 
+  useEffect(() => {
+    return () => {
+      planeHelpers.forEach((h) => {
+        h.geometry.dispose()
+        ;(h.material as Material).dispose()
+      })
+    }
+  }, [planeHelpers])
+
+  const handleClick = useCallback(() => onClick?.(index), [onClick, index])
+
   const isNearby = Math.abs(index - currItem) <= 1
 
   useFrame(({ clock }) => {
@@ -76,8 +86,11 @@ const ProjectItem = ({
     <motion.group
       ref={rootRef}
       {...props}
-      dispose={null}
-      animate={{ z: isActive ? 4 : 0 }}
+      onClick={handleClick}
+      animate={{
+        z: isActive ? 4 : 0,
+        x: isNearby && isZoomed && !isActive ? (index > currItem ? 20 : -20) : 0,
+      }}
       transition={spring}
     >
       {isNearby && (
@@ -98,22 +111,27 @@ const ProjectItem = ({
       <mesh>
         <roundedPlaneGeometry args={[cardWidth, cardHeight, 0.2]} />
         {isNearby || isActive ? (
-          <MeshPortalMaterial resolution={2048 * dpr} blur={0}>
-            <Project
+          <MeshPortalMaterial resolution={1024} blur={0}>
+            <PortalScene
               data={data}
               floatY={floatY}
               spinY={spinY}
-              inPortal
               outerRef={outerRef}
               isActive={isActive}
             />
-            <Environment preset="warehouse" />
           </MeshPortalMaterial>
         ) : (
           <meshBasicMaterial color="#05080F" />
         )}
       </mesh>
-      {isNearby && <ProjectItemContent data={data} index={projectIndex} isActive={isActive} />}
+      {isNearby && (
+        <ProjectItemCopy
+          data={data}
+          index={projectIndex}
+          isActive={isActive}
+          onClick={() => onClick?.(index)}
+        />
+      )}
     </motion.group>
   )
 }

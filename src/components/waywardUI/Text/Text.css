@@ -118,7 +118,8 @@
      font-light;
     }
     &-label,
-    &.system {
+    &.system,
+    &-button {
       @apply text-md
     font-primaryBold
     tracking-[0.15em]
