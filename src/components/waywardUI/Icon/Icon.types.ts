@@ -1,7 +1,7 @@
 export type IconProps = {
   data: {
     url?: string | any
-    dynamicSVG?: string
+    svgSrc?: string
   }
   [key: string]: any
 }

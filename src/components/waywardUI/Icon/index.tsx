@@ -7,13 +7,15 @@ import { IconProps } from './Icon.types'
 
 const Icon: FC<IconProps> = ({ data, ...props }) => {
   if (!data) return null
-  const { url, dynamicSVG } = data
-  const isAnimated = props?.initial || props?.animate || props?.variants
+  const { url, svgSrc } = data
+  const isAnimated = props?.initial || props?.animate || props?.variants || props?.layout
 
   const IconWrapper = isAnimated ? motion.span : 'span'
 
-  return dynamicSVG ? (
-    <IconWrapper dangerouslySetInnerHTML={{ __html: dynamicSVG }} {...props} />
+  if (!url && !svgSrc) return null
+
+  return svgSrc ? (
+    <IconWrapper dangerouslySetInnerHTML={{ __html: svgSrc }} {...props} className="icon" />
   ) : (
     <IconWrapper {...props}>
       <Image src={url} alt="icon" width={42} height={42} />

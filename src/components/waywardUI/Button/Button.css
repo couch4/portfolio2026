@@ -14,7 +14,8 @@
   .text {
     @apply !font-primaryBold
     !font-semibold
-    tracking-[0.1em];
+    tracking-[0.1em]
+    pointer-events-none;
   }
 
   &-primary {
@@ -127,6 +128,26 @@
       &-lg {
         @apply w-14 h-14;
       }
+    }
+  }
+
+  &-close {
+    @apply bg-transparent
+    border-2 border-copy
+    text-copy
+    p-2
+    w-10
+    h-10
+    rounded-full
+    opacity-50;
+
+    &:hover {
+      @apply opacity-100;
+    }
+
+    svg {
+      @apply w-full
+      h-full;
     }
   }
 }

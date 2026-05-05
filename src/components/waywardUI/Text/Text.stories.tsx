@@ -16,6 +16,7 @@ const allStyles: TextProps['textStyle'][] = [
   'p-lg',
   'p',
   'p-sm',
+  'label',
   'a',
 ]
 
@@ -23,7 +24,7 @@ const TypeScale = ({ mb, variant }: { mb?: string; variant: string }) => (
   <div className="flex flex-col gap-4">
     {allStyles.map((textStyle) => (
       <div key={textStyle} className="flex flex-col">
-        <Text textStyle="label" variant="system" className={`text-tertiary${mb ? ` ${mb}` : ''}`}>
+        <Text textStyle="label" variant="primary" className={`text-tertiary${mb ? ` ${mb}` : ''}`}>
           {textStyle}
         </Text>
         <Text textStyle={textStyle} variant={variant} className="text-white">
@@ -53,10 +54,10 @@ export const Secondary: Story = {
   render: () => <TypeScale variant="secondary" mb={'mb-2'} />,
 }
 
-export const System: Story = {
-  render: () => (
-    <Text variant="system" className="text-tertiary">
-      System label font
-    </Text>
-  ),
-}
+// export const System: Story = {
+//   render: () => (
+//     <Text variant="system" className="text-tertiary">
+//       System label font
+//     </Text>
+//   ),
+// }

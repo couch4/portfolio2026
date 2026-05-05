@@ -1,4 +1,10 @@
-# Alpine Portfolio — Claude Code Root Context
+# Wayward Portfolio — Claude Code Root Context
+
+## Model-Specific Protocols
+
+- **PLANNING (Opus/Sonnet)**: When in Plan Mode, focus on architectural integrity and edge-case detection. Output plans to `CURRENT_PLAN.md`.
+- **EXECUTION (Haiku)**: When implementing, strictly follow `CURRENT_PLAN.md`. Do not deviate without a `/model opus` re-plan.
+- **VERIFICATION (Sonnet)**: Use premier reasoning to audit the final code against the plan. Run `npm test` and analyze failures with high-depth thinking.
 
 ## Project overview
 

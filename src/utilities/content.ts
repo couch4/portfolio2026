@@ -1,10 +1,10 @@
 import twConfig from 'tailwind.config.mjs'
 
-const breakpoints = twConfig?.theme?.extend?.screens || {}
+const breakpoints = (twConfig?.theme?.extend?.screens || {}) as Record<string, string>
 
 const availBreakpoints = breakpoints
   ? Object.keys(breakpoints)
-  : ['base', 'sm', 'md', 'lg', 'xl', '2xl']
+  : ['base', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl']
 
 const findLastNotGreater = (arr: number[], value: number) => {
   let lastNotGreater = -1
@@ -22,15 +22,14 @@ const findLastNotGreater = (arr: number[], value: number) => {
 export const getCurrentBreakpoint = (width: number) => {
   let currentBreakpoint = 'base'
 
-  const breakpointNums: number[] = Object.values(breakpoints).map((breakpoint: any) => {
-    if (!breakpoint.includes('%')) {
-      return parseInt(breakpoint as string) as number
-    }
-  }) as number[]
+  const breakpointNums: number[] = (Object.values(breakpoints) as string[])
+    .filter((bp) => !bp.includes('%'))
+    .map((bp) => parseInt(bp))
+    .sort((a, b) => a - b)
 
   const breakpointValue = findLastNotGreater(breakpointNums, width)
 
-  if (breakpointValue > -1 && Array.isArray(breakpoints)) {
+  if (breakpointValue > -1) {
     currentBreakpoint = Object.keys(breakpoints).filter(
       (key) => breakpoints[key as any] === `${breakpointValue}px`,
     )[0]

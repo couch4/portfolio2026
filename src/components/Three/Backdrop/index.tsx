@@ -1,20 +1,11 @@
-import { memo, useEffect, useRef, useState } from 'react'
+'use client'
+
+import { memo, useEffect, useMemo, useState } from 'react'
 import { useGLTF, useTexture } from '@react-three/drei'
-import { extend, useFrame } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 import { BackdropMaterial } from '@/components/Three/Shaders/BackdropMaterial'
+import { createBackdropNodeMaterial } from '@/components/Three/Shaders/BackdropMaterialWebGPU'
 import { blurImageToDataURL } from '@/utilities/blurImage'
-import type { Texture } from 'three'
-
-extend({ BackdropMaterial })
-
-declare module '@react-three/fiber' {
-  interface ThreeElements {
-    backdropMaterial: ThreeElements['meshStandardMaterial'] & {
-      uTime?: number
-      uTexture?: Texture | null
-    }
-  }
-}
 
 const url = '/gltf/backdrop2.glb'
 
@@ -27,7 +18,8 @@ const Backdrop = ({
   textureUrl: string
 }) => {
   const { nodes }: any = useGLTF(url)
-  const matRef = useRef<InstanceType<typeof BackdropMaterial>>(null)
+  const gl = useThree((s) => s.gl)
+  const gpu = (gl as any)?.isWebGPURenderer === true
 
   const rotateY = align === 'left' ? -Math.PI * 0.5 : Math.PI
   const posX = align === 'left' ? -10 : 10
@@ -41,10 +33,19 @@ const Backdrop = ({
   const backgroundTexture = useTexture(blurredUrl ?? textureUrl)
   backgroundTexture.flipY = false
 
+  const material = useMemo(
+    () => (gpu ? createBackdropNodeMaterial() : new BackdropMaterial()),
+    [gpu],
+  )
+
+  useEffect(() => {
+    ;(material as any).uTexture = backgroundTexture
+  }, [material, backgroundTexture])
+
+  useEffect(() => () => material.dispose(), [material])
+
   useFrame(({ clock }) => {
-    if (matRef.current) {
-      matRef.current.uTime = clock.getElapsedTime() * 2
-    }
+    ;(material as any).uTime = clock.getElapsedTime() * 2
   })
 
   if (!blurredUrl) return null
@@ -53,7 +54,7 @@ const Backdrop = ({
     <group {...props} rotation-y={rotateY} scale={20} position={[posX, 10, -20]}>
       <mesh receiveShadow>
         <primitive object={nodes.backdrop.geometry} attach="geometry" />
-        <backdropMaterial ref={matRef} uTexture={backgroundTexture} />
+        <primitive object={material} attach="material" />
       </mesh>
     </group>
   )

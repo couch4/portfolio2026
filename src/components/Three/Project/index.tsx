@@ -1,6 +1,5 @@
-import { memo, useEffect } from 'react'
+import { memo, Suspense, useEffect } from 'react'
 import type { MutableRefObject, RefObject } from 'react'
-import { ContactShadows } from '@react-three/drei'
 import { useThree } from '@react-three/fiber'
 import { Fog } from 'three'
 import type { Group } from 'three'
@@ -31,7 +30,6 @@ const Project = ({
   fogStart?: number
   fogEnd?: number
 }) => {
-  const isDevView = useSceneStore((s) => s.isDevView)
   const { align, background } = data
   const scene = useThree((s) => s.scene)
 
@@ -44,24 +42,16 @@ const Project = ({
 
   return (
     <group {...props}>
-      <ProjectHero
-        data={data}
-        floatY={floatY}
-        spinY={spinY}
-        inPortal={inPortal}
-        outerRef={outerRef}
-        isActive={isActive}
-      />
-      {/* <ContactShadows
-        opacity={0.3}
-        scale={15}
-        blur={1.5}
-        far={10}
-        resolution={256}
-        color="#000000"
-        position-y={-3.5}
-      /> */}
-      <fog attach="fog" args={['#05080F', fogStart, fogEnd]} />
+      <Suspense fallback={null}>
+        <ProjectHero
+          data={data}
+          floatY={floatY}
+          spinY={spinY}
+          inPortal={inPortal}
+          outerRef={outerRef}
+          isActive={isActive}
+        />
+      </Suspense>
       <Backdrop textureUrl={background} align={align} />
     </group>
   )

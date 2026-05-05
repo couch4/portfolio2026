@@ -1,0 +1,86 @@
+.skillpill {
+  &__container {
+    @apply relative;
+  }
+
+  &__wrapper {
+    @apply relative
+    flex
+    justify-center
+    items-center
+    border border-copy/20
+    p-2
+    px-4
+    gap-2
+    cursor-pointer
+    backdrop-blur-md
+   bg-[radial-gradient(circle,rgba(23,28,37,0.6)_0%,rgba(23,28,37,0.8)_70%)];
+
+    .icon {
+      @apply w-4  
+      h-4
+      aspect-square
+      brightness-[300];
+    }
+
+    &.active {
+      @apply absolute
+      z-10
+      flex-col
+      gap-0
+      w-[8.125rem]
+      h-[8.125rem]
+      shadow-[0_0_2rem_rgba(0,0,0,0.5)];
+
+      .icon {
+        @apply w-8
+        h-8
+        brightness-100
+        my-1;
+      }
+    }
+  }
+
+  &__label {
+    @apply flex
+    uppercase
+    text-sm
+    -mt-[0.08rem]
+    tracking-normal
+    text-copySoft
+    font-semibold;
+  }
+
+  &__years {
+    @apply flex
+    uppercase
+    text-xs
+    -mt-1
+    text-copy/20;
+  }
+}
+
+.dial {
+  &__wrapper,
+  &__base,
+  &__progress {
+    @apply absolute;
+  }
+
+  &__wrapper {
+    @apply top-[0.55rem]
+    left-[0.55rem];
+  }
+
+  &__base {
+    @apply text-copySoft;
+  }
+
+  &__progress {
+    @apply z-20;
+
+    &-blur {
+      @apply blur-[0.3rem];
+    }
+  }
+}

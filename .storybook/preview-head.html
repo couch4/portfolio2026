@@ -17,23 +17,28 @@
   }
 
   :root {
-    --columns: 2;
+    /* Mobile (below 768px) */
+    --columns: 4;
     --gap: 1rem;
     --gutter: 1rem;
     --maxWidth: 1440px;
   }
 
   @media (min-width: 768px) {
+    /* Tablet / Small Desktop */
     :root {
-      --columns: 6;
-      --gap: 2rem;
-      --gutter: 2rem;
+      --columns: 8;
+      --gap: 1.5rem; /* Slightly tighter for 8 cols */
+      --gutter: 1.5rem;
     }
   }
 
   @media (min-width: 1024px) {
+    /* Desktop */
     :root {
       --columns: 12;
+      --gap: 2rem;
+      --gutter: 2rem;
     }
   }
 

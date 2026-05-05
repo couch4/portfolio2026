@@ -1,0 +1,218 @@
+.project-details {
+  @apply relative
+    w-full
+    h-full
+    grid 
+    grid-cols-4 md:grid-cols-8 lg:grid-cols-12 
+    gap-x-8
+    select-none
+    py-20;
+
+  .btn-close {
+    @apply absolute
+      top-0;
+  }
+
+  &[data-align='left'] {
+    .btn-close {
+      @apply right-0;
+    }
+  }
+
+  &__main {
+    @apply flex
+    justify-center
+    col-span-6
+    h-full
+    
+    row-start-1;
+
+    &[data-align='right'] {
+      @apply md:col-start-5 lg:col-start-7;
+    }
+  }
+
+  &__side {
+    @apply relative
+    h-full
+    justify-between
+    flex
+    flex-col;
+
+    &-wrapper {
+      @apply col-span-4 md:col-span-3 lg:col-span-5
+      row-start-1;
+
+      &[data-align='left'] {
+        @apply md:col-start-5 lg:col-start-8;
+      }
+
+      &[data-align='right'] {
+        @apply col-start-1
+      items-start;
+
+        .project-details__index {
+          @apply left-0
+          right-[initial];
+        }
+      }
+    }
+  }
+
+  &__viewer {
+    @apply flex
+    w-full
+    h-1/2
+    bg-black/50
+    rounded-md
+    p-8
+    my-auto;
+  }
+
+  &__copyBlock {
+    @apply relative
+    flex
+    flex-col
+    flex-1
+    gap-2;
+
+    &[data-align='left'] {
+      @apply items-end
+      text-right;
+
+      .text {
+        @apply text-right;
+      }
+    }
+
+    &[data-align='right'] {
+      @apply items-start;
+    }
+
+    &__title {
+      @apply text-copy
+    mb-2;
+    }
+
+    &__subTitle {
+      @apply text-copy/80
+      w-[80%]
+      mix-blend-overlay
+      mb-6;
+    }
+
+    &__scrollbox {
+      @apply flex
+      w-full
+      pointer-events-auto;
+
+      .scrollbars {
+        &__content {
+          @apply pb-10;
+        }
+      }
+    }
+
+    &__standfirst {
+      @apply !font-semibold
+    mb-4;
+    }
+
+    &__description {
+      @apply text-copy/70;
+    }
+
+    &__button {
+      @apply mt-6
+      pointer-events-auto;
+    }
+  }
+
+  &__info {
+    @apply flex
+    flex-col
+    gap-5;
+
+    &[data-align='left'] {
+      @apply items-end;
+    }
+  }
+
+  &__stats {
+    @apply flex
+    justify-between
+    w-full;
+
+    &__label {
+      @apply tracking-normal
+      text-copySoft
+      font-bold
+      text-sm;
+    }
+
+    &__item {
+      &[data-align='left'] {
+        @apply text-right;
+      }
+    }
+  }
+
+  &__skills {
+    @apply relative
+    flex
+    flex-wrap
+    gap-2
+    py-6
+    w-full
+    pointer-events-auto;
+
+    &:before {
+      @apply content-[""]
+      absolute
+      h-[1px]
+      w-full
+      top-0
+      bg-gradient-to-l
+      from-copy/0
+      to-copy/10;
+    }
+
+    &[data-align='left'] {
+      @apply justify-end;
+
+      &:before {
+        @apply bg-gradient-to-r;
+      }
+    }
+  }
+
+  &__index {
+    @apply absolute
+    text-copy/60
+    uppercase
+    text-sm
+    tracking-[0.15em]
+    right-0
+    bottom-0;
+  }
+
+  &__gradient {
+    @apply absolute
+    w-[150%]
+    h-[150%]
+    -top-1/4
+    -right-[50%]
+    bg-gradient-to-r
+    from-background/0
+    via-background/70
+    to-background
+    pointer-events-none
+    -z-10;
+
+    &[data-align='right'] {
+      @apply -right-0
+      bg-gradient-to-l
+      -left-[50%];
+    }
+  }
+}

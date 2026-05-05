@@ -38,7 +38,7 @@ const preview: Preview = {
       toolbar: {
         icon: 'cpu',
         items: [
-          { value: 'webgl', title: 'WebGL2' },
+          { value: 'webgl', title: 'WebGL' },
           { value: 'webgpu', title: 'WebGPU' },
         ],
         dynamicTitle: true,

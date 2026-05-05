@@ -5,6 +5,44 @@ import { useFrame } from '@react-three/fiber'
 import type { Group, Material, Mesh, Plane } from 'three'
 import { motion } from 'r3f-motion'
 
+// WebGPU fix: material.clone() can lose texture bindings when the renderer
+// converts standard materials to NodeMaterials via fromMaterial(). Explicitly
+// re-assigning every map property after cloning forces the node builder to
+// pick up the correct texture references.
+const MAP_KEYS = [
+  'map',
+  'normalMap',
+  'roughnessMap',
+  'metalnessMap',
+  'aoMap',
+  'emissiveMap',
+  'bumpMap',
+  'displacementMap',
+  'alphaMap',
+  'envMap',
+  'lightMap',
+  'clearcoatMap',
+  'clearcoatNormalMap',
+  'clearcoatRoughnessMap',
+  'sheenColorMap',
+  'sheenRoughnessMap',
+  'transmissionMap',
+  'thicknessMap',
+  'specularIntensityMap',
+  'specularColorMap',
+  'iridescenceMap',
+  'iridescenceThicknessMap',
+  'anisotropyMap',
+] as const
+
+function cloneMaterialWebGPUSafe(source: Material): Material {
+  const clone = source.clone()
+  for (const key of MAP_KEYS) {
+    if (key in source) (clone as any)[key] = (source as any)[key]
+  }
+  return clone
+}
+
 const ProjectHero = ({
   data,
   floatY,
@@ -24,36 +62,45 @@ const ProjectHero = ({
 }) => {
   const { align, gltf, modelSettings } = data
   const { scene }: any = useGLTF(gltf)
-  const clonedScene = useMemo(() => scene.clone(true), [scene])
 
-  useEffect(() => {
-    if (!clippingPlanes || inPortal) return
+  const { clonedScene, clonedMaterials } = useMemo(() => {
+    const clone = scene.clone(true)
     const cloned: Material[] = []
-    clonedScene.traverse((obj: Mesh) => {
-      const mesh = obj as Mesh
-      if (!mesh.isMesh) return
-      const mat = mesh.material
-      if (Array.isArray(mat)) {
-        const mats = mat.map((m) => {
-          const c = m.clone()
+
+    if (clippingPlanes && !inPortal) {
+      clone.traverse((obj: Mesh) => {
+        const mesh = obj as Mesh
+        if (!mesh.isMesh) return
+        const mat: Material | Material[] = mesh.material
+
+        if (Array.isArray(mat)) {
+          mesh.material = mat.map((m) => {
+            const c = cloneMaterialWebGPUSafe(m)
+            c.clippingPlanes = clippingPlanes
+            c.clipShadows = true
+            c.needsUpdate = true
+            cloned.push(c)
+            return c
+          })
+        } else if (mat) {
+          const c = cloneMaterialWebGPUSafe(mat)
           c.clippingPlanes = clippingPlanes
           c.clipShadows = true
+          c.needsUpdate = true
           cloned.push(c)
-          return c
-        })
-        mesh.material = mats
-      } else if (mat) {
-        const c = mat.clone()
-        c.clippingPlanes = clippingPlanes
-        c.clipShadows = true
-        cloned.push(c)
-        mesh.material = c
-      }
-    })
-    return () => {
-      cloned.forEach((m) => m.dispose())
+          mesh.material = c
+        }
+      })
     }
-  }, [clonedScene, clippingPlanes, inPortal])
+
+    return { clonedScene: clone, clonedMaterials: cloned }
+  }, [scene, clippingPlanes, inPortal])
+
+  useEffect(() => {
+    return () => {
+      clonedMaterials.forEach((m) => m.dispose())
+    }
+  }, [clonedMaterials])
 
   let posX = 0
   if (modelSettings?.position) {
@@ -82,7 +129,11 @@ const ProjectHero = ({
   })
 
   return (
-    <motion.group ref={animRef} animate={{ z: isActive ? 5 : 0, x: isActive ? posX * 2 : 0 }}>
+    <motion.group
+      ref={animRef}
+      initial={false}
+      animate={{ z: isActive ? 5 : 0, x: isActive ? posX * 2 : 0 }}
+    >
       <primitive object={clonedScene} {...modelSettings} position-x={posX} />
     </motion.group>
   )

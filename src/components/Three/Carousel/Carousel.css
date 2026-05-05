@@ -1,3 +1,4 @@
 .carousel {
-  @apply flex;
+  @apply cursor-grab
+  bg-red-400;
 }

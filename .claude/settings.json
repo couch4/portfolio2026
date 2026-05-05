@@ -52,7 +52,12 @@
       "Read(//Volumes/Trevor/Users/billy/.storybook/**)",
       "Bash(pkill -f \"storybook\" lsof -i :6006)",
       "Bash(bun --version)",
-      "Bash(node -e \"import\\('vite-plugin-svgr'\\).then\\(m => console.log\\('OK:', typeof m.default\\)\\).catch\\(e => console.log\\('ERROR:', e.message\\)\\)\")"
+      "Bash(node -e \"import\\('vite-plugin-svgr'\\).then\\(m => console.log\\('OK:', typeof m.default\\)\\).catch\\(e => console.log\\('ERROR:', e.message\\)\\)\")",
+      "Bash(bun tsc *)",
+      "Bash(node -e \"const p = require\\('/Volumes/Trevor/Users/billy/Documents/TheWayward/portfolio2026_2/web/node_modules/three/package.json'\\); console.log\\(p.version\\)\")",
+      "Bash(node -e \"const keys = Object.keys\\(require\\('/Volumes/Trevor/Users/billy/Documents/TheWayward/portfolio2026_2/web/node_modules/three/tsl'\\)\\); console.log\\(keys.filter\\(k => /env|pmrem|cube/i.test\\(k\\)\\).join\\('\\\\n'\\)\\)\")",
+      "Bash(bunx tsc *)",
+      "Read(//Volumes/Trevor/Users/billy/Documents/TheWayward/**)"
     ]
   }
 }

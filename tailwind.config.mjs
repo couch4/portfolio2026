@@ -2,7 +2,10 @@ import typography from '@tailwindcss/typography'
 
 const colors = {
   background: 'rgba(var(--background) / <alpha-value>)',
+  surface: 'rgba(var(--surface) / <alpha-value>)',
+  border: 'rgba(var(--border) / <alpha-value>)',
   copy: 'rgba(var(--copy) / <alpha-value>)',
+  copySoft: 'rgba(var(--copySoft) / <alpha-value>)',
   copySecondary: 'rgba(var(--copy-secondary) / <alpha-value>)',
   primary: 'rgba(var(--primary) / <alpha-value>)',
   secondary: 'rgba(var(--secondary) / <alpha-value>)',
