@@ -17,6 +17,7 @@ const Text: FC<TextProps> = ({
   animate,
   variants,
   children,
+  icons,
   ...props
 }) => {
   const textTag: TextTag =
@@ -30,12 +31,25 @@ const Text: FC<TextProps> = ({
     initial || animate || variants || props?.layoutId || props?.layout,
   )
 
-  const formattedText = DOMPurify.sanitize(children as string)
+  const formattedText = DOMPurify.sanitize(children as string, {
+    ALLOWED_ATTR: ['className', 'class'],
+    ALLOWED_TAGS: ['br', 'span'],
+  })
+
+  const hasIcons = icons?.iconBefore || icons?.iconAfter
+
+  const content = (
+    <>
+      {icons?.iconBefore}
+      <span dangerouslySetInnerHTML={{ __html: formattedText }} />
+      {icons?.iconAfter}
+    </>
+  )
 
   const allProps = {
     ...props,
     className: clsx([className, 'text', `text-${textStyle}`], camelToHyphen(variant)),
-    dangerouslySetInnerHTML: { __html: formattedText },
+    ...(hasIcons ? { children: content } : { dangerouslySetInnerHTML: { __html: formattedText } }),
   }
   let motionProps = {}
 

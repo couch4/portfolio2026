@@ -37,12 +37,20 @@ const nextConfig: NextConfig = {
       '.mjs': ['.mts', '.mjs'],
     }
 
+    webpackConfig.resolve.alias = {
+      ...webpackConfig.resolve.alias,
+      three: path.resolve(dirname, 'node_modules/three'),
+    }
+
     return webpackConfig
   },
   reactStrictMode: true,
   redirects,
   turbopack: {
     root: path.resolve(dirname),
+    resolveAlias: {
+      three: path.resolve(dirname, 'node_modules/three'),
+    },
   },
 }
 

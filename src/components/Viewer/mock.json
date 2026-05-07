@@ -1,0 +1,65 @@
+{
+  "images": [
+    {
+      "image": {
+        "src": "images/mock/newyork.avif",
+        "alt": "new york",
+        "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+        "depth": "images/mock/depth_newyork.png"
+      },
+      "video": null
+    },
+    {
+      "image": {
+        "src": "images/mock/river.avif",
+        "alt": "river",
+        "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+        "depth": "images/mock/depth_river.png"
+      },
+      "video": null
+    },
+    {
+      "image": {
+        "src": "images/mock/kitchen.avif",
+        "alt": "kitchen",
+        "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+        "depth": "images/mock/depth_kitchen.png"
+      },
+      "video": null
+    },
+    {
+      "image": {
+        "src": "images/mock/newyork.avif",
+        "alt": "new york",
+        "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+        "depth": "images/mock/depth_newyork.png"
+      },
+      "video": null
+    },
+    {
+      "image": {
+        "src": "images/mock/river.avif",
+        "alt": "river",
+        "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+        "depth": "images/mock/depth_river.png"
+      },
+      "video": null
+    }
+  ],
+  "video": [
+    {
+      "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+      "alt": "Video 1"
+    }
+  ],
+  "imagesAndVideo": [
+    {
+      "src": "https://picsum.photos/800/600",
+      "alt": "Image 1"
+    },
+    {
+      "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+      "alt": "Video 1"
+    }
+  ]
+}

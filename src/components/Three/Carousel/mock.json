@@ -4,13 +4,100 @@
     "subTitle": "Visualising artillery for modern warfare.",
     "standfirst": "A 3D simulation of a modern artillery unit.<br/>Made with React Three Fiber",
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. <br/><br/> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. <br/><br/> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    "gltf": "/gltf/tank.glb",
+    "gltf": "/gltf/tankOpt.glb",
     "accent": "primary",
     "modelSettings": {
       "scale": 0.1,
       "position": [1.5, -1.2, 0],
       "rotation": [0, -0.2, -0.1]
     },
+    "stats": [
+      {
+        "label": "Client",
+        "value": "British Army"
+      },
+      {
+        "label": "Role",
+        "value": "Frontend Developer"
+      },
+      {
+        "label": "Year",
+        "value": "2023"
+      }
+    ],
+    "skills": [
+      {
+        "label": "React",
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-11.5 -10.23174 23 20.46348\"><circle cx=\"0\" cy=\"0\" r=\"2.05\" fill=\"#61dafb\"/><g stroke=\"#61dafb\" stroke-width=\"1\" fill=\"none\"><ellipse rx=\"11\" ry=\"4.2\"/><ellipse rx=\"11\" ry=\"4.2\" transform=\"rotate(60)\"/><ellipse rx=\"11\" ry=\"4.2\" transform=\"rotate(120)\"/></g></svg>",
+        "experience": 10,
+        "level": 96
+      },
+      {
+        "label": "Three.js",
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-11.5 -10.23174 23 20.46348\"><circle cx=\"0\" cy=\"0\" r=\"2.05\" fill=\"#61dafb\"/><g stroke=\"#61dafb\" stroke-width=\"1\" fill=\"none\"><ellipse rx=\"11\" ry=\"4.2\"/><ellipse rx=\"11\" ry=\"4.2\" transform=\"rotate(60)\"/><ellipse rx=\"11\" ry=\"4.2\" transform=\"rotate(120)\"/></g></svg>",
+        "experience": 8,
+        "level": 85
+      },
+      {
+        "label": "Blender",
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-11.5 -10.23174 23 20.46348\"><circle cx=\"0\" cy=\"0\" r=\"2.05\" fill=\"#61dafb\"/><g stroke=\"#61dafb\" stroke-width=\"1\" fill=\"none\"><ellipse rx=\"11\" ry=\"4.2\"/><ellipse rx=\"11\" ry=\"4.2\" transform=\"rotate(60)\"/><ellipse rx=\"11\" ry=\"4.2\" transform=\"rotate(120)\"/></g></svg>",
+        "experience": 7,
+        "level": 65
+      }
+    ],
+    "media": [
+      {
+        "image": {
+          "src": "images/mock/newyork.avif",
+          "alt": "new york",
+          "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+          "depth": "images/mock/depth_newyork.png"
+        },
+        "video": null
+      },
+      {
+        "image": {
+          "src": "images/mock/river.avif",
+          "alt": "river",
+          "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+          "depth": "images/mock/depth_river.png"
+        },
+        "video": null
+      },
+      {
+        "image": {
+          "src": "images/mock/kitchen.avif",
+          "alt": "kitchen",
+          "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+          "depth": "images/mock/depth_kitchen.png"
+        },
+        "video": null
+      },
+      {
+        "image": {
+          "src": "images/mock/newyork.avif",
+          "alt": "new york",
+          "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+          "depth": "images/mock/depth_newyork.png"
+        },
+        "video": null
+      },
+      {
+        "image": {
+          "src": "images/mock/river.avif",
+          "alt": "river",
+          "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+          "depth": "images/mock/depth_river.png"
+        },
+        "video": null
+      }
+    ],
+    "links": [
+      {
+        "label": "Launch",
+        "url": "https://britisharmy.com"
+      }
+    ],
     "align": "left",
     "background": "/images/britishArmy.avif",
     "preTitle": "Virtual Battlefield"
@@ -32,12 +119,99 @@
     },
     "align": "right",
     "background": "/images/dreamdroid.png",
-    "preTitle": "AI Dream analyser"
+    "preTitle": "AI Dream analyser",
+    "stats": [
+      {
+        "label": "Client",
+        "value": "Dreamdroid"
+      },
+      {
+        "label": "Role",
+        "value": "3D, Design & Development"
+      },
+      {
+        "label": "Year",
+        "value": "2023"
+      }
+    ],
+    "skills": [
+      {
+        "label": "React",
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-11.5 -10.23174 23 20.46348\"><circle cx=\"0\" cy=\"0\" r=\"2.05\" fill=\"#61dafb\"/><g stroke=\"#61dafb\" stroke-width=\"1\" fill=\"none\"><ellipse rx=\"11\" ry=\"4.2\"/><ellipse rx=\"11\" ry=\"4.2\" transform=\"rotate(60)\"/><ellipse rx=\"11\" ry=\"4.2\" transform=\"rotate(120)\"/></g></svg>",
+        "experience": 10,
+        "level": 96
+      },
+      {
+        "label": "Three.js",
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-11.5 -10.23174 23 20.46348\"><circle cx=\"0\" cy=\"0\" r=\"2.05\" fill=\"#61dafb\"/><g stroke=\"#61dafb\" stroke-width=\"1\" fill=\"none\"><ellipse rx=\"11\" ry=\"4.2\"/><ellipse rx=\"11\" ry=\"4.2\" transform=\"rotate(60)\"/><ellipse rx=\"11\" ry=\"4.2\" transform=\"rotate(120)\"/></g></svg>",
+        "experience": 8,
+        "level": 85
+      },
+      {
+        "label": "Blender",
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-11.5 -10.23174 23 20.46348\"><circle cx=\"0\" cy=\"0\" r=\"2.05\" fill=\"#61dafb\"/><g stroke=\"#61dafb\" stroke-width=\"1\" fill=\"none\"><ellipse rx=\"11\" ry=\"4.2\"/><ellipse rx=\"11\" ry=\"4.2\" transform=\"rotate(60)\"/><ellipse rx=\"11\" ry=\"4.2\" transform=\"rotate(120)\"/></g></svg>",
+        "experience": 7,
+        "level": 65
+      }
+    ],
+    "media": [
+      {
+        "image": {
+          "src": "images/mock/newyork.avif",
+          "alt": "new york",
+          "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+          "depth": "images/mock/depth_newyork.png"
+        },
+        "video": null
+      },
+      {
+        "image": {
+          "src": "images/mock/river.avif",
+          "alt": "river",
+          "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+          "depth": "images/mock/depth_river.png"
+        },
+        "video": null
+      },
+      {
+        "image": {
+          "src": "images/mock/kitchen.avif",
+          "alt": "kitchen",
+          "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+          "depth": "images/mock/depth_kitchen.png"
+        },
+        "video": null
+      },
+      {
+        "image": {
+          "src": "images/mock/newyork.avif",
+          "alt": "new york",
+          "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+          "depth": "images/mock/depth_newyork.png"
+        },
+        "video": null
+      },
+      {
+        "image": {
+          "src": "images/mock/river.avif",
+          "alt": "river",
+          "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+          "depth": "images/mock/depth_river.png"
+        },
+        "video": null
+      }
+    ],
+    "links": [
+      {
+        "label": "Launch",
+        "url": "https://britisharmy.com"
+      }
+    ]
   },
   {
     "title": "Morris Electric",
     "subTitle": "A retro classic...electrified.",
-    "standfirst": "A 3D car configurator for a fictional electric car brand. Made with React and Three.js.",
+    "standfirst": "A 3D car configurator for a fictional electric car brand.<br/>Made with React and Three.js.",
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. <br/><br/> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. <br/><br/> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
     "gltf": "/gltf/van.glb",
     "accent": "primary",
@@ -47,6 +221,93 @@
     },
     "align": "right",
     "background": "/images/morris-je.webp",
-    "preTitle": "3D Car configurator"
+    "preTitle": "3D Car configurator",
+    "stats": [
+      {
+        "label": "Client",
+        "value": "Morris Electric"
+      },
+      {
+        "label": "Role",
+        "value": "3D, Design & Development"
+      },
+      {
+        "label": "Year",
+        "value": "2024"
+      }
+    ],
+    "skills": [
+      {
+        "label": "React",
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-11.5 -10.23174 23 20.46348\"><circle cx=\"0\" cy=\"0\" r=\"2.05\" fill=\"#61dafb\"/><g stroke=\"#61dafb\" stroke-width=\"1\" fill=\"none\"><ellipse rx=\"11\" ry=\"4.2\"/><ellipse rx=\"11\" ry=\"4.2\" transform=\"rotate(60)\"/><ellipse rx=\"11\" ry=\"4.2\" transform=\"rotate(120)\"/></g></svg>",
+        "experience": 10,
+        "level": 96
+      },
+      {
+        "label": "Three.js",
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-11.5 -10.23174 23 20.46348\"><circle cx=\"0\" cy=\"0\" r=\"2.05\" fill=\"#61dafb\"/><g stroke=\"#61dafb\" stroke-width=\"1\" fill=\"none\"><ellipse rx=\"11\" ry=\"4.2\"/><ellipse rx=\"11\" ry=\"4.2\" transform=\"rotate(60)\"/><ellipse rx=\"11\" ry=\"4.2\" transform=\"rotate(120)\"/></g></svg>",
+        "experience": 8,
+        "level": 85
+      },
+      {
+        "label": "Blender",
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-11.5 -10.23174 23 20.46348\"><circle cx=\"0\" cy=\"0\" r=\"2.05\" fill=\"#61dafb\"/><g stroke=\"#61dafb\" stroke-width=\"1\" fill=\"none\"><ellipse rx=\"11\" ry=\"4.2\"/><ellipse rx=\"11\" ry=\"4.2\" transform=\"rotate(60)\"/><ellipse rx=\"11\" ry=\"4.2\" transform=\"rotate(120)\"/></g></svg>",
+        "experience": 1,
+        "level": 65
+      }
+    ],
+    "media": [
+      {
+        "image": {
+          "src": "images/mock/newyork.avif",
+          "alt": "new york",
+          "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+          "depth": "images/mock/depth_newyork.png"
+        },
+        "video": null
+      },
+      {
+        "image": {
+          "src": "images/mock/river.avif",
+          "alt": "river",
+          "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+          "depth": "images/mock/depth_river.png"
+        },
+        "video": null
+      },
+      {
+        "image": {
+          "src": "images/mock/kitchen.avif",
+          "alt": "kitchen",
+          "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+          "depth": "images/mock/depth_kitchen.png"
+        },
+        "video": null
+      },
+      {
+        "image": {
+          "src": "images/mock/newyork.avif",
+          "alt": "new york",
+          "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+          "depth": "images/mock/depth_newyork.png"
+        },
+        "video": null
+      },
+      {
+        "image": {
+          "src": "images/mock/river.avif",
+          "alt": "river",
+          "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+          "depth": "images/mock/depth_river.png"
+        },
+        "video": null
+      }
+    ],
+    "links": [
+      {
+        "label": "Launch",
+        "url": "https://google.com"
+      }
+    ]
   }
 ]

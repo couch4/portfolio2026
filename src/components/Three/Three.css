@@ -21,4 +21,12 @@
   @apply flex
   p-4
   justify-end;
+
+  span {
+    @apply text-sm
+    text-tertiary
+    uppercase
+    mx-2
+    inline-block;
+  }
 }

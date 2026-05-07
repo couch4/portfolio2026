@@ -1,70 +1,11 @@
 .project {
   &-container {
     @apply w-screen
-    container
-    h-[60vh]
-    grid grid-cols-12 gap-x-4
     select-none
     pointer-events-none;
-    perspective: 1200px;
   }
 
-  &-wrapper {
-    @apply relative
-    flex
-    flex-col
-    gap-3
-    py-20;
-
-    &[data-align='left'] {
-      @apply col-start-7 col-span-5
-      items-end;
-
-      .text {
-        @apply text-right;
-      }
-    }
-
-    &[data-align='right'] {
-      @apply col-start-2 col-span-5
-      items-start;
-    }
-  }
-
-  /* &-preTitle {
-    @apply text-accentTertiary;
-  } */
-
-  &-title {
-    @apply text-copy;
-  }
-
-  &-subTitle {
-    @apply text-copy/80
-    mix-blend-overlay
-    mb-6;
-  }
-
-  &-scrollbox {
-    @apply w-full
-    pointer-events-auto;
-  }
-
-  &-standfirst {
-    @apply !font-normal
-    mb-4;
-  }
-
-  &-description {
-    @apply text-copy/70;
-  }
-
-  &-index {
-    @apply absolute
-    text-copy/60
-    uppercase
-    text-sm
-    tracking-[0.15em]
-    bottom-20;
+  &-html {
+    @apply border-green-600;
   }
 }

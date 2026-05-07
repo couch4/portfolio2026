@@ -1,0 +1,61 @@
+.viewer {
+  &__wrapper {
+    @apply !relative
+    w-full
+    rounded-[4rem]
+    overflow-hidden
+    border-t
+    border-b
+    border-white/20;
+    corner-shape: squircle;
+    box-shadow: 0 0 100px rgba(0, 0, 0, 0.5);
+
+    .liquid-glass {
+      @apply relative
+      border-none
+        !p-5;
+
+      &__tint {
+        @apply absolute
+        inset-0
+        bg-gradient-to-br
+        from-transparent
+        to-background/50;
+      }
+    }
+  }
+
+  &__canvas {
+    @apply w-full
+    h-full
+    block;
+  }
+
+  &__container {
+    @apply relative
+    rounded-[2rem]
+    overflow-hidden
+    w-full
+    aspect-[16/10];
+    corner-shape: squircle;
+  }
+
+  &__controls {
+    @apply flex
+    items-center
+    justify-between
+    px-4
+    py-8
+    gap-4;
+  }
+
+  &__control {
+    @apply cursor-pointer
+    pointer-events-auto
+    opacity-50;
+
+    &:hover {
+      @apply opacity-100;
+    }
+  }
+}

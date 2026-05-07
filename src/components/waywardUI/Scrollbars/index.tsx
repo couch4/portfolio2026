@@ -22,6 +22,7 @@ const Scrollbars: FC<ScrollbarsProps> = ({
 }) => {
   const [scrollUnderTop, setScrollUnderTop] = useState(false)
   const [scrollUnderBottom, setScrollUnderBottom] = useState(false)
+  const [hasScrollY, setHasScrollY] = useState(false)
   const { className = 'scrollbars', ...globalRestProps } = rest
   const scrollRef = useRef<Scrollbar>(null)
 
@@ -42,6 +43,7 @@ const Scrollbars: FC<ScrollbarsProps> = ({
         className={clsx(restProps.className, className, {
           'ScrollbarsCustom__under-top': scrollUnderTop,
           'ScrollbarsCustom__under-bottom': scrollUnderBottom,
+          'scrollbars--no-scroll-y': !hasScrollY,
         })}
       />
     )
@@ -90,6 +92,8 @@ const Scrollbars: FC<ScrollbarsProps> = ({
   }
 
   const handleScroll = (scrollValues) => {
+    const overflows = scrollValues.scrollHeight > scrollValues.clientHeight
+    setHasScrollY(overflows)
     setScrollUnderTop(scrollValues.scrollTop > 0)
     setScrollUnderBottom(
       scrollValues.scrollTop + scrollValues.clientHeight < scrollValues.scrollHeight,

@@ -1,6 +1,18 @@
-export interface ButtonProps {
+import { MotionProps } from 'motion/react'
+
+export interface ButtonProps extends MotionProps {
   asChild?: boolean
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'link' | 'iconArrow' | 'icon'
+  variant?:
+    | 'primary'
+    | 'secondary'
+    | 'tertiary'
+    | 'primaryOutline'
+    | 'secondaryOutline'
+    | 'tertiaryOutline'
+    | 'link'
+    | 'iconArrow'
+    | 'icon'
+    | 'close'
   size?: 'sm' | 'lg'
   children?: React.ReactNode
   ref?: React.Ref<HTMLButtonElement>

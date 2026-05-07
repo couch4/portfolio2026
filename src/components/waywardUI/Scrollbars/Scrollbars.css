@@ -1,16 +1,69 @@
-.ScrollbarsCustom {
-  &:after,
-  &:before {
-    @apply transition-shadow
-        duration-200
-        content-['']
-        absolute
-        w-full
-        h-full
-        pr-4
-        pointer-events-none;
+/* .ScrollbarsCustom {
+  &-Track {
+    @apply !bg-white/30;
   }
 
+  &-Thumb {
+    @apply !bg-white
+        transition-colors
+        duration-300;
+
+    &.dragging,
+    &:hover {
+      @apply !bg-tertiary;
+    }
+  }
+
+  &-TrackX {
+    @apply !h-2
+        !bottom-1;
+  }
+
+  &-TrackY {
+    @apply !w-2
+        !right-1;
+  } */
+
+/* Default: bottom fade only, no top fade */
+/* &-Scroller {
+    mask-image: linear-gradient(to bottom, black 0%, black calc(100% - 60px), transparent 100%);
+  } */
+
+/* When scrolled past top: add top fade */
+/* &__under-top &-Scroller {
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0px,
+      black 60px,
+      black calc(100% - 60px),
+      transparent 100%
+    );
+  } */
+
+/* When at bottom: remove bottom fade */
+/* &:not(&__under-bottom) &-Scroller {
+    mask-image: linear-gradient(to bottom, transparent 0px, black 60px, black 100%);
+  } */
+
+/* Both top and bottom fades when scrolled and not at bottom */
+/* &__under-top:not(&__under-bottom) &-Scroller {
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0px,
+      black 60px,
+      black calc(100% - 60px),
+      transparent 100%
+    );
+  }
+} */
+
+/* .scrollbars {
+  &__wrapper {
+    @apply mr-5;
+  }
+} */
+
+.ScrollbarsCustom {
   &-Track {
     @apply !bg-white/30;
   }
@@ -37,26 +90,63 @@
   }
 
   &__under-top {
-    &:before {
-      @apply top-0
-            left-0
-            duration-500
-            shadow-[inset_0_60px_60px_-60px_rgba(0,0,0,.12)];
-    }
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0px,
+      black 60px,
+      black calc(100% - 60px),
+      transparent 100%
+    );
   }
 
-  &__under-bottom {
-    &:after {
-      @apply bottom-0
-            left-0
-            duration-500
-            shadow-[inset_0_-60px_60px_-60px_rgba(0,0,0,.12)];
+  /* Only apply masks when there IS a scrollbar */
+  &:not(.scrollbars--no-scroll-y) {
+    .ScrollbarsCustom {
+      /* Default: bottom fade only, no top fade */
+      &-Scroller {
+        mask-image: linear-gradient(to bottom, black 0%, black calc(100% - 60px), transparent 100%);
+      }
+
+      /* When scrolled past top: add top fade */
+      &__under-top &-Scroller {
+        mask-image: linear-gradient(
+          to bottom,
+          transparent 0px,
+          black 60px,
+          black calc(100% - 60px),
+          transparent 100%
+        );
+      }
+
+      /* When at bottom: remove bottom fade */
+      &:not(&__under-bottom) &-Scroller {
+        mask-image: linear-gradient(to bottom, transparent 0px, black 60px, black 100%);
+      }
+
+      /* Both top and bottom fades when scrolled and not at bottom */
+      &__under-top:not(&__under-bottom) &-Scroller {
+        mask-image: linear-gradient(
+          to bottom,
+          transparent 0px,
+          black 60px,
+          black calc(100% - 60px),
+          transparent 100%
+        );
+      }
     }
   }
 }
 
 .scrollbars {
   &__wrapper {
-    @apply mr-5;
+    @apply transition-[margin-right]
+    duration-300
+    pointer-events-auto;
+  }
+  /* Only apply margin-right when there IS a scrollbar */
+  &:not(.scrollbars--no-scroll-y) {
+    .scrollbars__wrapper {
+      @apply mr-6;
+    }
   }
 }

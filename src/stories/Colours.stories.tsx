@@ -18,11 +18,11 @@ export default meta
 const groups = [
   {
     label: 'Base',
-    colors: ['background'],
+    colors: ['background', 'surface', 'border'],
   },
   {
     label: 'Copy',
-    colors: ['copy', 'copySecondary'],
+    colors: ['copy', 'copySecondary', 'copySoft'],
   },
   {
     label: 'Brand / Alpine Colors',
@@ -48,7 +48,7 @@ const getSwatches = (colors: string[]) => {
       <div className="flex flex-col">
         <div
           key={color}
-          className={`w-60 h-20 rounded-md flex items-center justify-center font-semibold text-lg bg-${color} border border-secondary/20 gap-2 mb-2`}
+          className={`w-60 h-20 rounded-md flex items-center justify-center font-semibold text-lg bg-${color} border border-border gap-2 mb-2`}
         />
         <Text textStyle="label" className="text-copy-secondary">
           {camelToSpace(color)}
