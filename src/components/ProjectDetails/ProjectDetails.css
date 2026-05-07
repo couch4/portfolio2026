@@ -24,7 +24,7 @@
     justify-center
     col-span-6
     h-full
-    
+    items-center
     row-start-1;
 
     &[data-align='right'] {
@@ -57,16 +57,6 @@
         }
       }
     }
-  }
-
-  &__viewer {
-    @apply flex
-    w-full
-    h-1/2
-    bg-black/50
-    rounded-md
-    p-8
-    my-auto;
   }
 
   &__copyBlock {

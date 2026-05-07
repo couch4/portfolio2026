@@ -1,0 +1,44 @@
+.liquid-glass {
+  @apply absolute
+        inset-0
+        z-0
+        overflow-hidden
+        border-t border-t-white/15
+        border-b border-b-white/20
+        rounded-[4rem];
+  corner-shape: squircle;
+  box-shadow: 0 0 100px rgba(0, 0, 0, 0.5);
+
+  &:after {
+    @apply absolute
+          inset-0
+          content-['']
+          shadow-[inset_0_-75px_100px_-25px_rgba(255,255,255,0.1)];
+  }
+
+  &__backing {
+    --bleed: calc(var(--blur-radius, 20px) * 2);
+    position: absolute;
+    top: calc(var(--bleed) * -1);
+    left: calc(var(--bleed) * -1);
+    width: calc(100% + var(--bleed) * 2);
+    height: calc(100% + var(--bleed) * 2);
+    display: block;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+  }
+
+  /* &__tint {
+    @apply absolute inset-0 bg-black/60;
+  } */
+
+  &__content {
+    @apply relative
+        w-full
+        h-full
+        z-10;
+  }
+
+  &__svg {
+    @apply hidden;
+  }
+}

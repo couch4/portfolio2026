@@ -1,25 +1,13 @@
 'use client'
 
-import {
-  createElement,
-  useImperativeHandle,
-  useRef,
-  FC,
-} from 'react'
+import { createElement, useImperativeHandle, useRef, FC } from 'react'
 import { motion } from 'motion/react'
 import { MotionBoxProps } from './Motion.types'
 import { motionBox } from './Motion.props'
 
-
-const Motion: FC<MotionBoxProps> = ({
-  className,
-  variant = 'div',
-  ref,
-  ...props
-}) => {
+const Motion: FC<MotionBoxProps> = ({ className, variant = 'div', ref, ...props }) => {
   const innerRef = useRef<HTMLDivElement>(null)
   useImperativeHandle(ref, () => innerRef.current!, [])
-
 
   const allProps = {
     ...props,
@@ -49,4 +37,3 @@ const getMotionTag = (tag = 'div') => {
 
   return tags[tag]
 }
-

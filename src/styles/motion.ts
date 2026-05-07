@@ -59,7 +59,7 @@ export const scaleInDelay = (
         scale: initScale,
         opacity: 0,
         transition: {
-          ...(variant === 'bounce' ? { duration: 0.05 } : spring),
+          ...(variant === 'bounce' ? { duration: 0.05 } : { duration: 0.3 }),
         },
       },
     },

@@ -31,17 +31,23 @@ export function createBackdropNodeMaterial() {
       const blend = f.mul(f).mul(float(3).sub(f.mul(2)))
       return mix(
         mix(hashFn(i), hashFn(i.add(vec2(float(1), float(0)))), blend.x),
-        mix(hashFn(i.add(vec2(float(0), float(1)))), hashFn(i.add(vec2(float(1), float(1)))), blend.x),
+        mix(
+          hashFn(i.add(vec2(float(0), float(1)))),
+          hashFn(i.add(vec2(float(1), float(1)))),
+          blend.x,
+        ),
         blend.y,
       )
     }
 
-    const dx = noiseFn(
-      v.mul(float(2.5)).add(vec2(t.mul(float(0.15)), t.mul(float(0.07)))),
-    ).sub(float(0.5))
-    const dy = noiseFn(
-      v.mul(float(2.5)).add(vec2(t.mul(float(0.09)), t.mul(float(0.13)))),
-    ).sub(float(0.5))
+    // Two independent noise fields offset in different directions — gives
+    // the bulging/waving feel without any rotational symmetry
+    const dx = noiseFn(v.mul(float(2.5)).add(vec2(t.mul(float(0.15)), t.mul(float(0.07))))).sub(
+      float(0.5),
+    )
+    const dy = noiseFn(v.mul(float(2.5)).add(vec2(t.mul(float(0.09)), t.mul(float(0.13))))).sub(
+      float(0.5),
+    )
 
     return texSample(texNode, v.add(vec2(dx, dy).mul(float(0.3))))
   })()

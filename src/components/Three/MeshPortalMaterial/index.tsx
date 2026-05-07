@@ -54,6 +54,13 @@ export type PortalProps = Omit<ThreeElements['portalMaterialImpl'], 'ref' | 'ble
   eventPriority?: number
   renderPriority?: number
   events?: boolean
+  /**
+   * Cap on the number of frames the inner RenderTexture re-renders. Pass
+   * Infinity (default) for live rendering, or a small integer (e.g. 4) to
+   * snapshot-render non-active portals. When the parent becomes invisible the
+   * cap drops to 0 regardless of this value.
+   */
+  frames?: number
 }
 
 // ---------------------------------------------------------------------------
@@ -66,6 +73,7 @@ function ManagePortalScene({
   material,
   priority,
   worldUnits,
+  onSceneReady,
 }: {
   blur: number
   events: boolean | undefined
@@ -73,10 +81,18 @@ function ManagePortalScene({
   material: React.RefObject<any>
   priority: number
   worldUnits: boolean
+  onSceneReady?: (s: THREE.Scene | null) => void
 }) {
   const scene = useThree((s) => s.scene)
   const setEvents = useThree((s) => s.setEvents)
   const gl = useThree((s) => s.gl)
+
+  // Hand the portal scene back to MeshPortalMaterial so it can drive
+  // matrixWorld from a useFrame that runs *before* drei's Container render.
+  React.useLayoutEffect(() => {
+    onSceneReady?.(scene)
+    return () => onSceneReady?.(null)
+  }, [scene, onSceneReady])
 
   // FIX #2 — only allocate blend buffers when blur > 0 (portal-enter transition)
   // samples: 0 for WebGPU — Metal only supports 1 and 4, useFBO default (0) is safe
@@ -119,8 +135,11 @@ function ManagePortalScene({
     const parent = material.current?.__r3f?.parent?.object
     if (!parent) return
 
+    // The matrixWorld is normally driven by MeshPortalMaterial's pre-render
+    // useFrame (which runs *before* drei's Container render). This block stays
+    // as a fallback for the manual-render branch below (transitioning portals).
     if (!worldUnits) {
-      if (priority && material.current?.blend === 1) parent.updateWorldMatrix(true, false)
+      parent.updateWorldMatrix(true, false)
       scene.matrixWorld.copy(parent.matrixWorld)
     } else {
       scene.matrixWorld.identity()
@@ -158,11 +177,16 @@ const MeshPortalMaterial = React.forwardRef<any, PortalProps>(
       renderPriority = 0,
       worldUnits = false,
       resolution = 512,
+      frames = Infinity,
       ...props
     },
     fref,
   ) => {
     const ref = React.useRef<any>(null)
+    const portalSceneRef = React.useRef<THREE.Scene | null>(null)
+    const onSceneReady = React.useCallback((s: THREE.Scene | null) => {
+      portalSceneRef.current = s
+    }, [])
     const { scene, gl, size, viewport, setEvents } = useThree()
     const gpu = isWebGPU(gl)
     const PortalMaterialImpl = gpu ? PortalMaterialWebGPU : PortalMaterialWebGL
@@ -175,10 +199,39 @@ const MeshPortalMaterial = React.forwardRef<any, PortalProps>(
       (image: THREE.Texture): THREE.RenderTarget | THREE.WebGLRenderTarget
       dispose(): void
     } | null>(null)
+    const resolutionRef = React.useRef<[number, number]>([
+      size.width * viewport.dpr,
+      size.height * viewport.dpr,
+    ])
 
     useFrame(() => {
       const p = ref.current.blend > 0 ? Math.max(1, renderPriority) : 0
       if (priority !== p) setPriority(p)
+    })
+
+    useFrame(() => {
+      if (ref.current?.resolution) {
+        ref.current.resolution.set(size.width * viewport.dpr, size.height * viewport.dpr)
+      }
+    })
+
+    // Pre-render matrixWorld sync. This useFrame is registered when
+    // MeshPortalMaterial mounts — *before* drei's <RenderTexture> children
+    // (its <Container> render useFrame, ManagePortalScene's matrix copy).
+    // Within a single priority-0 frame, this runs first, so the Container
+    // renders the portal scene with current-frame matrices. Without it, the
+    // portal lags one frame behind the main scene — visible as ghosting on
+    // anything that renders both inside and outside the portal.
+    useFrame(() => {
+      const ps = portalSceneRef.current
+      const portalParent = ref.current?.__r3f?.parent?.object
+      if (!ps || !portalParent) return
+      if (!worldUnits) {
+        portalParent.updateWorldMatrix(true, false)
+        ps.matrixWorld.copy(portalParent.matrixWorld)
+      } else {
+        ps.matrixWorld.identity()
+      }
     })
 
     React.useEffect(() => {
@@ -273,14 +326,14 @@ const MeshPortalMaterial = React.forwardRef<any, PortalProps>(
         ref={ref}
         blur={blur}
         blend={0}
-        resolution={[size.width * viewport.dpr, size.height * viewport.dpr]}
+        resolution={resolutionRef.current}
         attach="material"
         {...props}
       >
         <RenderTexture
           attach="map"
           samples={gpu ? 4 : 8}
-          frames={visible ? Infinity : 0}
+          frames={visible ? frames : 0}
           eventPriority={eventPriority}
           renderPriority={renderPriority}
           compute={compute}
@@ -293,6 +346,7 @@ const MeshPortalMaterial = React.forwardRef<any, PortalProps>(
             priority={priority}
             material={ref}
             worldUnits={worldUnits}
+            onSceneReady={onSceneReady}
           />
         </RenderTexture>
       </portalMaterialImpl>

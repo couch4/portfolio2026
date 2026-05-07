@@ -179,9 +179,12 @@ export function makeSDFGenerator(
     uvRender.material.uniforms.tex.value = image
     renderer.setRenderTarget(outsideRenderTarget)
     uvRender.render(renderer)
-    const passes = Math.ceil(Math.log(Math.max(clientWidth, clientHeight)) / Math.log(2))
+    const passes = Math.max(
+      1,
+      Math.ceil(Math.log(Math.max(clientWidth, clientHeight)) / Math.log(2)),
+    )
     let lastTarget: THREE.WebGLRenderTarget = outsideRenderTarget
-    let target: THREE.WebGLRenderTarget | null = null
+    let target: THREE.WebGLRenderTarget = outsideRenderTarget
     for (let i = 0; i < passes; i++) {
       const offset = Math.pow(2, passes - i - 1)
       target = lastTarget === outsideRenderTarget ? outsideRenderTarget2 : outsideRenderTarget
@@ -194,7 +197,7 @@ export function makeSDFGenerator(
       lastTarget = target
     }
     renderer.setRenderTarget(outsideRenderTargetFinal)
-    distanceFieldRender.material.uniforms.tex.value = target!.texture
+    distanceFieldRender.material.uniforms.tex.value = target.texture
     distanceFieldRender.render(renderer)
     uvRenderInside.material.uniforms.tex.value = image
     renderer.setRenderTarget(insideRenderTarget)
@@ -212,7 +215,7 @@ export function makeSDFGenerator(
       lastTarget = target
     }
     renderer.setRenderTarget(insideRenderTargetFinal)
-    distanceFieldRender.material.uniforms.tex.value = target!.texture
+    distanceFieldRender.material.uniforms.tex.value = target.texture
     distanceFieldRender.render(renderer)
     renderer.setRenderTarget(finalTarget)
     compositeRender.material.uniforms.tex.value = image

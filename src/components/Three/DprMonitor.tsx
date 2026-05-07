@@ -17,10 +17,25 @@ const DprMonitor = () => {
   const setDpr = useThree((s) => s.setDpr)
   const isSwiping = useSceneStore((s) => s.isSwiping)
   const dpr = useRef(Math.min(DPR_MAX_CAP, window.devicePixelRatio))
+  const stableDpr = useRef(Math.min(DPR_MAX_CAP, window.devicePixelRatio))
+  const wasSwiping = useRef(false)
   const frames = useRef(0)
   const lastCheck = useRef(performance.now())
 
   useFrame(() => {
+    // Swipe just ended → snap immediately to last known stable DPR
+    if (wasSwiping.current && !isSwiping) {
+      wasSwiping.current = false
+      dpr.current = stableDpr.current
+      setDpr(stableDpr.current)
+      // Reset FPS counters so adaptive loop restarts cleanly
+      frames.current = 0
+      lastCheck.current = performance.now()
+      return
+    }
+    wasSwiping.current = isSwiping
+
+    // During swipe: hold at min, skip FPS sampling
     if (isSwiping) {
       if (dpr.current !== DPR_MIN) {
         dpr.current = DPR_MIN
@@ -49,6 +64,7 @@ const DprMonitor = () => {
 
     if (next !== dpr.current) {
       dpr.current = next
+      stableDpr.current = next // keep stable DPR up to date
 
       console.log(next)
       setDpr(next)

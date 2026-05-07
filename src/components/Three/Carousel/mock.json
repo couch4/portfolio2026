@@ -45,6 +45,53 @@
         "level": 65
       }
     ],
+    "media": [
+      {
+        "image": {
+          "src": "images/mock/newyork.avif",
+          "alt": "new york",
+          "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+          "depth": "images/mock/depth_newyork.png"
+        },
+        "video": null
+      },
+      {
+        "image": {
+          "src": "images/mock/river.avif",
+          "alt": "river",
+          "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+          "depth": "images/mock/depth_river.png"
+        },
+        "video": null
+      },
+      {
+        "image": {
+          "src": "images/mock/kitchen.avif",
+          "alt": "kitchen",
+          "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+          "depth": "images/mock/depth_kitchen.png"
+        },
+        "video": null
+      },
+      {
+        "image": {
+          "src": "images/mock/newyork.avif",
+          "alt": "new york",
+          "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+          "depth": "images/mock/depth_newyork.png"
+        },
+        "video": null
+      },
+      {
+        "image": {
+          "src": "images/mock/river.avif",
+          "alt": "river",
+          "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+          "depth": "images/mock/depth_river.png"
+        },
+        "video": null
+      }
+    ],
     "links": [
       {
         "label": "Launch",
@@ -107,6 +154,53 @@
         "level": 65
       }
     ],
+    "media": [
+      {
+        "image": {
+          "src": "images/mock/newyork.avif",
+          "alt": "new york",
+          "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+          "depth": "images/mock/depth_newyork.png"
+        },
+        "video": null
+      },
+      {
+        "image": {
+          "src": "images/mock/river.avif",
+          "alt": "river",
+          "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+          "depth": "images/mock/depth_river.png"
+        },
+        "video": null
+      },
+      {
+        "image": {
+          "src": "images/mock/kitchen.avif",
+          "alt": "kitchen",
+          "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+          "depth": "images/mock/depth_kitchen.png"
+        },
+        "video": null
+      },
+      {
+        "image": {
+          "src": "images/mock/newyork.avif",
+          "alt": "new york",
+          "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+          "depth": "images/mock/depth_newyork.png"
+        },
+        "video": null
+      },
+      {
+        "image": {
+          "src": "images/mock/river.avif",
+          "alt": "river",
+          "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+          "depth": "images/mock/depth_river.png"
+        },
+        "video": null
+      }
+    ],
     "links": [
       {
         "label": "Launch",
@@ -158,8 +252,55 @@
       {
         "label": "Blender",
         "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-11.5 -10.23174 23 20.46348\"><circle cx=\"0\" cy=\"0\" r=\"2.05\" fill=\"#61dafb\"/><g stroke=\"#61dafb\" stroke-width=\"1\" fill=\"none\"><ellipse rx=\"11\" ry=\"4.2\"/><ellipse rx=\"11\" ry=\"4.2\" transform=\"rotate(60)\"/><ellipse rx=\"11\" ry=\"4.2\" transform=\"rotate(120)\"/></g></svg>",
-        "experience": 7,
+        "experience": 1,
         "level": 65
+      }
+    ],
+    "media": [
+      {
+        "image": {
+          "src": "images/mock/newyork.avif",
+          "alt": "new york",
+          "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+          "depth": "images/mock/depth_newyork.png"
+        },
+        "video": null
+      },
+      {
+        "image": {
+          "src": "images/mock/river.avif",
+          "alt": "river",
+          "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+          "depth": "images/mock/depth_river.png"
+        },
+        "video": null
+      },
+      {
+        "image": {
+          "src": "images/mock/kitchen.avif",
+          "alt": "kitchen",
+          "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+          "depth": "images/mock/depth_kitchen.png"
+        },
+        "video": null
+      },
+      {
+        "image": {
+          "src": "images/mock/newyork.avif",
+          "alt": "new york",
+          "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+          "depth": "images/mock/depth_newyork.png"
+        },
+        "video": null
+      },
+      {
+        "image": {
+          "src": "images/mock/river.avif",
+          "alt": "river",
+          "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+          "depth": "images/mock/depth_river.png"
+        },
+        "video": null
       }
     ],
     "links": [

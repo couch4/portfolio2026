@@ -2,14 +2,21 @@
   @apply flex
     p-[10px]
     px-6
-    /* rounded-sm */
     bg-accent 
     text-copySecondary 
     text-xl
     text-center
     justify-center
+    rounded-[2rem]
     cursor-pointer
-    pointer-events-auto;
+    pointer-events-auto
+    transition-transform
+    duration-100;
+  corner-shape: squircle;
+
+  &:active {
+    @apply scale-95;
+  }
 
   .text {
     @apply !font-primaryBold

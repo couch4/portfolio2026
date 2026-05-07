@@ -1,37 +1,41 @@
 import { memo, Suspense, useEffect } from 'react'
-import type { MutableRefObject, RefObject } from 'react'
+import type { RefObject } from 'react'
 import { useThree } from '@react-three/fiber'
 import { Fog } from 'three'
-import type { Group } from 'three'
+import type { Group, Material } from 'three'
 import Backdrop from '@/components/Three/Backdrop'
-import { useSceneStore } from '@/store/sceneStore'
-import type { MotionValue } from 'motion/react'
 import ProjectHero from './chunks/ProjectHero'
 
 const Project = ({
   data,
-  floatY,
-  spinY,
+  heroGroupRef,
+  posX = 0,
   inPortal,
-  currXMotion,
-  outerRef,
-  isActive,
+  isCentral,
   fogStart = 0,
   fogEnd = 45,
+  getBackdropResources,
   ...props
 }: {
   data: any
-  floatY?: MutableRefObject<number>
-  spinY?: MutableRefObject<number>
-  currXMotion?: MotionValue<number>
+  heroGroupRef: RefObject<Group | null>
+  posX?: number
   inPortal?: boolean
-  outerRef?: RefObject<Group | null>
-  isActive?: boolean
+  isCentral?: boolean
   fogStart?: number
   fogEnd?: number
+  getBackdropResources?: (url: string) => {
+    material: Material | null
+    blurredDataUrl: string | null
+  }
 }) => {
   const { align, background } = data
   const scene = useThree((s) => s.scene)
+
+  const backdropResources = getBackdropResources?.(background) || {
+    material: null,
+    blurredDataUrl: null,
+  }
 
   useEffect(() => {
     scene.fog = new Fog('#05080F', fogStart, fogEnd)
@@ -45,14 +49,20 @@ const Project = ({
       <Suspense fallback={null}>
         <ProjectHero
           data={data}
-          floatY={floatY}
-          spinY={spinY}
+          heroGroupRef={heroGroupRef}
+          posX={posX}
           inPortal={inPortal}
-          outerRef={outerRef}
-          isActive={isActive}
         />
       </Suspense>
-      <Backdrop textureUrl={background} align={align} />
+      {background && (
+        <Backdrop
+          textureUrl={background}
+          align={align}
+          material={backdropResources.material}
+          blurredDataUrl={backdropResources.blurredDataUrl}
+          isCentral={isCentral}
+        />
+      )}
     </group>
   )
 }

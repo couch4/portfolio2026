@@ -1,15 +1,29 @@
 'use client'
 
+import { useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
+import { useThree } from '@react-three/fiber'
 import Stats from '@/components/Three/Stats'
 import DprMonitor from './DprMonitor'
+import { useSceneStore } from '@/store/sceneStore'
 import './Three.css'
+
+const CanvasRegistrar = () => {
+  const gl = useThree((s) => s.gl)
+  const setGlCanvas = useSceneStore((s) => s.setGlCanvas)
+  useEffect(() => {
+    setGlCanvas(gl.domElement)
+    return () => setGlCanvas(null)
+  }, [gl, setGlCanvas])
+  return null
+}
 
 const glWebGL = {
   antialias: true,
   alpha: true,
   powerPreference: 'high-performance' as const,
   localClippingEnabled: true,
+  preserveDrawingBuffer: true,
 }
 
 const glWebGPU = async ({ canvas }: { canvas: HTMLCanvasElement }) => {
@@ -36,14 +50,15 @@ const ThreeCanvas = ({
       key={gl}
       shadows
       className="three-wrapper"
-      // dpr={[0.5, window.devicePixelRatio * (isWebGPU ? 0.8 : 0.6)]}
+      dpr={[0.5, window.devicePixelRatio * (isWebGPU ? 0.8 : 0.6)]}
       performance={{ min: 0.5 }}
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       gl={(isWebGPU ? glWebGPU : glWebGL) as any}
       {...props}
     >
       {children}
-      <DprMonitor />
+      <CanvasRegistrar />
+      {/* <DprMonitor /> */}
       <Stats isStats={stats} isWebGPU={isWebGPU} />
     </Canvas>
   )

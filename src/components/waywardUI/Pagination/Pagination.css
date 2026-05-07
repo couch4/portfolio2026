@@ -1,0 +1,30 @@
+.pagination {
+  &__wrapper {
+    @apply flex gap-3;
+  }
+
+  &__dot {
+    @apply relative
+    w-3
+    h-3
+    rounded-2xl
+    bg-copy/30
+    backdrop-blur-sm
+    pointer-events-auto
+    cursor-pointer;
+    corner-shape: squircle;
+
+    &__timer {
+      @apply absolute
+      z-10
+      top-0
+      left-0
+      w-full
+      h-full
+      rounded-2xl
+      pointer-events-none
+      bg-copy/90;
+      corner-shape: squircle;
+    }
+  }
+}

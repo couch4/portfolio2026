@@ -14,7 +14,9 @@
     gap-2
     cursor-pointer
     backdrop-blur-md
+    rounded-[5rem]
    bg-[radial-gradient(circle,rgba(23,28,37,0.6)_0%,rgba(23,28,37,0.8)_70%)];
+    corner-shape: squircle;
 
     .icon {
       @apply w-4  
@@ -31,6 +33,7 @@
       w-[8.125rem]
       h-[8.125rem]
       shadow-[0_0_2rem_rgba(0,0,0,0.5)];
+      corner-shape: initial;
 
       .icon {
         @apply w-8

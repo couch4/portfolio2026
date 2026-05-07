@@ -2,15 +2,16 @@ import { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { motion, useCarouselSlot } from 'r3f-motion'
 import { MeshPortalMaterial } from '@/components/Three/MeshPortalMaterial'
 import { useFrame } from '@react-three/fiber'
-import type { BufferAttribute, BufferGeometry, Material, Texture } from 'three'
+import type { BufferGeometry, Material, Texture } from 'three'
 import { Plane, PlaneHelper, Vector3 } from 'three'
 import type { Group } from 'three'
 import PortalScene from './PortalScene'
 import ProjectHero from './ProjectHero'
 import ProjectDetails from './ProjectDetails'
-import { geometry } from 'maath'
 import { spring } from '@/styles/motion'
 import { useCardSize } from '@/hooks'
+import { useSceneStore } from '@/store/sceneStore'
+import Squircle from '@/components/Three/Squircle'
 
 const ProjectItem = ({
   data,
@@ -23,6 +24,9 @@ const ProjectItem = ({
   envMap,
   totalItems,
   activeIndex,
+  sharedGeo,
+  placeholderMat,
+  getBackdropResources,
   ...props
 }: {
   data: any
@@ -35,13 +39,32 @@ const ProjectItem = ({
   envMap?: Texture
   totalItems?: number
   activeIndex?: number
+  sharedGeo?: BufferGeometry
+  placeholderMat?: Material
+  getBackdropResources?: (url: string) => {
+    material: Material | null
+    blurredDataUrl: string | null
+  }
 }) => {
-  const { modelSettings } = data
+  const { modelSettings, align } = data
   const { cardWidth, cardHeight } = useCardSize()
-  const floatY = useRef(0)
-  const spinY = useRef(0)
   const outerRef = useRef<Group>(null)
+  const portalRef = useRef<Group>(null)
   const rootRef = useRef<Group>(null)
+
+  let posX = 0
+  if (modelSettings?.position) {
+    posX = align === 'left' ? -modelSettings.position[0] : modelSettings.position[0]
+  }
+
+  // Spring state runs entirely inside useFrame — no external rAF, no restDelta snap.
+  const heroZ = useRef({ cur: 0, vel: 0, target: 0 })
+  const heroX = useRef({ cur: 0, vel: 0, target: 0 })
+
+  useEffect(() => {
+    heroZ.current.target = isActive ? 5 : 0
+    heroX.current.target = isActive ? posX * 2 : 0
+  }, [isActive, posX])
 
   let carouselSlot
   try {
@@ -58,40 +81,8 @@ const ProjectItem = ({
 
   const { itemIndex, slotIndex, isNearby, distance, currIndex } = carouselSlot
   const isPre = distance <= 2
-
-  // Stable geometry ref — never let R3F auto-dispose it so the WebGPU index
-  // buffer stays alive across React strict-mode remounts and DPR changes.
-  // Multiple portal cards share the same NodeMaterial shader/monitor, meaning
-  // only the first card per frame gets updateForRender; if geometry is disposed
-  // mid-frame the subsequent cards' GPU index buffers are gone → crash.
-  const cardGeoRef = useRef<BufferGeometry | null>(null)
-  if (!cardGeoRef.current) {
-    cardGeoRef.current = new geometry.RoundedPlaneGeometry(
-      cardWidth,
-      cardHeight,
-      0.2,
-    ) as unknown as BufferGeometry
-  }
-
-  // Update vertex positions/UVs in-place on resize; the index topology is
-  // invariant (depends only on `segments`, not width/height) so its GPU
-  // buffer never needs to be recreated.
-  useEffect(() => {
-    const geo = cardGeoRef.current
-    if (!geo) return
-    const tmp = new geometry.RoundedPlaneGeometry(
-      cardWidth,
-      cardHeight,
-      0.2,
-    ) as unknown as BufferGeometry
-    const pos = geo.getAttribute('position') as BufferAttribute
-    pos.array.set((tmp.getAttribute('position') as BufferAttribute).array)
-    pos.needsUpdate = true
-    const uv = geo.getAttribute('uv') as BufferAttribute
-    uv.array.set((tmp.getAttribute('uv') as BufferAttribute).array)
-    uv.needsUpdate = true
-    ;(tmp as any).dispose()
-  }, [cardWidth, cardHeight])
+  const isCentral = distance === 0 || isActive
+  const isSwiping = useSceneStore((s) => s.isSwiping)
 
   const bottomY = cardHeight / 2
   const clippingPlanes = useMemo(
@@ -135,13 +126,43 @@ const ProjectItem = ({
     return clockwiseDist < counterClockwiseDist
   }, [index, activeIndex, totalItems])
 
-  useFrame(({ clock }) => {
+  useFrame(({ clock }, delta) => {
     if (!isNearby) return
-    floatY.current = Math.sin(clock.getElapsedTime() * 0.5) * 0.15
-    spinY.current = Math.sin(clock.getElapsedTime() * 0.3) * 0.1
+    const dt = Math.min(delta, 0.05)
+    const step = (s: { cur: number; vel: number; target: number }) => {
+      const acc = -600 * (s.cur - s.target) - 100 * s.vel
+      s.vel += acc * dt
+      s.cur += s.vel * dt
+      if (Math.abs(s.cur - s.target) < 0.0005 && Math.abs(s.vel) < 0.001) {
+        s.cur = s.target
+        s.vel = 0
+      }
+    }
+    // step(heroZ.current)
+    // step(heroX.current)
+    const fy = isActive && modelSettings?.floatY ? Math.sin(clock.getElapsedTime() * 0.5) * 0.15 : 0
+    const sy = isActive && modelSettings?.spinY ? Math.sin(clock.getElapsedTime() * 0.3) * 0.1 : 0
+    const apply = (g: Group | null) => {
+      if (!g) return
+      g.position.set(heroX.current.cur, fy, heroZ.current.cur)
+      g.rotation.y = sy
+    }
+    apply(outerRef.current)
+    apply(portalRef.current)
   })
 
-  const fboRes = isActive ? 2048 : isNearby ? 1024 : 256
+  // Flick-aware fboRes ladder: idle/drag keeps full quality, high-velocity swipes drop res
+  const fboRes = isSwiping
+    ? isActive
+      ? 768
+      : isNearby
+        ? 192
+        : 0
+    : isActive
+      ? 1024
+      : isNearby
+        ? 384
+        : 0
 
   return (
     <motion.group
@@ -157,41 +178,34 @@ const ProjectItem = ({
     >
       {isNearby && (
         <>
-          <ProjectHero
-            data={data}
-            floatY={floatY}
-            spinY={spinY}
-            outerRef={outerRef}
-            clippingPlanes={clippingPlanes}
-            isActive={isActive}
-          />
+          <ProjectHero data={data} heroGroupRef={outerRef} posX={posX} />
           {planeHelpers.map((helper, i) => (
             <primitive key={i} object={helper} />
           ))}
         </>
       )}
-      <mesh>
-        <primitive object={cardGeoRef.current} attach="geometry" />
-        {isPre || isActive ? (
+
+      <Squircle width={cardWidth * 0.98} height={cardHeight} radius={1}>
+        {isPre ? (
           <MeshPortalMaterial resolution={fboRes} blur={0}>
             <PortalScene
               data={data}
-              floatY={floatY}
-              spinY={spinY}
-              outerRef={outerRef}
-              isActive={isActive}
+              heroGroupRef={portalRef}
+              posX={posX}
+              isCentral={isCentral}
               envMap={envMap}
+              getBackdropResources={getBackdropResources}
             />
           </MeshPortalMaterial>
         ) : (
-          <meshBasicMaterial color="#05080F" />
+          <primitive object={placeholderMat!} attach="material" />
         )}
-      </mesh>
+      </Squircle>
       {isNearby && (
         <ProjectDetails
           data={data}
           index={itemIndex + 1}
-          isActive={isZoomed}
+          isActive={isZoomed && isActive}
           onClick={handleClick}
           onExit={handleExit}
         />

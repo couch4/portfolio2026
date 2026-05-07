@@ -15,10 +15,15 @@ interface SkillPillProps {
   }
 }
 
+let hoverTimeout: NodeJS.Timeout | null = null
+
 const SkillPill: FC<SkillPillProps> = ({ data }) => {
   const { experience, label, level, icon } = data
   const [isActive, setIsActive] = useState(false)
+  const [startWidth, setStartWidth] = useState<number>(0)
+  const [startHeight, setStartHeight] = useState<number>(0)
   const containerRef = useRef<HTMLDivElement>(null)
+  const hasMeasuredRef = useRef(false)
   const { width, height } = useDimensions(containerRef)
 
   useEffect(() => {
@@ -28,21 +33,44 @@ const SkillPill: FC<SkillPillProps> = ({ data }) => {
   }, [isActive])
 
   const handleActive = () => {
-    setIsActive(!isActive)
+    if (!hasMeasuredRef.current) {
+      setStartWidth(width)
+      setStartHeight(height)
+      hasMeasuredRef.current = true
+    }
+
+    setIsActive(true)
+    if (hoverTimeout) {
+      clearTimeout(hoverTimeout)
+    }
+  }
+
+  const handlePointerEnter = () => {
+    hoverTimeout = setTimeout(() => {
+      handleActive()
+    }, 500)
   }
 
   const handlePointerLeave = () => {
     setIsActive(false)
+    if (hoverTimeout) {
+      clearTimeout(hoverTimeout)
+    }
   }
 
   const years = experience > 1 ? 'years' : 'year'
 
   return (
-    <div className="skillpill__container" ref={containerRef} style={{ width, height }}>
+    <div
+      className="skillpill__container"
+      ref={containerRef}
+      {...(hasMeasuredRef.current ? { style: { width: startWidth, height: startHeight } } : {})}
+    >
       <Motion
         className={clsx('skillpill__wrapper', { active: isActive })}
         onClick={handleActive}
         onPointerLeave={handlePointerLeave}
+        onPointerEnter={handlePointerEnter}
         layout
         animate={isActive ? 'active' : 'inactive'}
         {...wrapperVars(isActive)}
