@@ -37,39 +37,68 @@ const LiquidGlass: FC<LiquidGlassProps> = ({
     const ctx = dst.getContext('2d')
     if (!ctx) return
 
-    const loop = () => {
+    let cachedSrcRect: DOMRect = src.getBoundingClientRect()
+
+    const refreshSrcRect = () => {
+      cachedSrcRect = src.getBoundingClientRect()
+    }
+
+    const ro = new ResizeObserver(refreshSrcRect)
+    ro.observe(src)
+    window.addEventListener('resize', refreshSrcRect, { passive: true })
+
+    const blit = () => {
+      const srcRect = cachedSrcRect
       const rect = wrapper.getBoundingClientRect()
-      const srcRect = src.getBoundingClientRect()
       const scale = src.width / srcRect.width
       const bleed = blurRadius * 2
 
-      const sx = rect.left - srcRect.left - bleed
-      const sy = rect.top - srcRect.top - bleed
-      const sw = rect.width + bleed * 2
-      const sh = rect.height + bleed * 2
+      const sx = Math.round((rect.left - srcRect.left - bleed) * scale)
+      const sy = Math.round((rect.top - srcRect.top - bleed) * scale)
+      const sw = Math.round((rect.width + bleed * 2) * scale)
+      const sh = Math.round((rect.height + bleed * 2) * scale)
+      const dw = Math.round(rect.width + bleed * 2)
+      const dh = Math.round(rect.height + bleed * 2)
 
-      const dw = Math.ceil(sw)
-      const dh = Math.ceil(sh)
       if (dst.width !== dw || dst.height !== dh) {
         dst.width = dw
         dst.height = dh
       }
 
       ctx.clearRect(0, 0, dw, dh)
-      ctx.drawImage(src, sx * scale, sy * scale, sw * scale, sh * scale, 0, 0, dw, dh)
+      ctx.drawImage(src, sx, sy, sw, sh, 0, 0, dw, dh)
+    }
+
+    const loop = () => {
+      blit()
       rafRef.current = requestAnimationFrame(loop)
     }
 
+    // Also blit on pointermove so the canvas stays in sync during active drag,
+    // which Framer drives from pointermove outside of rAF timing
+    const onPointerMove = () => blit()
+    window.addEventListener('pointermove', onPointerMove, { passive: true })
+
     rafRef.current = requestAnimationFrame(loop)
-    return () => cancelAnimationFrame(rafRef.current)
+    return () => {
+      cancelAnimationFrame(rafRef.current)
+      ro.disconnect()
+      window.removeEventListener('resize', refreshSrcRect)
+      window.removeEventListener('pointermove', onPointerMove)
+    }
   }, [glCanvas, blurRadius])
+
+  const { style: callerStyle, ...restProps } = props as {
+    style?: React.CSSProperties
+    [k: string]: unknown
+  }
 
   return (
     <Motion
       ref={wrapperRef}
-      {...props}
+      {...restProps}
+      style={{ ...callerStyle, '--blur-radius': `${blurRadius}px` } as React.CSSProperties}
       className={clsx(base, className)}
-      style={{ '--blur-radius': `${blurRadius}px` } as React.CSSProperties}
     >
       <svg className={`${base}__svg`}>
         <defs>
