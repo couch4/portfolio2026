@@ -1,6 +1,7 @@
 'use client'
 
 import { FC, useEffect, useMemo, useRef } from 'react'
+import { useAnimationFrame } from 'motion/react'
 import { Motion } from '@/components/waywardUI'
 import { useSceneStore } from '@/store/sceneStore'
 import clsx from 'clsx'
@@ -122,27 +123,20 @@ const LiquidGlass: FC<LiquidGlassProps> = ({
 
   // Per-frame: counter-transform the static display canvas so it stays
   // anchored to viewport (0,0), no matter how the wrapper drags / scales /
-  // translates. The canvas content is unchanged → SVG filter raster stays
-  // cached. Only one CSS transform write per frame — composited on GPU,
-  // effectively free.
-  useEffect(() => {
+  // translates. Driven by motion's scheduler (useAnimationFrame) so it runs
+  // AFTER Framer has committed the wrapper's transform on the same frame —
+  // eliminating the timing race that caused remote jitter with plain rAF.
+  useAnimationFrame(() => {
     const src = glCanvas
     const dst = backingRef.current
     const wrapper = wrapperRef.current
     if (!src || !dst || !wrapper) return
-
-    let rafId = 0
-    const tick = () => {
-      const wrapperRect = wrapper.getBoundingClientRect()
-      const srcRect = src.getBoundingClientRect()
-      const tx = srcRect.left - wrapperRect.left
-      const ty = srcRect.top - wrapperRect.top
-      dst.style.transform = `translate3d(${tx}px, ${ty}px, 0)`
-      rafId = requestAnimationFrame(tick)
-    }
-    rafId = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(rafId)
-  }, [glCanvas])
+    const wrapperRect = wrapper.getBoundingClientRect()
+    const srcRect = src.getBoundingClientRect()
+    const tx = srcRect.left - wrapperRect.left
+    const ty = srcRect.top - wrapperRect.top
+    dst.style.transform = `translate3d(${tx}px, ${ty}px, 0)`
+  })
 
   const { style: callerStyle, ...restProps } = props as {
     style?: React.CSSProperties

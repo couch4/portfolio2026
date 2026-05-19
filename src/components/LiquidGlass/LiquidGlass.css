@@ -6,7 +6,9 @@
         border-t border-t-white/15
         border-b border-b-white/20
         rounded-[4rem];
-  corner-shape: squircle;
+  @supports (corner-shape: squircle) {
+    corner-shape: squircle;
+  }
   box-shadow: 0 0 100px rgba(0, 0, 0, 0.5);
 
   &:after {
