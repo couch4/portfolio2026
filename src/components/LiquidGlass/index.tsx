@@ -11,6 +11,12 @@ interface LiquidGlassProps {
   turbulence?: number
   blurRadius?: number
   className?: string
+  /**
+   * Bump this value to force a re-capture of the background (e.g. when a
+   * parent slide change has redrawn the scene). Between bumps the glass is
+   * fully static — no per-frame work, filter raster stays cached.
+   */
+  recaptureKey?: string | number
 }
 
 const base = 'liquid-glass'
@@ -21,38 +27,56 @@ const LiquidGlass: FC<LiquidGlassProps> = ({
   turbulence = 10,
   blurRadius = 40,
   className,
+  recaptureKey,
   ...props
 }) => {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const backingRef = useRef<HTMLCanvasElement>(null)
   const glCanvas = useSceneStore((s) => s.glCanvas)
-  const rafRef = useRef<number>(0)
 
-  // Offscreen snapshot of the full source canvas. Captured once on mount /
-  // glCanvas change / source resize. The per-frame blit reads from this static
-  // buffer, never from the live WebGL canvas — so the expensive readback is
-  // paid exactly once per capture, not per frame.
+  // Offscreen snapshot of the full source canvas. Holds the most recent
+  // capture of the bg. The display canvas is composed from this buffer.
   const snapshot = useMemo(() => {
     if (typeof document === 'undefined') return null
     return document.createElement('canvas')
   }, [])
 
-  // Effect 1 — Capture-once: snapshot the entire source canvas into the
-  // offscreen snapshot buffer. On initial mount the WebGL canvas often has
-  // not rendered its first frame yet, so we retry across the next several
-  // rAFs until the snapshot reads non-empty pixels.
+  // Capture from WebGL → snapshot → display canvas. The display canvas is
+  // sized to the full viewport (matches source canvas) and contains the full
+  // backdrop. It stays anchored to viewport (0,0) via a CSS transform that
+  // counter-tracks the wrapper's own transform, so the wrapper "windows"
+  // through it via overflow:hidden — reveal the right slice as it moves.
   useEffect(() => {
     const src = glCanvas
-    if (!src || !snapshot) return
+    const dst = backingRef.current
+    const wrapper = wrapperRef.current
+    if (!src || !dst || !wrapper || !snapshot) return
 
     const sctx = snapshot.getContext('2d')
-    if (!sctx) return
+    const dctx = dst.getContext('2d')
+    if (!sctx || !dctx) return
 
-    const capture = () => {
+    const captureSnapshot = () => {
+      if (src.width === 0 || src.height === 0) return
       if (snapshot.width !== src.width) snapshot.width = src.width
       if (snapshot.height !== src.height) snapshot.height = src.height
       sctx.clearRect(0, 0, snapshot.width, snapshot.height)
       sctx.drawImage(src, 0, 0)
+    }
+
+    const composeToDisplay = () => {
+      if (snapshot.width === 0 || snapshot.height === 0) return
+      const srcRect = src.getBoundingClientRect()
+      if (srcRect.width === 0 || srcRect.height === 0) return
+
+      // Display canvas covers the full source-canvas region (= viewport).
+      if (dst.width !== snapshot.width) dst.width = snapshot.width
+      if (dst.height !== snapshot.height) dst.height = snapshot.height
+      dst.style.width = `${srcRect.width}px`
+      dst.style.height = `${srcRect.height}px`
+
+      dctx.clearRect(0, 0, dst.width, dst.height)
+      dctx.drawImage(snapshot, 0, 0)
     }
 
     const hasContent = () => {
@@ -61,83 +85,64 @@ const LiquidGlass: FC<LiquidGlassProps> = ({
       return px[0] !== 0 || px[1] !== 0 || px[2] !== 0 || px[3] !== 0
     }
 
-    let rafId = 0
-    let attempts = 0
-    const timeoutIds: number[] = []
-
-    const tryCapture = () => {
-      capture()
-      attempts++
-      if (!hasContent() && attempts < 600) {
-        // Still empty — WebGL canvas hasn't rendered its first frame yet.
-        // Keep polling every frame (up to ~10s).
-        rafId = requestAnimationFrame(tryCapture)
-        return
-      }
-      // Content is visible. Re-capture at intervals to catch late-loading
-      // assets (GLBs, textures) that stream in after the first render —
-      // important on slow remote connections where assets arrive seconds
-      // after the initial sky/clear-color frame.
-      ;[500, 1500, 3500, 7000].forEach((delay) => {
-        timeoutIds.push(window.setTimeout(capture, delay))
+    let scheduledRaf = 0
+    const recapture = () => {
+      if (scheduledRaf) cancelAnimationFrame(scheduledRaf)
+      scheduledRaf = requestAnimationFrame(() => {
+        scheduledRaf = 0
+        captureSnapshot()
+        composeToDisplay()
       })
     }
-    tryCapture()
 
-    const ro = new ResizeObserver(capture)
+    // Initial capture: retry until the bg has rendered.
+    let initRaf = 0
+    let initAttempts = 0
+    const tryInit = () => {
+      captureSnapshot()
+      composeToDisplay()
+      initAttempts++
+      if (!hasContent() && initAttempts < 600) {
+        initRaf = requestAnimationFrame(tryInit)
+      }
+    }
+    tryInit()
+
+    const ro = new ResizeObserver(recapture)
     ro.observe(src)
-    window.addEventListener('resize', capture, { passive: true })
+    window.addEventListener('resize', recapture, { passive: true })
 
     return () => {
-      if (rafId) cancelAnimationFrame(rafId)
-      timeoutIds.forEach((id) => clearTimeout(id))
+      if (initRaf) cancelAnimationFrame(initRaf)
+      if (scheduledRaf) cancelAnimationFrame(scheduledRaf)
       ro.disconnect()
-      window.removeEventListener('resize', capture)
+      window.removeEventListener('resize', recapture)
     }
-  }, [glCanvas, snapshot])
+  }, [glCanvas, snapshot, recaptureKey])
 
-  // Effect 2 — Per-frame slice: copy the wrapper's region of the static
-  // snapshot into the small display canvas (which carries the SVG filter).
-  // Buffer dimensions are reused across frames (no per-frame reallocation),
-  // and the source is a fast in-memory canvas, not the live WebGL surface.
+  // Per-frame: counter-transform the static display canvas so it stays
+  // anchored to viewport (0,0), no matter how the wrapper drags / scales /
+  // translates. The canvas content is unchanged → SVG filter raster stays
+  // cached. Only one CSS transform write per frame — composited on GPU,
+  // effectively free.
   useEffect(() => {
     const src = glCanvas
     const dst = backingRef.current
     const wrapper = wrapperRef.current
-    if (!src || !dst || !wrapper || !snapshot) return
+    if (!src || !dst || !wrapper) return
 
-    const ctx = dst.getContext('2d')
-    if (!ctx) return
-
-    const bleed = blurRadius * 2
-
+    let rafId = 0
     const tick = () => {
-      const srcRect = src.getBoundingClientRect()
       const wrapperRect = wrapper.getBoundingClientRect()
-      const scale = srcRect.width > 0 ? snapshot.width / srcRect.width : 1
-
-      const dw = Math.ceil(wrapperRect.width + bleed * 2)
-      const dh = Math.ceil(wrapperRect.height + bleed * 2)
-      if (dw > 0 && dh > 0 && (dst.width !== dw || dst.height !== dh)) {
-        dst.width = dw
-        dst.height = dh
-      }
-
-      const sx = (wrapperRect.left - srcRect.left - bleed) * scale
-      const sy = (wrapperRect.top - srcRect.top - bleed) * scale
-      const sw = (wrapperRect.width + bleed * 2) * scale
-      const sh = (wrapperRect.height + bleed * 2) * scale
-
-      ctx.clearRect(0, 0, dst.width, dst.height)
-      if (sw > 0 && sh > 0) {
-        ctx.drawImage(snapshot, sx, sy, sw, sh, 0, 0, dst.width, dst.height)
-      }
-      rafRef.current = requestAnimationFrame(tick)
+      const srcRect = src.getBoundingClientRect()
+      const tx = srcRect.left - wrapperRect.left
+      const ty = srcRect.top - wrapperRect.top
+      dst.style.transform = `translate3d(${tx}px, ${ty}px, 0)`
+      rafId = requestAnimationFrame(tick)
     }
-
-    rafRef.current = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(rafRef.current)
-  }, [glCanvas, snapshot, blurRadius])
+    rafId = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(rafId)
+  }, [glCanvas])
 
   const { style: callerStyle, ...restProps } = props as {
     style?: React.CSSProperties
@@ -155,10 +160,10 @@ const LiquidGlass: FC<LiquidGlassProps> = ({
         <defs>
           <filter
             id="glass-distortion"
-            x="-50%"
-            y="-50%"
-            width="200%"
-            height="200%"
+            x="0%"
+            y="0%"
+            width="100%"
+            height="100%"
             colorInterpolationFilters="sRGB"
           >
             <feGaussianBlur in="SourceGraphic" stdDeviation={blurRadius * 0.25} result="blurred" />

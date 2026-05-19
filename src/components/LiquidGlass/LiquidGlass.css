@@ -17,15 +17,13 @@
   }
 
   &__backing {
-    --bleed: calc(var(--blur-radius, 20px) * 2);
     position: absolute;
-    top: calc(var(--bleed) * -1);
-    left: calc(var(--bleed) * -1);
-    width: calc(100% + var(--bleed) * 2);
-    height: calc(100% + var(--bleed) * 2);
+    top: 0;
+    left: 0;
     display: block;
     pointer-events: none;
-    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+    transform-origin: 0 0;
+    will-change: transform;
   }
 
   /* &__tint {
