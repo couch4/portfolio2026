@@ -95,14 +95,27 @@ const LiquidGlass: FC<LiquidGlassProps> = ({
       })
     }
 
-    // Initial capture: retry until the bg has rendered.
+    // Initial capture: retry until the bg has rendered, then keep capturing
+    // for a short window so late-streaming assets (GLBs, textures) end up in
+    // the snapshot. On slow remote connections the sky may paint long before
+    // terrain/trees/water, and "any content" alone isn't sufficient.
     let initRaf = 0
     let initAttempts = 0
+    let postContentAttempts = 0
+    const EMPTY_BUDGET = 1800 // up to 30s waiting for the very first paint
+    const POST_CONTENT_BUDGET = 90 // ~1.5s of continued captures after content
     const tryInit = () => {
       captureSnapshot()
       composeToDisplay()
       initAttempts++
-      if (!hasContent() && initAttempts < 600) {
+      if (hasContent()) {
+        postContentAttempts++
+        if (postContentAttempts < POST_CONTENT_BUDGET) {
+          initRaf = requestAnimationFrame(tryInit)
+        }
+        return
+      }
+      if (initAttempts < EMPTY_BUDGET) {
         initRaf = requestAnimationFrame(tryInit)
       }
     }
@@ -133,8 +146,15 @@ const LiquidGlass: FC<LiquidGlassProps> = ({
     const update = () => {
       const wrapperRect = wrapper.getBoundingClientRect()
       const srcRect = src.getBoundingClientRect()
-      const tx = srcRect.left - wrapperRect.left
-      const ty = srcRect.top - wrapperRect.top
+      // Wrapper inherits our canvas — when it scales (e.g. scaleInDelay
+      // during expand), the canvas's translate gets multiplied by the same
+      // scale. Divide by current scale so the net viewport translation
+      // matches what we want regardless of wrapper transform state.
+      const cssWidth = wrapper.offsetWidth || 1
+      const scale = wrapperRect.width / cssWidth
+      const safeScale = scale > 0.01 ? scale : 1
+      const tx = (srcRect.left - wrapperRect.left) / safeScale
+      const ty = (srcRect.top - wrapperRect.top) / safeScale
       dst.style.transform = `translate3d(${tx}px, ${ty}px, 0)`
     }
 
