@@ -1,155 +1,219 @@
 import { Suspense, useMemo, useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
-import { EdgesGeometry, Mesh, MeshStandardMaterial } from 'three'
+import { DoubleSide, EdgesGeometry, Mesh, MeshStandardMaterial } from 'three'
 import { createPointsMaterial, createWireframeMaterial } from '../../Shaders/PointCloudMaterial'
 import { usePointCloud } from '@/hooks/usePointCloud'
 
-const terrainUrl = '/gltf/alpsBLock.glb'
+const terrainUrl = '/gltf/alpsBlock4.glb'
 
-// Both material instances kept alive — no shader recompilation on toggle
-const alpMaterial = new MeshStandardMaterial({
-  color: '#8B7765',
-  roughness: 0.8,
-  metalness: 0.2,
-  transparent: true,
-})
-const bankMaterial = new MeshStandardMaterial({ color: 'green', transparent: true })
-const alpPoints = createPointsMaterial('#a8957a')
-const alpWire = createWireframeMaterial('#a8957a')
-const bankPoints = createPointsMaterial('#4a8c3f')
-const bankWire = createWireframeMaterial('#4a8c3f')
-
-const PEAK_NODES = [
-  {
-    key: 'peakLeft',
-    pos: [-198.12, 62.888, -54.171] as [number, number, number],
-    rot: [0, 0.053, 0] as [number, number, number],
-    scale: [101.213, 66.852, 101.213] as [number, number, number],
-  },
-  {
-    key: 'peakLeftBack',
-    pos: [-81.527, 62.888, -127.939] as [number, number, number],
-    rot: [0, 0.211, 0] as [number, number, number],
-    scale: [101.213, 66.852, 101.213] as [number, number, number],
-  },
-  {
-    key: 'peakMain',
-    pos: [0, 62.888, 0] as [number, number, number],
-    rot: [0, -0.259, 0] as [number, number, number],
-    scale: [120.419, 79.537, 120.419] as [number, number, number],
-  },
-  {
-    key: 'peakRight',
-    pos: [212.629, 62.888, -21.897] as [number, number, number],
-    rot: [0, 0.708, 0] as [number, number, number],
-    scale: [101.213, 66.852, 101.213] as [number, number, number],
-  },
-  {
-    key: 'peakRightBack',
-    pos: [64.433, 62.888, -127.939] as [number, number, number],
-    rot: [0, 0.211, 0] as [number, number, number],
-    scale: [101.213, 66.852, 101.213] as [number, number, number],
-  },
-  {
-    key: 'peakRightFront',
-    pos: [110.734, 38.915, 118.266] as [number, number, number],
-    rot: [0, -1.241, 0] as [number, number, number],
-    scale: [112.9, 42.661, 112.9] as [number, number, number],
-  },
-] as const
+const mountainsOffset = 2000
 
 const Terrain = ({ props }: { props?: any }) => {
   const mountainRangeRef = useRef(null)
-  const { nodes } = useGLTF(terrainUrl)
-  const progress = usePointCloud()
-
-  // EdgesGeometry per peak — computed once, gives clean mountain ridgelines
-  const edgeGeos = useMemo(
-    () => PEAK_NODES.map(({ key }) => new EdgesGeometry((nodes[key] as Mesh).geometry, 20)),
-    [nodes],
-  )
-
-  const leftBankEdges = useMemo(
-    () => new EdgesGeometry((nodes.leftBank as Mesh).geometry, 20),
-    [nodes],
-  )
-  const rightBankEdges = useMemo(
-    () => new EdgesGeometry((nodes.rightBank as Mesh).geometry, 20),
-    [nodes],
-  )
-
-  useFrame(() => {
-    const p = progress.current
-    alpMaterial.opacity = 1 - p
-    bankMaterial.opacity = 1 - p
-    alpPoints.uniforms.uProgress.value = p
-    alpWire.uniforms.uProgress.value = p
-    bankPoints.uniforms.uProgress.value = p
-    bankWire.uniforms.uProgress.value = p
-  })
+  const { nodes, materials = {} } = useGLTF(terrainUrl)
 
   return (
     <Suspense fallback={null}>
-      <group
-        {...props}
-        dispose={null}
-        rotation={[0, -Math.PI, 0]}
-        scale={0.1}
-        position={[0, -50, 0]}
-      >
-        <group
-          ref={mountainRangeRef}
-          position={[0, 8.995, -4177.279]}
-          scale={[8.39 * 1.5, 8.125 * 1.5, 4.627 * 1.5]}
-        >
-          {PEAK_NODES.map(({ key, pos, rot, scale }, i) => {
-            const geo = (nodes[key] as Mesh).geometry
-            return (
-              <group key={key} position={pos} rotation={rot} scale={scale}>
-                <mesh castShadow receiveShadow geometry={geo} material={alpMaterial} />
-                <points geometry={geo} material={alpPoints} />
-                <lineSegments geometry={edgeGeos[i]} material={alpWire} />
-              </group>
-            )
-          })}
-        </group>
-
-        {/* Left bank */}
-        <group position={[-687.12, 0, -1521.199]} scale={[222.496, 25.006, 904.699]}>
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={(nodes.leftBank as Mesh).geometry}
-            material={bankMaterial}
-          />
-          <points geometry={(nodes.leftBank as Mesh).geometry} material={bankPoints} />
-          <lineSegments geometry={leftBankEdges} material={bankWire} />
-        </group>
-
-        {/* Right bank */}
-        <group
-          position={[702.643, 0, -1381.945]}
-          rotation={[-Math.PI, 0, 0]}
-          scale={[-222.496, -25.006, -904.699]}
-        >
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={(nodes.rightBank as Mesh).geometry}
-            material={bankMaterial}
-          />
-          <points geometry={(nodes.rightBank as Mesh).geometry} material={bankPoints} />
-          <lineSegments geometry={rightBankEdges} material={bankWire} />
-        </group>
-        {/* <mesh
+      <group {...props} dispose={null} scale={0.1} position={[0, -50, 0]}>
+        <mesh
+          name="Icosphere"
           castShadow
           receiveShadow
-          geometry={(nodes.Landscape as any).geometry}
-          position={[-504.072, 55.881, -3850.142]}
-          rotation={[Math.PI, -0.985, Math.PI]}
-          scale={[1221.554, 1781.382, 1771.682]}
+          geometry={nodes.Icosphere?.geometry}
+          material={nodes.Icosphere?.material}
+          position={[-67.107, 0.182, -148.335]}
+          scale={8.966}
+        />
+        <mesh
+          name="Icosphere001"
+          castShadow
+          receiveShadow
+          geometry={nodes.Icosphere001?.geometry}
+          material={nodes.Icosphere001?.material}
+          position={[-58.356, 1.259, -132.105]}
+          scale={8.966}
+        />
+        <mesh
+          name="Icosphere002"
+          castShadow
+          receiveShadow
+          geometry={nodes.Icosphere002?.geometry}
+          material={nodes.Icosphere002?.material}
+          position={[-137.872, 0.012, -81.443]}
+          rotation={[0.006, -0.002, -0.465]}
+          scale={[21.424, 14.197, 21.424]}
+        />
+        <mesh
+          name="Icosphere003"
+          castShadow
+          receiveShadow
+          geometry={nodes.Icosphere003?.geometry}
+          material={nodes.Icosphere003?.material}
+          position={[-160.983, 0.012, -60.617]}
+          rotation={[-0.105, 0, -0.412]}
+          scale={[21.424, 14.197, 21.424]}
+        />
+        <mesh
+          name="Retopo_big_rock001"
+          castShadow
+          receiveShadow
+          geometry={nodes.Retopo_big_rock001?.geometry}
+          material={nodes.Retopo_big_rock001?.material}
+          position={[8.291, 1.068, -320.568]}
+          scale={1.482}
+        />
+        <mesh
+          name="Retopo_big_rock002"
+          castShadow
+          receiveShadow
+          geometry={nodes.Retopo_big_rock002?.geometry}
+          material={nodes.Retopo_big_rock002?.material}
+          position={[25.007, 7.401, 104.061]}
+        />
+        <mesh
+          name="Icosphere004"
+          castShadow
+          receiveShadow
+          geometry={nodes.Icosphere004?.geometry}
+          material={nodes.Icosphere004?.material}
+          position={[0, 3.229, 0]}
+          rotation={[0.56, -0.247, -0.172]}
+          scale={[4.323, 2.244, 4.323]}
+        />
+        <mesh
+          name="campfire"
+          castShadow
+          receiveShadow
+          geometry={nodes.campfire?.geometry}
+          material={materials?.tripo_mat_e19d9078}
+          position={[332.283, 12.16, -759.269]}
+          rotation={[0, -1.423, 0]}
+          scale={47.801}
+        />
+        <mesh name="Retopo_leftBank002" receiveShadow geometry={nodes.Retopo_leftBank002?.geometry}>
+          <meshStandardMaterial color="#578e57" roughness={1} metalness={0} side={DoubleSide} />
+        </mesh>
+        <mesh
+          name="Icosphere005"
+          castShadow
+          receiveShadow
+          geometry={nodes.Icosphere005?.geometry}
+          material={nodes.Icosphere005?.material}
+          position={[0, 3.229, 0]}
+          rotation={[0.373, 0.694, 0.789]}
+          scale={[4.323, 2.244, 4.323]}
+        />
+        {/* <PerspectiveCamera
+          name="Camera"
+          makeDefault={false}
+          far={5000}
+          near={0.1}
+          fov={31.417}
+          position={[2.09, 0.639, 443.975]}
+          rotation={[0.037, 0.06, -0.002]}
+          scale={0.197}
         /> */}
+        {/* <group
+          name="mountainRange"
+          position={[-80.988, 1.789, -1574.498]}
+          scale={[3.892, 3.769, 2.146]}
+        /> */}
+        <mesh
+          name="boat"
+          castShadow
+          receiveShadow
+          geometry={nodes.boat?.geometry}
+          material={nodes.boat?.material}
+          position={[148.211, -4.097, -542.391]}
+          rotation={[-Math.PI, -0.847, -3.099]}
+          scale={52.037}
+        />
+        <mesh
+          name="jetty"
+          castShadow
+          receiveShadow
+          geometry={nodes.jetty?.geometry}
+          material={materials?.['tripo_mat_9c9082df-5a96-480a-bef9-acd07b6c1c78']}
+          position={[166.064, -1.797, -508.363]}
+          rotation={[0, 0.183, 0]}
+          scale={91.035}
+        />
+        <mesh
+          name="cabin"
+          castShadow
+          receiveShadow
+          geometry={nodes.cabin?.geometry}
+          material={materials?.['tripo_mat_1a0ac4cc-7946-42f0-81ec-1795afdce3f3']}
+          position={[346.856, -14.603, -575.906]}
+          rotation={[-Math.PI, 0.126, -Math.PI]}
+          scale={320.089}
+        />
+        <mesh
+          name="rightBank001"
+          receiveShadow
+          geometry={nodes.rightBank001?.geometry}
+          // material={materials.grass}
+        >
+          <meshStandardMaterial color="#578e57" roughness={1} metalness={0} />
+        </mesh>
+        <group scale={5} position={[0, 0, 100]}>
+          <mesh
+            name="peakLeft"
+            castShadow
+            receiveShadow
+            geometry={nodes.peakLeft?.geometry}
+            position={[-1102.081, 238.81, mountainsOffset - 4383.688]}
+            rotation={[0, 0.062, 0]}
+            scale={[521.932, 333.885, 585.387]}
+          >
+            <meshStandardMaterial color="grey" fog={false} />
+          </mesh>
+          <mesh
+            name="peakLeftBack"
+            castShadow
+            receiveShadow
+            geometry={nodes.peakLeftBack?.geometry}
+            position={[-500.787, 238.81, mountainsOffset - 4810.96]}
+            rotation={[0, 0.242, 0]}
+            scale={[521.31, 333.885, 574.048]}
+          >
+            <meshStandardMaterial color="grey" fog={false} />
+          </mesh>
+          <mesh
+            name="peakMain"
+            castShadow
+            receiveShadow
+            geometry={nodes.peakMain?.geometry}
+            position={[-80.334, 238.81, mountainsOffset - 4069.925]}
+            rotation={[0, -0.295, 0]}
+            scale={[619.878, 397.242, 676.674]}
+          >
+            <meshStandardMaterial color="grey" fog={false} />
+          </mesh>
+          <mesh
+            name="peakRight"
+            castShadow
+            receiveShadow
+            geometry={nodes.peakRight?.geometry}
+            position={[1016.238, 238.81, mountainsOffset - 4196.758]}
+            rotation={[0, 0.705, 0]}
+            scale={[640.748, 410.196, 647.208]}
+          >
+            <meshStandardMaterial color="grey" fog={false} />
+          </mesh>
+          <mesh
+            name="peakRightBack"
+            castShadow
+            receiveShadow
+            geometry={nodes.peakRightBack?.geometry}
+            position={[251.96, 238.81, mountainsOffset - 4810.96]}
+            rotation={[0, 0.242, 0]}
+            scale={[521.31, 333.885, 574.048]}
+          >
+            <meshStandardMaterial color="grey" fog={false} />
+          </mesh>
+        </group>
       </group>
     </Suspense>
   )

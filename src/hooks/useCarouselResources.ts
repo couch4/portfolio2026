@@ -1,11 +1,9 @@
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import { BackdropMaterial } from '@/components/Three/Shaders/BackdropMaterial'
-import { createBackdropNodeMaterial } from '@/components/Three/Shaders/BackdropMaterialWebGPU'
 import { blurImageToDataURL } from '@/utilities/blurImage'
 import { geometry } from 'maath'
 import * as THREE from 'three'
-import { PMREMGenerator as PMREMGeneratorWebGPU } from 'three/webgpu'
 import type { BufferGeometry, Group, Material, Mesh, Plane, Texture } from 'three'
 
 // WebGPU fix: material.clone() can lose texture bindings when the renderer
@@ -137,6 +135,9 @@ export function getOrBuildPMREM(envMap: Texture, gl: any): THREE.RenderTarget {
   const key = (envMap as any).uuid
   const existing = pmremCache.get(key)
   if (existing) return existing
+  // Dynamic import to avoid loading WebGPU module in WebGL mode
+  // @ts-ignore - Dynamic import for WebGPU-only module
+  const { PMREMGenerator: PMREMGeneratorWebGPU } = require('three/webgpu')
   const pmremGen = new PMREMGeneratorWebGPU(gl)
   const rt = (envMap as any).isCubeTexture
     ? pmremGen.fromCubemap(envMap as any)
@@ -210,7 +211,17 @@ export function useCarouselResources(items: any[], cardWidth: number, cardHeight
     uniqueUrls.forEach((textureUrl) => {
       if (!textureUrl) return
       if (!backdropCacheRef.current.has(textureUrl)) {
-        const material = gpu ? createBackdropNodeMaterial() : new BackdropMaterial()
+        const material = gpu
+          ? // Dynamic import to avoid loading WebGPU module in WebGL mode
+            // @ts-ignore - Dynamic import for WebGPU-only module
+            (() => {
+              const {
+                createBackdropNodeMaterial,
+              } = require('@/components/Three/Shaders/BackdropMaterialWebGPU')
+              // @ts-ignore
+              return createBackdropNodeMaterial()
+            })()
+          : new BackdropMaterial()
         backdropCacheRef.current.set(textureUrl, {
           material,
           blurredDataUrl: null,
@@ -237,14 +248,14 @@ export function useCarouselResources(items: any[], cardWidth: number, cardHeight
     }
   }, [items, gpu])
 
-  const getBackdropResources = (textureUrl: string): BackdropResources => {
+  const getBackdropResources = useCallback((textureUrl: string): BackdropResources => {
     return (
       backdropCacheRef.current.get(textureUrl) || {
         material: null,
         blurredDataUrl: null,
       }
     )
-  }
+  }, [])
 
   return {
     sharedGeo: sharedGeoRef.current,

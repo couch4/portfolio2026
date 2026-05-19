@@ -1,15 +1,22 @@
 'use client'
-import { useHeaderTheme } from '@/providers/HeaderTheme'
 import React, { useEffect } from 'react'
+import type { Page } from '@/payload-types'
+import { useSceneStore } from '@/store/sceneStore'
+import RenderR3FBlocks from '@/blocks/RenderR3FBlocks'
 
-const PageClient: React.FC = () => {
-  /* Force the header to be dark mode while we have an image behind it */
-  const { setHeaderTheme } = useHeaderTheme()
+type Props = {
+  page: Page
+}
+
+const PageClient: React.FC<Props> = ({ page }) => {
+  const setSceneContent = useSceneStore((s) => s.setSceneContent)
 
   useEffect(() => {
-    setHeaderTheme('light')
-  }, [setHeaderTheme])
-  return <React.Fragment />
+    setSceneContent(<RenderR3FBlocks page={page} />)
+    return () => setSceneContent(null)
+  }, [page, setSceneContent])
+
+  return null
 }
 
 export default PageClient

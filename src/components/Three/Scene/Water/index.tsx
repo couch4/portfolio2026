@@ -191,7 +191,7 @@ const WaterComponent = () => {
     u['time'].value = waterTime.current
     u['sunDirection'].value.copy(sunDirection)
     u['reflectivity'].value = reflectivity
-    u['flowDirection'].value.set(-10, -flowSpeed)
+    u['flowDirection'].value.set(-10, flowSpeed)
     u['uFoamIntensity'].value = foamIntensity
     u['foamColor'].value.set(foamColor)
     u['foamThreshold'].value = foamThreshold
@@ -223,7 +223,7 @@ const WaterComponent = () => {
           },
         ]}
         rotation={[-Math.PI / 2, 0, 0]}
-        position={[0, -50, 148]}
+        position={[0, -50, -148]}
       />
       {/* Dev view — animated waving wireframe grid matching water surface */}
       <points

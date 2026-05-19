@@ -3,8 +3,8 @@ import TreePlane from './TreePlane'
 
 const urls = ['textures/leftTreePlane.png', 'textures/rightTreePlane.png']
 const positions = [
-  [145, 50, 280],
-  [-185, 50, 250],
+  [-145, 50, -280],
+  [185, 50, -250],
 ]
 
 const TreePlanes: FC = () => {
@@ -14,7 +14,6 @@ const TreePlanes: FC = () => {
       url={url}
       // @ts-ignore
       position={positions[index]}
-      rotation={[0, Math.PI, 0]}
       scale={[40, 20, 0]}
     />
   ))

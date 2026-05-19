@@ -1,8 +1,8 @@
-@import '@/components/waywardUI/Text/Text.css';
-@import '@/components/waywardUI/Button/Button.css';
-@import '@/components/LiquidGlass/LiquidGlass.css';
-@import '@/components/waywardUI/Scrollbars/Scrollbars.css';
-@import '@/components/Three/Project/Project.css';
+@import '../components/waywardUI/Text/Text.css';
+@import '../components/waywardUI/Button/Button.css';
+@import '../components/LiquidGlass/LiquidGlass.css';
+@import '../components/waywardUI/Scrollbars/Scrollbars.css';
+@import '../components/Three/Project/Project.css';
 
 @tailwind base;
 @tailwind components;

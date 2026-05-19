@@ -147,3 +147,46 @@ export const pulseScale = {
     ease: 'easeInOut',
   },
 } as const
+
+export const motionDefaults = {
+  initial: 'inactive',
+  animate: 'active',
+  exit: 'exit',
+} as const
+
+export const rollOut = {
+  variants: {
+    inactive: {
+      height: 0,
+      opacity: 0,
+      transition: {
+        ...spring,
+        height: {
+          ...spring,
+          delay: 0.3,
+        },
+      },
+    },
+    active: {
+      height: 'auto',
+      opacity: 1,
+      transition: {
+        ...spring,
+        opacity: {
+          delay: 0.3,
+        },
+      },
+    },
+    exit: {
+      height: 0,
+      opacity: 0,
+      transition: {
+        ...spring,
+        height: {
+          ...spring,
+          delay: 0.3,
+        },
+      },
+    },
+  },
+} as const

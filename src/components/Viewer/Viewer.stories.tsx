@@ -30,6 +30,15 @@ const meta = {
       control: { type: 'boolean' },
       description: 'Show depth map preview instead of albedo',
     },
+    mouseInteraction: {
+      control: { type: 'boolean' },
+      description: 'Enable akella-style fake-3D pointer parallax via the depth map',
+    },
+    mouseIntensity: {
+      control: { type: 'range', min: 0, max: 0.3, step: 0.005 },
+      description:
+        'Pointer parallax strength in UV space (matches Fake3DShaderView depthScale * 0.1)',
+    },
   },
   decorators: [
     (Story) => (
@@ -56,6 +65,9 @@ interface ImageCarouselWrapperProps {
   depthIntensity?: number
   blurXIntensity?: number
   showDepthMap?: boolean
+  mouseInteraction?: boolean
+  mouseIntensity?: number
+  data: any[]
 }
 
 const ImageCarouselWrapper = ({
@@ -63,8 +75,11 @@ const ImageCarouselWrapper = ({
   depthIntensity,
   blurXIntensity,
   showDepthMap,
+  mouseInteraction,
+  mouseIntensity,
+  data,
 }: ImageCarouselWrapperProps) => {
-  const images = data.images
+  const images = data
 
   return (
     <div className="relative flex flex-col items-center gap-4 w-[60vw]">
@@ -74,6 +89,8 @@ const ImageCarouselWrapper = ({
         depthIntensity={depthIntensity}
         blurXIntensity={blurXIntensity}
         showDepthMap={showDepthMap}
+        mouseInteraction={mouseInteraction}
+        mouseIntensity={mouseIntensity}
       />
     </div>
   )
@@ -86,13 +103,30 @@ export const ImageDepthCarousel: Story = {
     depthIntensity: 0.4,
     blurXIntensity: 0.5,
     showDepthMap: false,
+    mouseInteraction: false,
+    mouseIntensity: 0.1,
+    data: data.images,
   },
 }
 
 export const VideoPlayer: Story = {
-  args: {},
+  render: (args) => <ImageCarouselWrapper {...args} />,
+  args: {
+    slideFadeDuration: 1200,
+    depthIntensity: 0.4,
+    blurXIntensity: 0.5,
+    showDepthMap: false,
+    data: data.video,
+  },
 }
 
 export const ImageAndVideoCarousel: Story = {
-  args: {},
+  render: (args) => <ImageCarouselWrapper {...args} />,
+  args: {
+    slideFadeDuration: 1200,
+    depthIntensity: 0.4,
+    blurXIntensity: 0.5,
+    showDepthMap: false,
+    data: data.imagesAndVideo,
+  },
 }

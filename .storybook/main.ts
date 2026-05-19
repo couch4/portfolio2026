@@ -47,10 +47,24 @@ const config: StorybookConfig = {
           find,
           replacement: replacement as string,
         }))
+    // Also alias the physical nested zustand@3.7.2 that leva bundles in its own
+    // node_modules — Vite pre-bundling resolves that path directly, bypassing the
+    // bare-specifier alias above. Pointing both paths to the same shims ensures
+    // a single zustand instance with a stable getSnapshot, eliminating the
+    // "getSnapshot should be cached" / infinite-loop error in React 18.
+    const levaZustand = path.resolve(process.cwd(), 'node_modules/leva/node_modules/zustand')
     config.resolve.alias = [
       ...existingAlias,
       { find: /^zustand\/shallow$/, replacement: path.join(SHIMS, 'zustand-shallow.mjs') },
       { find: /^zustand$/, replacement: path.join(SHIMS, 'zustand.mjs') },
+      {
+        find: new RegExp(`^${levaZustand.replace(/[/\\]/g, '[/\\\\]')}/shallow`),
+        replacement: path.join(SHIMS, 'zustand-shallow.mjs'),
+      },
+      {
+        find: new RegExp(`^${levaZustand.replace(/[/\\]/g, '[/\\\\]')}`),
+        replacement: path.join(SHIMS, 'zustand.mjs'),
+      },
     ]
 
     config.build ??= {}

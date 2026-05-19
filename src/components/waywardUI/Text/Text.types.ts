@@ -20,7 +20,7 @@ export type TextProps = {
     | 'button'
   href?: string
   ref?: React.Ref<any>
-  variant?: any
+  variant?: 'primary' | 'primaryBold' | 'secondary'
   className?: any | any[]
   onClick?: () => void
   children?: React.ReactNode

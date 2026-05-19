@@ -30,7 +30,9 @@ export default meta
 
 export const ProjectLeft: StoryObj = {
   args: {
-    data: mock,
+    data: {
+      ...mock,
+    },
   },
 }
 

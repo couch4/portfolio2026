@@ -35,6 +35,8 @@
     @apply relative
     rounded-[2rem]
     overflow-hidden
+    flex
+    flex-col
     w-full
     aspect-[16/10];
     corner-shape: squircle;
@@ -45,17 +47,129 @@
     items-center
     justify-between
     px-4
-    py-8
+    h-20
     gap-4;
+
+    .pagination__wrapper {
+      @apply w-full
+      flex
+      items-center
+      justify-center
+      px-4;
+    }
   }
 
   &__control {
     @apply cursor-pointer
     pointer-events-auto
-    opacity-50;
+    w-5
+    h-5;
+
+    svg {
+      @apply transition-opacity
+      duration-300
+      opacity-50;
+    }
+
+    &__fullscreen {
+      @apply -mt-[0.15rem]
+      -ml-[0.15rem];
+    }
 
     &:hover {
+      svg {
+        @apply opacity-100;
+      }
+    }
+  }
+
+  &-caption {
+    &__wrapper {
+      @apply flex
+      flex-col
+      gap-2
+      mx-4
+      border-t
+      border-white/10;
+    }
+
+    &__title {
+      @apply font-semibold
+      mt-6;
+    }
+
+    &__description {
+      @apply text-copy/70
+      mb-6;
+    }
+  }
+}
+
+/* VIDEO STYLES */
+
+.video {
+  &__wrapper {
+    @apply absolute
+    z-10
+    inset-0
+    bg-black/20
+    w-full
+    h-full
+    overflow-hidden;
+
+    #videoPlayer {
+      @apply w-full h-full;
+    }
+
+    video {
+      @apply w-full h-full object-cover;
+    }
+  }
+
+  &__player {
+    @apply opacity-0
+    transition-opacity
+    duration-500;
+
+    &.playing {
       @apply opacity-100;
+    }
+  }
+
+  &__controls {
+    &__play {
+      @apply absolute
+      z-20
+      w-20
+      h-20
+      rounded-full
+      inset-0
+      flex
+      items-center
+      justify-center
+      bg-copy/50
+      backdrop-blur-md
+      m-auto
+      shadow-[0_0_20px_#00000040]
+      cursor-pointer;
+      corner-shape: squircle;
+
+      &.playing {
+        @apply hidden;
+      }
+
+      &:hover {
+        @apply bg-copy/70;
+      }
+
+      &:active {
+        @apply scale-95;
+      }
+
+      svg {
+        @apply w-8
+        h-8;
+      }
     }
   }
 }

@@ -17,7 +17,7 @@ const ArrowBox = () => (
 
 const meta = {
   component: Button,
-  title: 'Base Components/Button',
+  title: 'Design System/Button',
   parameters: {
     layout: 'centered',
   },

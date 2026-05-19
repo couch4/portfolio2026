@@ -3,7 +3,7 @@ import { vertexShader, fragmentShader } from './CarouselCanvasShader'
 
 export interface Slide {
   image: { src: string; alt: string; blurred: string; depth: string }
-  video: null | unknown
+  video?: null | unknown
 }
 
 interface CarouselCanvasProps {
@@ -13,6 +13,10 @@ interface CarouselCanvasProps {
   depthIntensity?: number
   blurXIntensity?: number
   showDepthMap?: boolean
+  /** Toggle the akella-style fake-3D pointer parallax effect. */
+  mouseInteraction?: boolean
+  /** Strength of the pointer parallax in UV space (matches Fake3DShaderView's depthScale * 0.1). */
+  mouseIntensity?: number
 }
 
 interface SlideTextures {
@@ -110,6 +114,8 @@ const CarouselCanvas: FC<CarouselCanvasProps> = ({
   depthIntensity = 0.4,
   blurXIntensity = 0,
   showDepthMap = false,
+  mouseInteraction = false,
+  mouseIntensity = 0.1,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const glRef = useRef<WebGL2RenderingContext | null>(null)
@@ -132,6 +138,12 @@ const CarouselCanvas: FC<CarouselCanvasProps> = ({
   const depthIntensityRef = useRef(depthIntensity)
   const blurXIntensityRef = useRef(blurXIntensity)
   const showDepthMapRef = useRef(showDepthMap)
+  const mouseInteractionRef = useRef(mouseInteraction)
+  const mouseIntensityRef = useRef(mouseIntensity)
+  // Target pointer in normalised device coords (-1..1). Updated on pointermove.
+  const mouseTargetRef = useRef<[number, number]>([0, 0])
+  // Smoothed (lerped) pointer offset already scaled by intensity, fed to uMouse.
+  const mouseLerpedRef = useRef<[number, number]>([0, 0])
 
   const drawFrameRef = useRef<() => boolean>(() => false)
   const requestDrawRef = useRef<() => void>(() => {})
@@ -168,6 +180,22 @@ const CarouselCanvas: FC<CarouselCanvasProps> = ({
     const slideA = slides[from] ?? slides[0]
     const slideB = slides[to] ?? slideA
 
+    // Lerp the smoothed mouse offset toward the target each frame. When
+    // mouseInteraction is off the target is forced back to (0,0) so the
+    // effect glides out instead of snapping.
+    const intensity = mouseIntensityRef.current
+    const targetX = mouseInteractionRef.current ? mouseTargetRef.current[0] * intensity : 0
+    const targetY = mouseInteractionRef.current ? mouseTargetRef.current[1] * intensity : 0
+    const lerped = mouseLerpedRef.current
+    lerped[0] += (targetX - lerped[0]) * 0.08
+    lerped[1] += (targetY - lerped[1]) * 0.08
+    const mouseSettled =
+      Math.abs(targetX - lerped[0]) < 0.0001 && Math.abs(targetY - lerped[1]) < 0.0001
+    if (mouseSettled) {
+      lerped[0] = targetX
+      lerped[1] = targetY
+    }
+
     gl.clearColor(0, 0, 0, 0)
     gl.clear(gl.COLOR_BUFFER_BIT)
     gl.useProgram(program)
@@ -194,11 +222,12 @@ const CarouselCanvas: FC<CarouselCanvasProps> = ({
     gl.uniform2f(u.uAspectImageA, slideA.aspect[0], slideA.aspect[1])
     gl.uniform2f(u.uAspectImageB, slideB.aspect[0], slideB.aspect[1])
     gl.uniform2f(u.uAspectCanvas, canvas.width, canvas.height)
+    gl.uniform2f(u.uMouse, lerped[0], lerped[1])
 
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
     gl.bindVertexArray(null)
 
-    return transitionRef.current !== null
+    return transitionRef.current !== null || !mouseSettled
   }
 
   requestDrawRef.current = () => {
@@ -247,6 +276,7 @@ const CarouselCanvas: FC<CarouselCanvasProps> = ({
       uAspectImageA: gl.getUniformLocation(program, 'uAspectImageA'),
       uAspectImageB: gl.getUniformLocation(program, 'uAspectImageB'),
       uAspectCanvas: gl.getUniformLocation(program, 'uAspectCanvas'),
+      uMouse: gl.getUniformLocation(program, 'uMouse'),
     }
 
     const vao = gl.createVertexArray()!
@@ -361,8 +391,54 @@ const CarouselCanvas: FC<CarouselCanvasProps> = ({
     depthIntensityRef.current = depthIntensity
     blurXIntensityRef.current = blurXIntensity
     showDepthMapRef.current = showDepthMap
+    mouseInteractionRef.current = mouseInteraction
+    mouseIntensityRef.current = mouseIntensity
     requestDrawRef.current()
-  }, [slideFadeDuration, depthIntensity, blurXIntensity, showDepthMap])
+  }, [
+    slideFadeDuration,
+    depthIntensity,
+    blurXIntensity,
+    showDepthMap,
+    mouseInteraction,
+    mouseIntensity,
+  ])
+
+  // Pointer tracking: only attach listeners when mouse interaction is active.
+  // Coords are normalised to (-1..1) inside the canvas; (0,0) is the centre.
+  useEffect(() => {
+    if (!mouseInteraction) {
+      // Glide back to centre when toggled off.
+      mouseTargetRef.current[0] = 0
+      mouseTargetRef.current[1] = 0
+      requestDrawRef.current()
+      return
+    }
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    const handleMove = (e: PointerEvent) => {
+      const rect = canvas.getBoundingClientRect()
+      if (rect.width === 0 || rect.height === 0) return
+      const nx = ((e.clientX - rect.left) / rect.width) * 2 - 1
+      // Invert Y so up = positive (matches NDC convention used in Fake3DShaderView).
+      const ny = -(((e.clientY - rect.top) / rect.height) * 2 - 1)
+      mouseTargetRef.current[0] = Math.max(-1, Math.min(1, nx))
+      mouseTargetRef.current[1] = Math.max(-1, Math.min(1, ny))
+      requestDrawRef.current()
+    }
+    const handleLeave = () => {
+      mouseTargetRef.current[0] = 0
+      mouseTargetRef.current[1] = 0
+      requestDrawRef.current()
+    }
+
+    canvas.addEventListener('pointermove', handleMove)
+    canvas.addEventListener('pointerleave', handleLeave)
+    return () => {
+      canvas.removeEventListener('pointermove', handleMove)
+      canvas.removeEventListener('pointerleave', handleLeave)
+    }
+  }, [mouseInteraction])
 
   useEffect(() => {
     const prev = prevIndexRef.current

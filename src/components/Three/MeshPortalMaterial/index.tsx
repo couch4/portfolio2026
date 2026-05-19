@@ -190,11 +190,14 @@ const MeshPortalMaterial = React.forwardRef<any, PortalProps>(
     const { scene, gl, size, viewport, setEvents } = useThree()
     const gpu = isWebGPU(gl)
     const PortalMaterialImpl = gpu ? PortalMaterialWebGPU : PortalMaterialWebGL
-    extend({ PortalMaterialImpl })
+    React.useMemo(() => {
+      extend({ PortalMaterialImpl })
+    }, [gpu])
     // WebGPU (Metal) only supports sampleCount 1 and 4 — useFBO defaults to HalfFloatType
     // which is fine, but samples must be 0 (=1) for WebGPU compatibility.
     const maskRenderTarget = useFBO(resolution, resolution, gpu ? { samples: 0 } : undefined)
     const [priority, setPriority] = React.useState(0)
+    const priorityValueRef = React.useRef(0)
     const sdfGeneratorRef = React.useRef<{
       (image: THREE.Texture): THREE.RenderTarget | THREE.WebGLRenderTarget
       dispose(): void
@@ -206,7 +209,10 @@ const MeshPortalMaterial = React.forwardRef<any, PortalProps>(
 
     useFrame(() => {
       const p = ref.current.blend > 0 ? Math.max(1, renderPriority) : 0
-      if (priority !== p) setPriority(p)
+      if (priorityValueRef.current !== p) {
+        priorityValueRef.current = p
+        setPriority(p)
+      }
     })
 
     useFrame(() => {
