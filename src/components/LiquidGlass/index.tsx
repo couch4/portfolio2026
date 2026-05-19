@@ -1,7 +1,6 @@
 'use client'
 
 import { FC, useEffect, useMemo, useRef } from 'react'
-import { useAnimationFrame } from 'motion/react'
 import { Motion } from '@/components/waywardUI'
 import { useSceneStore } from '@/store/sceneStore'
 import clsx from 'clsx'
@@ -123,20 +122,40 @@ const LiquidGlass: FC<LiquidGlassProps> = ({
 
   // Per-frame: counter-transform the static display canvas so it stays
   // anchored to viewport (0,0), no matter how the wrapper drags / scales /
-  // translates. Driven by motion's scheduler (useAnimationFrame) so it runs
-  // AFTER Framer has committed the wrapper's transform on the same frame —
-  // eliminating the timing race that caused remote jitter with plain rAF.
-  useAnimationFrame(() => {
+  // translates. Also reactively listens to wrapper style mutations so it
+  // catches Framer's commits in the same task they happen.
+  useEffect(() => {
     const src = glCanvas
     const dst = backingRef.current
     const wrapper = wrapperRef.current
     if (!src || !dst || !wrapper) return
-    const wrapperRect = wrapper.getBoundingClientRect()
-    const srcRect = src.getBoundingClientRect()
-    const tx = srcRect.left - wrapperRect.left
-    const ty = srcRect.top - wrapperRect.top
-    dst.style.transform = `translate3d(${tx}px, ${ty}px, 0)`
-  })
+
+    const update = () => {
+      const wrapperRect = wrapper.getBoundingClientRect()
+      const srcRect = src.getBoundingClientRect()
+      const tx = srcRect.left - wrapperRect.left
+      const ty = srcRect.top - wrapperRect.top
+      dst.style.transform = `translate3d(${tx}px, ${ty}px, 0)`
+    }
+
+    let rafId = 0
+    const tick = () => {
+      update()
+      rafId = requestAnimationFrame(tick)
+    }
+    rafId = requestAnimationFrame(tick)
+
+    // Catch Framer's style writes synchronously (in the same task that
+    // commits them) so the canvas inverse-transform updates without
+    // waiting for the next rAF tick.
+    const mo = new MutationObserver(update)
+    mo.observe(wrapper, { attributes: true, attributeFilter: ['style'] })
+
+    return () => {
+      cancelAnimationFrame(rafId)
+      mo.disconnect()
+    }
+  }, [glCanvas])
 
   const { style: callerStyle, ...restProps } = props as {
     style?: React.CSSProperties
