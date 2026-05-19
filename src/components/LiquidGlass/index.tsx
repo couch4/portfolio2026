@@ -63,12 +63,24 @@ const LiquidGlass: FC<LiquidGlassProps> = ({
 
     let rafId = 0
     let attempts = 0
+    const timeoutIds: number[] = []
+
     const tryCapture = () => {
       capture()
       attempts++
-      if (!hasContent() && attempts < 30) {
+      if (!hasContent() && attempts < 600) {
+        // Still empty — WebGL canvas hasn't rendered its first frame yet.
+        // Keep polling every frame (up to ~10s).
         rafId = requestAnimationFrame(tryCapture)
+        return
       }
+      // Content is visible. Re-capture at intervals to catch late-loading
+      // assets (GLBs, textures) that stream in after the first render —
+      // important on slow remote connections where assets arrive seconds
+      // after the initial sky/clear-color frame.
+      ;[500, 1500, 3500, 7000].forEach((delay) => {
+        timeoutIds.push(window.setTimeout(capture, delay))
+      })
     }
     tryCapture()
 
@@ -78,6 +90,7 @@ const LiquidGlass: FC<LiquidGlassProps> = ({
 
     return () => {
       if (rafId) cancelAnimationFrame(rafId)
+      timeoutIds.forEach((id) => clearTimeout(id))
       ro.disconnect()
       window.removeEventListener('resize', capture)
     }
