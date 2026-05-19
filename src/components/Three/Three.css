@@ -1,4 +1,12 @@
 .three {
+  &-container {
+    @apply absolute
+        top-0
+        left-0
+        w-full
+        h-full;
+  }
+
   &-wrapper {
     @apply !absolute
         top-0

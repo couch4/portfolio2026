@@ -1,6 +1,6 @@
 'use client'
 
-import { FC, useEffect, useRef } from 'react'
+import { FC, useEffect, useMemo, useRef } from 'react'
 import { Motion } from '@/components/waywardUI'
 import { useSceneStore } from '@/store/sceneStore'
 import clsx from 'clsx'
@@ -28,65 +28,103 @@ const LiquidGlass: FC<LiquidGlassProps> = ({
   const glCanvas = useSceneStore((s) => s.glCanvas)
   const rafRef = useRef<number>(0)
 
+  // Offscreen snapshot of the full source canvas. Captured once on mount /
+  // glCanvas change / source resize. The per-frame blit reads from this static
+  // buffer, never from the live WebGL canvas — so the expensive readback is
+  // paid exactly once per capture, not per frame.
+  const snapshot = useMemo(() => {
+    if (typeof document === 'undefined') return null
+    return document.createElement('canvas')
+  }, [])
+
+  // Effect 1 — Capture-once: snapshot the entire source canvas into the
+  // offscreen snapshot buffer. On initial mount the WebGL canvas often has
+  // not rendered its first frame yet, so we retry across the next several
+  // rAFs until the snapshot reads non-empty pixels.
+  useEffect(() => {
+    const src = glCanvas
+    if (!src || !snapshot) return
+
+    const sctx = snapshot.getContext('2d')
+    if (!sctx) return
+
+    const capture = () => {
+      if (snapshot.width !== src.width) snapshot.width = src.width
+      if (snapshot.height !== src.height) snapshot.height = src.height
+      sctx.clearRect(0, 0, snapshot.width, snapshot.height)
+      sctx.drawImage(src, 0, 0)
+    }
+
+    const hasContent = () => {
+      if (snapshot.width === 0 || snapshot.height === 0) return false
+      const px = sctx.getImageData(snapshot.width >> 1, snapshot.height >> 1, 1, 1).data
+      return px[0] !== 0 || px[1] !== 0 || px[2] !== 0 || px[3] !== 0
+    }
+
+    let rafId = 0
+    let attempts = 0
+    const tryCapture = () => {
+      capture()
+      attempts++
+      if (!hasContent() && attempts < 30) {
+        rafId = requestAnimationFrame(tryCapture)
+      }
+    }
+    tryCapture()
+
+    const ro = new ResizeObserver(capture)
+    ro.observe(src)
+    window.addEventListener('resize', capture, { passive: true })
+
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId)
+      ro.disconnect()
+      window.removeEventListener('resize', capture)
+    }
+  }, [glCanvas, snapshot])
+
+  // Effect 2 — Per-frame slice: copy the wrapper's region of the static
+  // snapshot into the small display canvas (which carries the SVG filter).
+  // Buffer dimensions are reused across frames (no per-frame reallocation),
+  // and the source is a fast in-memory canvas, not the live WebGL surface.
   useEffect(() => {
     const src = glCanvas
     const dst = backingRef.current
     const wrapper = wrapperRef.current
-    if (!src || !dst || !wrapper) return
+    if (!src || !dst || !wrapper || !snapshot) return
 
     const ctx = dst.getContext('2d')
     if (!ctx) return
 
-    let cachedSrcRect: DOMRect = src.getBoundingClientRect()
+    const bleed = blurRadius * 2
 
-    const refreshSrcRect = () => {
-      cachedSrcRect = src.getBoundingClientRect()
-    }
+    const tick = () => {
+      const srcRect = src.getBoundingClientRect()
+      const wrapperRect = wrapper.getBoundingClientRect()
+      const scale = srcRect.width > 0 ? snapshot.width / srcRect.width : 1
 
-    const ro = new ResizeObserver(refreshSrcRect)
-    ro.observe(src)
-    window.addEventListener('resize', refreshSrcRect, { passive: true })
-
-    const blit = () => {
-      const srcRect = cachedSrcRect
-      const rect = wrapper.getBoundingClientRect()
-      const scale = src.width / srcRect.width
-      const bleed = blurRadius * 2
-
-      const sx = Math.round((rect.left - srcRect.left - bleed) * scale)
-      const sy = Math.round((rect.top - srcRect.top - bleed) * scale)
-      const sw = Math.round((rect.width + bleed * 2) * scale)
-      const sh = Math.round((rect.height + bleed * 2) * scale)
-      const dw = Math.round(rect.width + bleed * 2)
-      const dh = Math.round(rect.height + bleed * 2)
-
-      if (dst.width !== dw || dst.height !== dh) {
+      const dw = Math.ceil(wrapperRect.width + bleed * 2)
+      const dh = Math.ceil(wrapperRect.height + bleed * 2)
+      if (dw > 0 && dh > 0 && (dst.width !== dw || dst.height !== dh)) {
         dst.width = dw
         dst.height = dh
       }
 
-      ctx.clearRect(0, 0, dw, dh)
-      ctx.drawImage(src, sx, sy, sw, sh, 0, 0, dw, dh)
+      const sx = (wrapperRect.left - srcRect.left - bleed) * scale
+      const sy = (wrapperRect.top - srcRect.top - bleed) * scale
+      const sw = (wrapperRect.width + bleed * 2) * scale
+      const sh = (wrapperRect.height + bleed * 2) * scale
+
+      ctx.clearRect(0, 0, dst.width, dst.height)
+      if (sw > 0 && sh > 0) {
+        ctx.drawImage(snapshot, sx, sy, sw, sh, 0, 0, dst.width, dst.height)
+      }
+      rafRef.current = requestAnimationFrame(tick)
     }
 
-    const loop = () => {
-      blit()
-      rafRef.current = requestAnimationFrame(loop)
-    }
-
-    // Also blit on pointermove so the canvas stays in sync during active drag,
-    // which Framer drives from pointermove outside of rAF timing
-    const onPointerMove = () => blit()
-    window.addEventListener('pointermove', onPointerMove, { passive: true })
-
-    rafRef.current = requestAnimationFrame(loop)
-    return () => {
-      cancelAnimationFrame(rafRef.current)
-      ro.disconnect()
-      window.removeEventListener('resize', refreshSrcRect)
-      window.removeEventListener('pointermove', onPointerMove)
-    }
-  }, [glCanvas, blurRadius])
+    rafRef.current = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(rafRef.current)
+  }, [glCanvas, snapshot, blurRadius])
 
   const { style: callerStyle, ...restProps } = props as {
     style?: React.CSSProperties

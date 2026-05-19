@@ -29,12 +29,16 @@ const ThreeCanvas = ({
   gl = 'webgl',
   stats = false,
   effects = false,
+  eventSource,
+  eventPrefix,
   ...props
 }: {
   children: React.ReactNode
   gl?: 'webgl' | 'webgpu'
   stats?: boolean
   effects?: boolean
+  eventSource?: React.RefObject<HTMLElement>
+  eventPrefix?: 'offset' | 'client' | 'page' | 'layer' | 'screen'
 }) => {
   const isWebGPU = gl === 'webgpu'
   const [winDPR, setWinDPR] = useState(1)
@@ -53,6 +57,8 @@ const ThreeCanvas = ({
       performance={{ min: 0.5 }}
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       gl={(isWebGPU ? glWebGPU : glWebGL) as any}
+      eventSource={eventSource}
+      eventPrefix={eventPrefix}
       {...props}
     >
       {children}
