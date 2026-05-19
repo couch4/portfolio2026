@@ -39,7 +39,7 @@ export const LiquidGlassDefault: Story = {
       <Text
         textStyle="h2"
         variant="primaryBold"
-        className="text-white flex justify-center items-center h-full"
+        className="text-white flex justify-center items-center h-full text-center"
       >
         Drag me!
       </Text>
