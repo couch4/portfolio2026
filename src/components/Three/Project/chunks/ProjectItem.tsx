@@ -66,23 +66,9 @@ const ProjectItem = ({
     heroX.current.target = isActive ? posX * 2 : 0
   }, [isActive, posX])
 
-  let carouselSlot
-  try {
-    carouselSlot = useCarouselSlot()
-  } catch {
-    carouselSlot = {
-      itemIndex: projectIndex,
-      slotIndex: 0,
-      isNearby: true,
-      distance: 0,
-      currIndex: useRef(projectIndex),
-    }
-  }
-
-  const { itemIndex, slotIndex, isNearby, distance, currIndex } = carouselSlot
-  const isPre = distance <= 2
-  const isCentral = distance === 0 || isActive
   const isSwiping = useSceneStore((s) => s.isSwiping)
+
+  const currIndexRef = useRef(projectIndex)
 
   const bottomY = cardHeight / 2
   const clippingPlanes = useMemo(
@@ -99,6 +85,23 @@ const ProjectItem = ({
     () => (debug ? clippingPlanes.map((p) => new PlaneHelper(p, 5, 0xff0000)) : []),
     [debug, clippingPlanes],
   )
+
+  let carouselSlot
+  try {
+    carouselSlot = useCarouselSlot()
+  } catch {
+    carouselSlot = {
+      itemIndex: projectIndex,
+      slotIndex: 0,
+      isNearby: true,
+      distance: 0,
+      currIndex: currIndexRef,
+    }
+  }
+
+  const { itemIndex, slotIndex, isNearby, distance, currIndex } = carouselSlot
+  const isPre = distance <= 2
+  const isCentral = distance === 0 || isActive
 
   useEffect(() => {
     return () => {

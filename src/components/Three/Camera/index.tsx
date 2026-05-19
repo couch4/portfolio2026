@@ -1,33 +1,56 @@
 'use client'
 
-import { CameraControls, PerspectiveCamera } from '@react-three/drei'
+import { useEffect, useRef } from 'react'
+import { usePathname } from 'next/navigation'
+import { PerspectiveCamera } from '@react-three/drei'
 import { useControls } from 'leva'
+import { useCameraSystem } from './useCameraSystem'
+import { useCameraStore } from '@/store/cameraStore'
+import { SCENE_POSES, type SceneKey } from './cameraPositions'
+import { useFrame, useThree } from '@react-three/fiber'
+import { Euler } from 'three'
 
-const Camera = () => {
-  const { cameraX, cameraY, cameraZ, rotationX, rotationY, rotationZ, freeCamera } = useControls({
-    cameraX: { value: 0, min: -100, max: 100, step: 1 },
-    cameraY: { value: -43, min: -100, max: 100, step: 1 },
-    cameraZ: { value: -1, min: -100, max: 100, step: 1 },
-    rotationX: { value: 0.2, min: -Math.PI, max: Math.PI, step: 0.01 },
-    rotationY: { value: Math.PI, min: -Math.PI, max: Math.PI, step: 0.01 },
-    rotationZ: { value: 0, min: -Math.PI, max: Math.PI, step: 0.01 },
-    freeCamera: false,
+const CameraRig = () => {
+  const { camera: threeCamera } = useThree()
+
+  useCameraSystem()
+
+  const { cameraFOV, cameraX, cameraY, cameraZ, rotationX, rotationY, rotationZ, freeCamera } =
+    useControls({
+      cameraX: { value: 0, min: -100, max: 100, step: 1 },
+      cameraY: { value: -45, min: -100, max: 100, step: 1 },
+      cameraZ: { value: 67, min: -100, max: 100, step: 1 },
+      rotationX: { value: 0, min: -Math.PI, max: Math.PI, step: 0.01 },
+      rotationY: { value: 0, min: -Math.PI, max: Math.PI, step: 0.01 },
+      rotationZ: { value: 0, min: -Math.PI, max: Math.PI, step: 0.01 },
+      cameraFOV: { value: 50, min: 10, max: 120, step: 1 },
+      freeCamera: false,
+    })
+
+  useFrame(() => {
+    if (!freeCamera) return
+    threeCamera.position.set(cameraX, cameraY, cameraZ)
+    threeCamera.setRotationFromEuler(new Euler(rotationX, rotationY, rotationZ, 'XYZ'))
   })
 
-  if (freeCamera) {
-    return <CameraControls makeDefault />
-  }
+  return <PerspectiveCamera makeDefault fov={cameraFOV} far={10000} near={0.1} />
+}
 
-  return (
-    <PerspectiveCamera
-      makeDefault
-      position={[cameraX, cameraY, cameraZ]}
-      rotation={[rotationX, rotationY, rotationZ]}
-      fov={75}
-      far={5000}
-      near={0.1}
-    />
-  )
+const Camera = () => {
+  const pathname = usePathname()
+  const goTo = useCameraStore((s) => s.goTo)
+  const prevSceneRef = useRef<SceneKey>('home')
+
+  useEffect(() => {
+    const raw = pathname.split('/')[1] || 'home'
+    const nextScene = raw as SceneKey
+    if (!(nextScene in SCENE_POSES)) return
+    if (nextScene === prevSceneRef.current) return
+    prevSceneRef.current = nextScene
+    goTo(nextScene)
+  }, [pathname, goTo])
+
+  return <CameraRig />
 }
 
 export default Camera

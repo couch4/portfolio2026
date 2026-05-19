@@ -48,9 +48,6 @@ const nextConfig: NextConfig = {
   redirects,
   turbopack: {
     root: path.resolve(dirname),
-    resolveAlias: {
-      three: path.resolve(dirname, 'node_modules/three'),
-    },
   },
 }
 

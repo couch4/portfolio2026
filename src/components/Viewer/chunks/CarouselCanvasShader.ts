@@ -23,6 +23,9 @@ uniform float uShowDepthMap;
 uniform vec2 uAspectImageA;
 uniform vec2 uAspectImageB;
 uniform vec2 uAspectCanvas;
+// Smoothed pointer offset in UV space (already pre-scaled by intensity).
+// Zero when mouse interaction is disabled.
+uniform vec2 uMouse;
 
 in vec2 vUv;
 out vec4 fragColor;
@@ -116,8 +119,14 @@ void main() {
   vec2 offA = vec2(uDirection * (p          + (dA - 0.5) * uParallax * pulse), 0.0);
   vec2 offB = vec2(uDirection * ((p - 1.0)  + (dB - 0.5) * uParallax * pulse), 0.0);
 
-  vec2 sampleA = uvA + offA;
-  vec2 sampleB = uvB + offB;
+  // Akella-style fake-3D parallax: near pixels (depth ~ 1) follow the cursor
+  // more than far pixels (depth ~ 0). uMouse is already pre-scaled on the CPU
+  // and lerped for smoothness. Stays at 0 when mouseInteraction is off.
+  vec2 mouseA = uMouse * dA;
+  vec2 mouseB = uMouse * dB;
+
+  vec2 sampleA = uvA + offA + mouseA;
+  vec2 sampleB = uvB + offB + mouseB;
 
   // Seam softness scales with the depth shift so the overlap zone always
   // covers wherever the shear pushes pixels — no holes at the boundary.

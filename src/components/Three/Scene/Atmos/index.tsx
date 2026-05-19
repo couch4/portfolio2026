@@ -42,10 +42,10 @@ const Atmos = () => {
   } = useControls(
     'Sky',
     {
-      elevation: { value: 5, min: 0, max: 90, step: 0.1 },
-      azimuth: { value: -93, min: -180, max: 180, step: 1 },
-      turbidity: { value: 1.5, min: 0, max: 20 },
-      rayleigh: { value: 2.3, min: 0, max: 4 },
+      elevation: { value: 14, min: 0, max: 90, step: 0.1 },
+      azimuth: { value: 140, min: -180, max: 180, step: 1 },
+      turbidity: { value: 0.3, min: 0, max: 20 },
+      rayleigh: { value: 0.28, min: 0, max: 4 },
       mieCoefficient: { value: 0.005, min: 0, max: 0.1 },
       mieDirectionalG: { value: 0.8, min: 0, max: 1 },
       exposure: { value: 0.5, min: 0, max: 1 },
@@ -113,7 +113,7 @@ const Atmos = () => {
     cloudScale,
     cloudSpeed,
     gl,
-    scene,
+    // scene,
     pmrem,
     bakeSky,
   ])
@@ -135,7 +135,24 @@ const Atmos = () => {
     [pmrem],
   )
 
-  return <sky ref={skyRef} scale={10000} />
+  return (
+    <>
+      <sky ref={skyRef} scale={10000} />
+      <directionalLight
+        castShadow
+        position={sunDirection}
+        intensity={elevation / 10}
+        shadow-mapSize={[2048, 2048]}
+        shadow-camera-left={-50}
+        shadow-camera-right={50}
+        shadow-camera-top={50}
+        shadow-camera-bottom={-50}
+        shadow-camera-near={1}
+        shadow-camera-far={50}
+        shadow-bias={-0.0005}
+      />
+    </>
+  )
 }
 
 export default Atmos

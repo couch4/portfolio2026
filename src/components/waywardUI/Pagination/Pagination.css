@@ -7,6 +7,7 @@
     @apply relative
     w-3
     h-3
+    shrink-0
     rounded-2xl
     bg-copy/30
     backdrop-blur-sm
@@ -25,6 +26,28 @@
       pointer-events-none
       bg-copy/90;
       corner-shape: squircle;
+    }
+
+    &__progress {
+      @apply absolute
+      inset-0
+      cursor-pointer
+      select-none
+      touch-none;
+
+      &__fill {
+        @apply absolute
+        top-0
+        left-0
+        w-full
+        h-full
+        bg-copy/90
+        rounded-2xl
+        pointer-events-none;
+        corner-shape: squircle;
+        transform-origin: left;
+        will-change: transform;
+      }
     }
   }
 }

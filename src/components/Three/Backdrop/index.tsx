@@ -4,7 +4,6 @@ import { memo, useEffect, useMemo, useState } from 'react'
 import { useGLTF, useTexture } from '@react-three/drei'
 import { useFrame, useThree } from '@react-three/fiber'
 import { BackdropMaterial } from '@/components/Three/Shaders/BackdropMaterial'
-import { createBackdropNodeMaterial } from '@/components/Three/Shaders/BackdropMaterialWebGPU'
 import { blurImageToDataURL } from '@/utilities/blurImage'
 import type { Material } from 'three'
 
@@ -28,14 +27,24 @@ const Backdrop = ({
   const gl = useThree((s) => s.gl)
   const gpu = (gl as any)?.isWebGPURenderer === true
 
+  console.log('gpu', gpu, gl)
+
   const rotateY = align === 'left' ? -Math.PI * 0.5 : Math.PI
   const posX = align === 'left' ? -10 : 10
 
   // Use pre-created resources from hook if available, otherwise fallback to local creation
-  const localMaterial = useMemo(
-    () => (gpu ? createBackdropNodeMaterial() : new BackdropMaterial()),
-    [gpu],
-  )
+  const localMaterial = useMemo(() => {
+    if (gpu) {
+      // Dynamic import to avoid loading WebGPU module in WebGL mode
+      // @ts-ignore - Dynamic import for WebGPU-only module
+      const {
+        createBackdropNodeMaterial,
+      } = require('@/components/Three/Shaders/BackdropMaterialWebGPU')
+      // @ts-ignore
+      return createBackdropNodeMaterial()
+    }
+    return new BackdropMaterial()
+  }, [gpu])
   const material = preCreatedMaterial || localMaterial
 
   const blurredUrl = preBlurredDataUrl || textureUrl

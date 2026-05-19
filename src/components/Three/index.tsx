@@ -5,13 +5,17 @@ import { Suspense } from 'react'
 import Scene from './Scene'
 import './Three.css'
 import Camera from './Camera'
+import { useSceneStore } from '@/store/sceneStore'
 
 export const Three = () => {
+  const sceneContent = useSceneStore((s) => s.sceneContent)
+
   return (
-    <Canvas>
+    <Canvas gl="webgl" stats effects>
       <Suspense fallback={null}>
         <Scene />
       </Suspense>
+      {sceneContent}
       <Camera />
     </Canvas>
   )

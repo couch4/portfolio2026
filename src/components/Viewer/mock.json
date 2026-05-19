@@ -4,7 +4,7 @@
       "image": {
         "src": "images/mock/newyork.avif",
         "alt": "new york",
-        "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+        "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAFCAYAAABirU3bAAAAYUlEQVR4AQBVAKr/AgMUHf8oxP7/HeH//wAcJv8CDgsXADr5+ABN5OEABwAAAAIJ+OwAA6udAAy7tQAbEiUAAh8TBgATIPEALS4cABf82wAC9dbaADrx+QBcUUQAAfP3AAAAAP//ZErnmQAAAAZJREFUAwAGVB1EdmFbSwAAAABJRU5ErkJggg==",
         "depth": "images/mock/depth_newyork.png"
       },
       "video": null
@@ -31,7 +31,7 @@
       "image": {
         "src": "images/mock/newyork.avif",
         "alt": "new york",
-        "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+        "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAFCAYAAABirU3bAAAAYUlEQVR4AQBVAKr/AgMUHf8oxP7/HeH//wAcJv8CDgsXADr5+ABN5OEABwAAAAIJ+OwAA6udAAy7tQAbEiUAAh8TBgATIPEALS4cABf82wAC9dbaADrx+QBcUUQAAfP3AAAAAP//ZErnmQAAAAZJREFUAwAGVB1EdmFbSwAAAABJRU5ErkJggg==",
         "depth": "images/mock/depth_newyork.png"
       },
       "video": null
@@ -48,18 +48,97 @@
   ],
   "video": [
     {
-      "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-      "alt": "Video 1"
+      "image": {
+        "src": "images/mock/christmasGiftingGuide.png",
+        "alt": "christmas gifting",
+        "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAACCAYAAAB/qH1jAAAALklEQVR4AQAiAN3/AvTkgv+c+Y3/Mv7I/wHg//8C+KnQAOmnwwCRSVoA/SABAAAAAP//GePXegAAAAZJREFUAwCGUxNrqyXrIgAAAABJRU5ErkJggg==",
+        "depth": "images/mock/depth_christmasGiftingGuide.png"
+      },
+      "video": {
+        "src": "images/mock/nikeGifting.mp4"
+      },
+      "caption": {
+        "title": "Nike Gifting Guide",
+        "description": "A guide to gifting Nike products. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      }
+    },
+    {
+      "image": {
+        "src": "images/mock/magicInTheAir.png",
+        "alt": "magic in the air",
+        "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAACCAYAAAB/qH1jAAAALklEQVR4AQAiAN3/Aqhfuf8vJYL/AAAA/1mHj/8CJnpFAMHPMwD+/mQApVz8AAAAAP//UbXC/AAAAAZJREFUAwADxg8LIb/rNQAAAABJRU5ErkJggg==",
+        "depth": "images/mock/depth_magicInTheAir.png"
+      },
+      "video": {
+        "src": "images/mock/nikeAirMagic.mp4"
+      },
+      "caption": {
+        "title": "Nike Air Magic",
+        "description": "A video about Nike Air Magic. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      }
     }
   ],
   "imagesAndVideo": [
     {
-      "src": "https://picsum.photos/800/600",
-      "alt": "Image 1"
+      "image": {
+        "src": "images/mock/newyork.avif",
+        "alt": "new york",
+        "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAFCAYAAABirU3bAAAAYUlEQVR4AQBVAKr/AgMUHf8oxP7/HeH//wAcJv8CDgsXADr5+ABN5OEABwAAAAIJ+OwAA6udAAy7tQAbEiUAAh8TBgATIPEALS4cABf82wAC9dbaADrx+QBcUUQAAfP3AAAAAP//ZErnmQAAAAZJREFUAwAGVB1EdmFbSwAAAABJRU5ErkJggg==",
+        "depth": "images/mock/depth_newyork.png"
+      },
+      "video": null
     },
     {
-      "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-      "alt": "Video 1"
+      "image": {
+        "src": "images/mock/christmasGiftingGuide.png",
+        "alt": "christmas gifting",
+        "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAACCAYAAAB/qH1jAAAALklEQVR4AQAiAN3/AvTkgv+c+Y3/Mv7I/wHg//8C+KnQAOmnwwCRSVoA/SABAAAAAP//GePXegAAAAZJREFUAwCGUxNrqyXrIgAAAABJRU5ErkJggg==",
+        "depth": "images/mock/depth_christmasGiftingGuide.png"
+      },
+      "video": {
+        "src": "images/mock/nikeGifting.mp4"
+      },
+      "caption": {
+        "title": "Nike Gifting Guide",
+        "description": "A guide to gifting Nike products. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      }
+    },
+    {
+      "image": {
+        "src": "images/mock/river.avif",
+        "alt": "river",
+        "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+        "depth": "images/mock/depth_river.png"
+      },
+      "video": null,
+      "caption": {
+        "title": "Loreum ipsum dolor sit amet",
+        "description": "Consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      }
+    },
+    {
+      "image": {
+        "src": "images/mock/magicInTheAir.png",
+        "alt": "magic in the air",
+        "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAACCAYAAAB/qH1jAAAALklEQVR4AQAiAN3/Aqhfuf8vJYL/AAAA/1mHj/8CJnpFAMHPMwD+/mQApVz8AAAAAP//UbXC/AAAAAZJREFUAwADxg8LIb/rNQAAAABJRU5ErkJggg==",
+        "depth": "images/mock/depth_magicInTheAir.png"
+      },
+      "video": {
+        "src": "images/mock/nikeAirMagic.mp4"
+      },
+      "caption": {
+        "title": "Nike Air Magic",
+        "description": "A video about Nike Air Magic. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      }
+    },
+    {
+      "image": {
+        "src": "images/mock/kitchen.avif",
+        "alt": "kitchen",
+        "blurred": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAP0lEQVR4AQAzAMz/AjVMAP+MljH/QFYh/wAAAP8CGAolAFhNuwD2BzMADxMLAAI0JyMAGxwTAA38DgAFHR0AAAAA//85w135AAAABklEQVQDAHlZC7DrrfsAAAAAAElFTkSuQmCC",
+        "depth": "images/mock/depth_kitchen.png"
+      },
+      "video": null
     }
   ]
 }

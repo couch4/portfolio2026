@@ -6,6 +6,7 @@ import { Header } from '@/Header/Component'
 import { Providers } from '@/providers'
 import { InitTheme } from '@/providers/Theme/InitTheme'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
+import { Scrollbars } from '@/components/waywardUI'
 import { draftMode } from 'next/headers'
 import ThreeClientWrapper from '@/components/Three/ClientWrapper'
 
@@ -19,7 +20,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html className={fontImports} lang="en" suppressHydrationWarning>
       <head>
-        <InitTheme />
+        {/* <InitTheme /> */}
         <link href="/favicon.ico" rel="icon" sizes="32x32" />
         <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
       </head>
@@ -30,11 +31,18 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               preview: isEnabled,
             }}
           />
-
           <Header />
-          {/* {children} */}
           <ThreeClientWrapper />
-          <Footer />
+          {children}
+          <Scrollbars
+            driveCamera
+            wrapperClassName="!fixed !top-0 !right-0 !z-[10] !w-full"
+            style={{ width: '12px', height: '100svh' }}
+            noScrollX
+          >
+            <div style={{ width: 1, height: '500vh', pointerEvents: 'none' }} />
+          </Scrollbars>
+          {/* <Footer /> */}
         </Providers>
       </body>
     </html>

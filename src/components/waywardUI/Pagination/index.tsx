@@ -1,6 +1,6 @@
 'use client'
 
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import { Motion } from '@/components/waywardUI'
 import clsx from 'clsx'
 import PageDot from './PageDot'
@@ -13,6 +13,9 @@ interface PaginationProps {
   updateIndex?: (index: number) => void
   waitTime?: number
   onTimerEnd?: (index: number) => void
+  isPlaying?: boolean
+  videoProgress?: number
+  onVideoSeek?: (progress: number) => void
 }
 
 const Pagination: FC<PaginationProps> = ({
@@ -22,11 +25,19 @@ const Pagination: FC<PaginationProps> = ({
   updateIndex,
   waitTime = 1000,
   onTimerEnd,
+  isPlaying,
+  videoProgress,
+  onVideoSeek,
 }) => {
-  const handleDotClick = (index: number) => {
-    console.log('Dot clicked:', index)
+  const [timerPaused, setTimerPaused] = useState(false)
 
-    updateIndex?.(index)
+  const handleDotClick = (index: number) => {
+    if (index === activeIndex) {
+      setTimerPaused(!timerPaused)
+    } else {
+      setTimerPaused(false)
+      updateIndex?.(index)
+    }
   }
 
   const renderDots = data.map((_: any, index: number) => {
@@ -38,6 +49,11 @@ const Pagination: FC<PaginationProps> = ({
         onClick={handleDotClick}
         index={index}
         onTimerEnd={onTimerEnd}
+        pauseTimer={timerPaused}
+        isVideo={data[index]?.video !== null}
+        isPlaying={isPlaying}
+        videoProgress={index === activeIndex ? videoProgress : undefined}
+        onVideoSeek={index === activeIndex ? onVideoSeek : undefined}
       />
     )
   })

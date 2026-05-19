@@ -56,17 +56,6 @@ const CarouselLoopStory = (args: Record<string, unknown>) => {
   return <Carousel items={carouselMock} {...args} />
 }
 
-// const CarouselLoopStory = (args: Record<string, unknown>) => {
-//   const { cardWidth, gap } = useCardSize()
-//   const envMap = useEnvironment({ preset: 'warehouse' })
-
-//   const projects = carouselMock.map((item, index: number) => (
-//     <ProjectItem key={`carousel-item.${index}`} data={item} envMap={envMap} />
-//   ))
-
-//   return <Carousel items={projects} {...args} itemWidth={cardWidth} gap={gap} />
-// }
-
 export const CarouselLoop: StoryObj = {
   render: (args) => <CarouselLoopStory {...args} />,
   argTypes: {
