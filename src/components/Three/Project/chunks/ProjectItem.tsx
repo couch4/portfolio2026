@@ -113,6 +113,8 @@ const ProjectItem = ({
   }, [planeHelpers])
 
   const handleClick = useCallback(() => {
+    console.log('CLICKED', itemIndex)
+
     if (distance === 0 && !isZoomed) {
       onClick?.(itemIndex)
     }

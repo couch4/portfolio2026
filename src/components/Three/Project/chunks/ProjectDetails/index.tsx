@@ -41,7 +41,7 @@ const ProjectDetails = ({
         center
         distanceFactor={distanceFactor}
         className="project-html"
-        pointerEvents="none"
+        pointerEvents={isActive ? 'auto' : 'none'}
         {...props}
       >
         <ProjectDetailsHtml

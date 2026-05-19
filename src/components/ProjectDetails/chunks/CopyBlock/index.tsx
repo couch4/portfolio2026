@@ -17,6 +17,11 @@ const copyClass = 'project-details__copyBlock'
 const CopyBlock: FC<CopyBlockProps> = ({ data, isActive, onClick }) => {
   const { accent, align, title, subTitle, description, preTitle, standfirst } = data
 
+  const handleClick = () => {
+    console.log('button level click')
+    onClick?.()
+  }
+
   return (
     <Motion data-align={align} className={clsx(copyClass)}>
       <Text
@@ -50,7 +55,7 @@ const CopyBlock: FC<CopyBlockProps> = ({ data, isActive, onClick }) => {
         </Scrollbars>
       </Motion>
       <Button
-        onClick={onClick}
+        onClick={handleClick}
         variant={`${accent}Outline` as 'primaryOutline'}
         className={`${copyClass}__button`}
         {...buttonVars}

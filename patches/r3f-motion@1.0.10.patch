@@ -1,0 +1,44 @@
+diff --git a/dist/cjs/index.js b/dist/cjs/index.js
+--- a/dist/cjs/index.js
++++ b/dist/cjs/index.js
+@@ -1236,7 +1236,9 @@
+         const onClickCapture = (e) => {
+             if (isDragging) {
+-                e.stopImmediatePropagation();
+-                e.stopPropagation();
++                const canvas = document.querySelector('canvas');
++                if (!canvas || canvas.contains(e.target)) {
++                    e.stopImmediatePropagation();
++                    e.stopPropagation();
++                }
+             }
+         };
+@@ -1291,6 +1297,8 @@
+         if (isDraggingRef.current || snapDelta > 0.001) {
+             lastMotionAtRef.current = performance.now();
+             isDragging = snapDelta > 0.001;
++        } else {
++            isDragging = false;
+         }
+diff --git a/dist/es/components/Carousel/index.mjs b/dist/es/components/Carousel/index.mjs
+--- a/dist/es/components/Carousel/index.mjs
++++ b/dist/es/components/Carousel/index.mjs
+@@ -124,7 +124,9 @@
+         const onClickCapture = (e) => {
+             if (isDragging) {
+-                e.stopImmediatePropagation();
+-                e.stopPropagation();
++                const canvas = document.querySelector('canvas');
++                if (!canvas || canvas.contains(e.target)) {
++                    e.stopImmediatePropagation();
++                    e.stopPropagation();
++                }
+             }
+         };
+@@ -182,6 +188,8 @@
+         if (isDraggingRef.current || snapDelta > 0.001) {
+             lastMotionAtRef.current = performance.now();
+             isDragging = snapDelta > 0.001;
++        } else {
++            isDragging = false;
+         }

@@ -32,6 +32,11 @@ const SideContent: FC<SideContentProps> = ({
     [index, title],
   )
 
+  const handleClick = () => {
+    console.log('html level click')
+    onClick?.()
+  }
+
   return (
     <Motion data-align={align} className="project-details__side-wrapper">
       <Motion
@@ -47,7 +52,7 @@ const SideContent: FC<SideContentProps> = ({
           index={index}
           isActive={isActive}
           offset={offset}
-          onClick={onClick}
+          onClick={handleClick}
         />
         <AnimatePresence>{isActive && <Info data={data} />}</AnimatePresence>
         <Text
