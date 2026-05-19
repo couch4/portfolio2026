@@ -6,22 +6,24 @@
     overflow-hidden
     border-t
     border-b
+    p-5
     border-white/20;
     corner-shape: squircle;
     box-shadow: 0 0 100px rgba(0, 0, 0, 0.5);
+  }
 
-    .liquid-glass {
-      @apply relative
+  &__glass {
+    @apply absolute
       border-none
+      z-[-1]
         !p-5;
 
-      &__tint {
-        @apply absolute
+    &__tint {
+      @apply absolute
         inset-0
         bg-gradient-to-br
         from-transparent
         to-background/50;
-      }
     }
   }
 

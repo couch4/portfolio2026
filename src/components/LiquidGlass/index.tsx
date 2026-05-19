@@ -1,6 +1,6 @@
 'use client'
 
-import { FC, useEffect, useMemo, useRef } from 'react'
+import { FC, memo, useEffect, useMemo, useRef } from 'react'
 import { Motion } from '@/components/waywardUI'
 import { useSceneStore } from '@/store/sceneStore'
 import clsx from 'clsx'
@@ -33,6 +33,8 @@ const LiquidGlass: FC<LiquidGlassProps> = ({
   const wrapperRef = useRef<HTMLDivElement>(null)
   const backingRef = useRef<HTMLCanvasElement>(null)
   const glCanvas = useSceneStore((s) => s.glCanvas)
+
+  console.log(glCanvas)
 
   // Offscreen snapshot of the full source canvas. Holds the most recent
   // capture of the bg. The display canvas is composed from this buffer.
@@ -253,4 +255,4 @@ const LiquidGlass: FC<LiquidGlassProps> = ({
   )
 }
 
-export default LiquidGlass
+export default memo(LiquidGlass)

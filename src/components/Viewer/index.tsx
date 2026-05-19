@@ -128,80 +128,80 @@ const Viewer: FC<ViewerProps> = ({
 
   return (
     <Motion ref={wrapperRef} className="viewer__wrapper" {...props}>
-      <LiquidGlass blurRadius={80}>
-        <Motion className="viewer__container">
-          <CarouselCanvas
-            data={data}
-            activeIndex={currentIndex}
-            slideFadeDuration={slideFadeDuration}
-            depthIntensity={depthIntensity}
-            blurXIntensity={blurXIntensity}
-            showDepthMap={showDepthMap}
-            mouseInteraction={mouseInteraction}
-            mouseIntensity={mouseIntensity}
-          />
-          <AnimatePresence>
-            {hasVideo && (
-              <Video
-                key={`video-${currentIndex}`}
-                data={data[currentIndex].video}
-                isPlaying={isPlaying}
-                isVideoPaused={isVideoPaused}
-                setIsPlaying={setIsPlaying}
-                setIsVideoPaused={setIsVideoPaused}
-                onProgress={handleProgress}
-                onDuration={setVideoDuration}
-                onSeekReady={handleSeekReady}
-                onEnded={handleVideoEnd}
-                initial="inactive"
-                animate="active"
-                exit="exit"
-              />
-            )}
-          </AnimatePresence>
-        </Motion>
-        <Motion className="viewer__controls">
-          <AnimatePresence>
-            {hasVideo && (
-              <Motion
-                className="viewer__control"
-                onClick={handlePlay}
-                {...fadeIn}
-                {...motionDefaults}
-              >
-                {isPlaying && !isVideoPaused ? (
-                  <Pause className="viewer__control__pause" data-disabled={!hasVideo} />
-                ) : (
-                  <Play className="viewer__control__play" data-disabled={!hasVideo} />
-                )}
-              </Motion>
-            )}
-          </AnimatePresence>
-          <Pagination
-            data={data}
-            updateIndex={handleUpdate}
-            activeIndex={currentIndex}
-            waitTime={5}
-            onTimerEnd={handleSkip}
-            isPlaying={isPlaying}
-            videoProgress={videoDuration > 0 ? videoCurrentTime / videoDuration : 0}
-            onVideoSeek={handleVideoSeek}
-          />
-          <AnimatePresence>
-            {hasVideo && (
-              <Motion
-                className="viewer__control"
-                onClick={handleFullscreen}
-                {...fadeIn}
-                {...motionDefaults}
-              >
-                <Fullscreen className="viewer__control__fullscreen" />
-              </Motion>
-            )}
-          </AnimatePresence>
-        </Motion>
-        <ViewerCaption data={data[currentIndex]?.caption} />
-      </LiquidGlass>
+      <LiquidGlass blurRadius={80} className="viewer__glass" />
+      <Motion className="viewer__container">
+        <CarouselCanvas
+          data={data}
+          activeIndex={currentIndex}
+          slideFadeDuration={slideFadeDuration}
+          depthIntensity={depthIntensity}
+          blurXIntensity={blurXIntensity}
+          showDepthMap={showDepthMap}
+          mouseInteraction={mouseInteraction}
+          mouseIntensity={mouseIntensity}
+        />
+        <AnimatePresence>
+          {hasVideo && (
+            <Video
+              key={`video-${currentIndex}`}
+              data={data[currentIndex].video}
+              isPlaying={isPlaying}
+              isVideoPaused={isVideoPaused}
+              setIsPlaying={setIsPlaying}
+              setIsVideoPaused={setIsVideoPaused}
+              onProgress={handleProgress}
+              onDuration={setVideoDuration}
+              onSeekReady={handleSeekReady}
+              onEnded={handleVideoEnd}
+              initial="inactive"
+              animate="active"
+              exit="exit"
+            />
+          )}
+        </AnimatePresence>
+      </Motion>
+      <Motion className="viewer__controls">
+        <AnimatePresence>
+          {hasVideo && (
+            <Motion
+              className="viewer__control"
+              onClick={handlePlay}
+              {...fadeIn}
+              {...motionDefaults}
+            >
+              {isPlaying && !isVideoPaused ? (
+                <Pause className="viewer__control__pause" data-disabled={!hasVideo} />
+              ) : (
+                <Play className="viewer__control__play" data-disabled={!hasVideo} />
+              )}
+            </Motion>
+          )}
+        </AnimatePresence>
+        <Pagination
+          data={data}
+          updateIndex={handleUpdate}
+          activeIndex={currentIndex}
+          waitTime={5}
+          onTimerEnd={handleSkip}
+          isPlaying={isPlaying}
+          videoProgress={videoDuration > 0 ? videoCurrentTime / videoDuration : 0}
+          onVideoSeek={handleVideoSeek}
+        />
+        <AnimatePresence>
+          {hasVideo && (
+            <Motion
+              className="viewer__control"
+              onClick={handleFullscreen}
+              {...fadeIn}
+              {...motionDefaults}
+            >
+              <Fullscreen className="viewer__control__fullscreen" />
+            </Motion>
+          )}
+        </AnimatePresence>
+      </Motion>
+      <ViewerCaption data={data[currentIndex]?.caption} />
+      {/* </LiquidGlass> */}
     </Motion>
   )
 }
