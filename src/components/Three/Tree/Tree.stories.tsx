@@ -82,6 +82,10 @@ function DistanceReadout({ onDistance }) {
 const meta: Meta = {
   title: '3D/Main Scene/Tree Genrator',
   parameters: { layout: 'fullscreen' },
+  globals: {
+    orbit: true,
+    renderer: 'webgl',
+  },
   decorators: [
     (Story, context) => {
       const { renderer, stats = false, orbit = false } = context.globals
@@ -301,14 +305,14 @@ const defaults = {
   trunkRadiusTip: 0.05,
   trunkTaper: 1.4,
   rungCount: 10,
-  rungSpacing: 0.85,
+  rungSpacing: 0.55,
   branchesPerRung: 9,
   branchLength: 3.1,
   branchLengthVariance: 0.1,
   branchDroop: 0.75,
   branchAngleSpread: 0.2,
   foliageScaleBase: 1.85,
-  rungStart: 0.2,
+  rungStart: 0.3,
   distanceLOD1: 40,
   foliageScaleTop: 0.1,
   seed: 42,
@@ -474,7 +478,7 @@ export const LODComparison = {
               whiteSpace: 'nowrap',
             }}
           >
-            LOD 1 — Impostor
+            LOD 1 — Billboard
           </div>
         </Html>
 
@@ -509,6 +513,7 @@ export const ForestTest = {
     foliageScaleBase: 1.85,
     rungStart: 0.3,
     minSpacing: 4,
+    postProcess: true,
   },
   argTypes: {
     treeCount: {

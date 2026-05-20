@@ -30,8 +30,10 @@
     text-copySecondary;
 
     &:hover {
-      @apply bg-accent
-      text-white;
+      @apply bg-transparent
+      border-2
+      text-accent 
+      border-accent;
     }
 
     &Outline {
@@ -52,7 +54,10 @@
     @apply bg-accentSecondary
     text-copy;
     &:hover {
-      @apply bg-accent;
+      @apply bg-transparent
+      border-2
+      text-accentSecondary 
+      border-accentSecondary;
     }
 
     &Outline {
@@ -73,7 +78,10 @@
     @apply bg-accentTertiary
     text-copy;
     &:hover {
-      @apply bg-copy;
+      @apply bg-transparent
+      border-2
+      text-accentTertiary 
+      border-accentTertiary;
     }
 
     &Outline {
@@ -156,5 +164,11 @@
       @apply w-full
       h-full;
     }
+  }
+
+  svg {
+    @apply !w-5
+    mr-[-0.4rem]
+    !h-5;
   }
 }
