@@ -1,8 +1,9 @@
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { motion, useCarouselSlot } from 'r3f-motion'
 import { MeshPortalMaterial } from '@/components/Three/MeshPortalMaterial'
-import { useFrame } from '@react-three/fiber'
-import type { BufferGeometry, Material, Texture } from 'three'
+import { useFrame, useThree } from '@react-three/fiber'
+import type { Scene } from 'three'
+import type { BufferGeometry, Material } from 'three'
 import { Plane, PlaneHelper, Vector3 } from 'three'
 import type { Group } from 'three'
 import PortalScene from './PortalScene'
@@ -21,7 +22,6 @@ const ProjectItem = ({
   projectIndex = 1,
   onClick,
   index,
-  envMap,
   totalItems,
   activeIndex,
   sharedGeo,
@@ -36,7 +36,6 @@ const ProjectItem = ({
   projectIndex?: number
   onClick?: (index: number) => void
   index: number
-  envMap?: Texture
   totalItems?: number
   activeIndex?: number
   sharedGeo?: BufferGeometry
@@ -51,6 +50,7 @@ const ProjectItem = ({
   const outerRef = useRef<Group>(null)
   const portalRef = useRef<Group>(null)
   const rootRef = useRef<Group>(null)
+  const outerScene = useThree((s) => s.scene) as Scene
 
   let posX = 0
   if (modelSettings?.position) {
@@ -99,7 +99,7 @@ const ProjectItem = ({
     }
   }
 
-  const { itemIndex, slotIndex, isNearby, distance, currIndex } = carouselSlot
+  const { itemIndex, isNearby, distance } = carouselSlot
   const isPre = distance <= 2
   const isCentral = distance === 0 || isActive
 
@@ -122,7 +122,7 @@ const ProjectItem = ({
 
   const handleExit = useCallback(() => {
     onClick?.(itemIndex)
-  }, [onClick])
+  }, [onClick, itemIndex])
 
   const isRightSide = useMemo(() => {
     if (activeIndex === undefined || !totalItems) return false
@@ -134,17 +134,6 @@ const ProjectItem = ({
   useFrame(({ clock }, delta) => {
     if (!isNearby) return
     const dt = Math.min(delta, 0.05)
-    const step = (s: { cur: number; vel: number; target: number }) => {
-      const acc = -600 * (s.cur - s.target) - 100 * s.vel
-      s.vel += acc * dt
-      s.cur += s.vel * dt
-      if (Math.abs(s.cur - s.target) < 0.0005 && Math.abs(s.vel) < 0.001) {
-        s.cur = s.target
-        s.vel = 0
-      }
-    }
-    // step(heroZ.current)
-    // step(heroX.current)
     const fy = isActive && modelSettings?.floatY ? Math.sin(clock.getElapsedTime() * 0.5) * 0.15 : 0
     const sy = isActive && modelSettings?.spinY ? Math.sin(clock.getElapsedTime() * 0.3) * 0.1 : 0
     const apply = (g: Group | null) => {
@@ -198,7 +187,7 @@ const ProjectItem = ({
               heroGroupRef={portalRef}
               posX={posX}
               isCentral={isCentral}
-              envMap={envMap}
+              outerScene={outerScene}
               getBackdropResources={getBackdropResources}
             />
           </MeshPortalMaterial>

@@ -14,7 +14,7 @@ const Scene = () => {
       <fog attach="fog" args={['#7aaaaa', 50, 500]} />
       <Atmos />
       <Terrain />
-      <BankTrees windEnabled />
+      {/* <BankTrees windEnabled /> */}
       {/* <TreePlanes /> */}
       <Water />
     </>
