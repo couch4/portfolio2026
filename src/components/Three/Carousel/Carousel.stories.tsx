@@ -77,7 +77,7 @@ export const CarouselLoop: StoryObj = {
     debug: false,
     gap: 0.5,
     defaultValue: 0,
-    postProcess: false,
+    postProcess: true,
     intensity: 1,
     noiseStrength: 0.1,
     scanlineIntensity: 0.9,

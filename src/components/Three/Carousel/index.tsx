@@ -1,6 +1,6 @@
-import { memo, useCallback, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { useEnvironment, useGLTF, useTexture } from '@react-three/drei'
+import { useGLTF, useTexture } from '@react-three/drei'
 import { Carousel as R3FCarousel, motion } from 'r3f-motion'
 import { useCardSize, useCarouselResources } from '@/hooks'
 import type { Group } from 'three'
@@ -20,7 +20,6 @@ interface CarouselProps {
 }
 
 const Carousel = ({ items = [], ...props }: CarouselProps) => {
-  const envMap = useEnvironment({ preset: 'warehouse' })
   const { cardWidth = 4, cardHeight, gap = 0.5 } = useCardSize()
   const [zoomed, setZoomed] = useState<number | null>(null)
   const setIsSwiping = useSceneStore((s) => s.setIsSwiping)
@@ -49,27 +48,42 @@ const Carousel = ({ items = [], ...props }: CarouselProps) => {
   }, [])
 
   // Preload all GLTFs and backgrounds as soon as carousel first renders
-  items.forEach((item) => {
-    if (item.gltf) useGLTF.preload(item.gltf)
-    if (item.background) useTexture.preload(item.background)
-  })
+  useEffect(() => {
+    items.forEach((item) => {
+      if (item.gltf) useGLTF.preload(item.gltf)
+      if (item.background) useTexture.preload(item.background)
+    })
+  }, [items])
 
-  const projects = items.map((item, index: number) => (
-    <ProjectItem
-      key={`carousel-item.${index}`}
-      data={item}
-      envMap={envMap}
-      onClick={handleClick}
-      isActive={zoomed === index}
-      isZoomed={zoomed !== null}
-      index={index}
-      totalItems={items.length}
-      activeIndex={zoomed !== null ? zoomed : undefined}
-      sharedGeo={sharedGeo || undefined}
-      placeholderMat={placeholderMat || undefined}
-      getBackdropResources={getBackdropResources}
-    />
-  ))
+  const projects = useMemo(
+    () =>
+      items.map((item, index: number) => (
+        <ProjectItem
+          key={`carousel-item.${index}`}
+          data={item}
+          onClick={handleClick}
+          isActive={zoomed === index}
+          isZoomed={zoomed !== null}
+          index={index}
+          totalItems={items.length}
+          activeIndex={zoomed !== null ? zoomed : undefined}
+          sharedGeo={sharedGeo || undefined}
+          placeholderMat={placeholderMat || undefined}
+          getBackdropResources={getBackdropResources}
+        />
+      )),
+    [
+      items,
+      cardWidth,
+      cardHeight,
+      gap,
+      zoomed,
+      handleClick,
+      sharedGeo,
+      placeholderMat,
+      getBackdropResources,
+    ],
+  )
 
   return (
     <motion.group ref={groupRef} className="carousel">
@@ -79,7 +93,10 @@ const Carousel = ({ items = [], ...props }: CarouselProps) => {
         itemWidth={cardWidth}
         gap={gap}
         disable={zoomed !== null}
-        onDrag={(info) => setIsSwiping(Math.abs(info.velocity.x) > FLICK_VELOCITY_THRESHOLD)}
+        onDrag={useCallback(
+          (info: any) => setIsSwiping(Math.abs(info.velocity.x) > FLICK_VELOCITY_THRESHOLD),
+          [setIsSwiping],
+        )}
         onDragEnd={() => setIsSwiping(false)}
         transition={spring}
       />

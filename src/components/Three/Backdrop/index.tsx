@@ -27,22 +27,20 @@ const Backdrop = ({
   const gl = useThree((s) => s.gl)
   const gpu = (gl as any)?.isWebGPURenderer === true
 
-  console.log('gpu', gpu, gl)
-
   const rotateY = align === 'left' ? -Math.PI * 0.5 : Math.PI
   const posX = align === 'left' ? -10 : 10
 
   // Use pre-created resources from hook if available, otherwise fallback to local creation
   const localMaterial = useMemo(() => {
-    if (gpu) {
-      // Dynamic import to avoid loading WebGPU module in WebGL mode
-      // @ts-ignore - Dynamic import for WebGPU-only module
-      const {
-        createBackdropNodeMaterial,
-      } = require('@/components/Three/Shaders/BackdropMaterialWebGPU')
-      // @ts-ignore
-      return createBackdropNodeMaterial()
-    }
+    // if (gpu) {
+    //   // Dynamic import to avoid loading WebGPU module in WebGL mode
+    //   // @ts-ignore - Dynamic import for WebGPU-only module
+    //   const {
+    //     createBackdropNodeMaterial,
+    //   } = require('@/components/Three/Shaders/BackdropMaterialWebGPU')
+    //   // @ts-ignore
+    //   return createBackdropNodeMaterial()
+    // }
     return new BackdropMaterial()
   }, [gpu])
   const material = preCreatedMaterial || localMaterial

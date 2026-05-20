@@ -1,3 +1,4 @@
+import { FC } from 'react'
 import { EffectComposer, N8AO } from '@react-three/postprocessing'
 import VHS from './VHS'
 
@@ -17,7 +18,7 @@ const vhsSettings = {
   tapeSpeed: 1,
 }
 
-const Effects = ({ ssao = false }) => {
+const Effects: FC<{ ssao?: boolean }> = ({ ssao = false }) => {
   return (
     <EffectComposer>
       <VHS {...vhsSettings} />

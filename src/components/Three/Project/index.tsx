@@ -47,12 +47,7 @@ const Project = ({
   return (
     <group {...props}>
       <Suspense fallback={null}>
-        <ProjectHero
-          data={data}
-          heroGroupRef={heroGroupRef}
-          posX={posX}
-          inPortal={inPortal}
-        />
+        <ProjectHero data={data} heroGroupRef={heroGroupRef} posX={posX} inPortal={inPortal} />
       </Suspense>
       {background && (
         <Backdrop

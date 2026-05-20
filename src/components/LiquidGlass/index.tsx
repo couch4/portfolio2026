@@ -27,14 +27,12 @@ const LiquidGlass: FC<LiquidGlassProps> = ({
   turbulence = 10,
   blurRadius = 40,
   className,
-  recaptureKey,
+  recaptureKey = 0,
   ...props
 }) => {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const backingRef = useRef<HTMLCanvasElement>(null)
   const glCanvas = useSceneStore((s) => s.glCanvas)
-
-  console.log(glCanvas)
 
   // Offscreen snapshot of the full source canvas. Holds the most recent
   // capture of the bg. The display canvas is composed from this buffer.

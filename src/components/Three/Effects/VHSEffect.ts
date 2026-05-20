@@ -139,12 +139,12 @@ const fragmentShader = /* glsl */ `
     // Stage 6 — Capture: colour noise + luma static
     // ----------------------------------------------------------------
 
-    // Wrap frameId so it never grows large enough to swamp the uv*uResolution
+    // Wrap frameId so it never grows large enough to swamp the uv
     // term in the hash dot-product (float32 loses per-pixel entropy once the
     // frameId contribution >> uv contribution in magnitude).
     float frameId  = mod(floor(t * 24.0), 997.0);  // 997 is prime → no visible repeat
-    float nA       = hash(uv * uResolution + vec2(frameId * 137.0, frameId * 61.3));
-    float nB       = hash(uv * uResolution * 0.5 + vec2(frameId * 79.1, frameId * 113.7));
+    float nA       = hash(uv + vec2(frameId * 137.0, frameId * 61.3) * 0.001);
+    float nB       = hash(uv * 0.5 + vec2(frameId * 79.1, frameId * 113.7) * 0.001);
     col           += (nA * nB - 0.2) * uNoiseStrength * 0.28;
 
     // ----------------------------------------------------------------
@@ -214,37 +214,73 @@ export class VHSEffect extends Effect {
         ['uBarrelDistortion', new Uniform(barrelDistortion)],
         ['uHandheldStrength', new Uniform(handheldStrength)],
         ['uTapeSpeed', new Uniform(tapeSpeed)],
-        ['uResolution', new Uniform(new Vector2(1, 1))],
+        ['uResolution', new Uniform(new Vector2(1920, 1080))],
       ]),
     })
   }
 
-  get intensity() { return (this.uniforms.get('uIntensity') as Uniform<number>).value }
-  set intensity(v: number) { (this.uniforms.get('uIntensity') as Uniform<number>).value = v }
+  get intensity() {
+    return (this.uniforms.get('uIntensity') as Uniform<number>).value
+  }
+  set intensity(v: number) {
+    ;(this.uniforms.get('uIntensity') as Uniform<number>).value = v
+  }
 
-  get noiseStrength() { return (this.uniforms.get('uNoiseStrength') as Uniform<number>).value }
-  set noiseStrength(v: number) { (this.uniforms.get('uNoiseStrength') as Uniform<number>).value = v }
+  get noiseStrength() {
+    return (this.uniforms.get('uNoiseStrength') as Uniform<number>).value
+  }
+  set noiseStrength(v: number) {
+    ;(this.uniforms.get('uNoiseStrength') as Uniform<number>).value = v
+  }
 
-  get scanlineIntensity() { return (this.uniforms.get('uScanlineIntensity') as Uniform<number>).value }
-  set scanlineIntensity(v: number) { (this.uniforms.get('uScanlineIntensity') as Uniform<number>).value = v }
+  get scanlineIntensity() {
+    return (this.uniforms.get('uScanlineIntensity') as Uniform<number>).value
+  }
+  set scanlineIntensity(v: number) {
+    ;(this.uniforms.get('uScanlineIntensity') as Uniform<number>).value = v
+  }
 
-  get chromaShift() { return (this.uniforms.get('uChromaShift') as Uniform<number>).value }
-  set chromaShift(v: number) { (this.uniforms.get('uChromaShift') as Uniform<number>).value = v }
+  get chromaShift() {
+    return (this.uniforms.get('uChromaShift') as Uniform<number>).value
+  }
+  set chromaShift(v: number) {
+    ;(this.uniforms.get('uChromaShift') as Uniform<number>).value = v
+  }
 
-  get ghostStrength() { return (this.uniforms.get('uGhostStrength') as Uniform<number>).value }
-  set ghostStrength(v: number) { (this.uniforms.get('uGhostStrength') as Uniform<number>).value = v }
+  get ghostStrength() {
+    return (this.uniforms.get('uGhostStrength') as Uniform<number>).value
+  }
+  set ghostStrength(v: number) {
+    ;(this.uniforms.get('uGhostStrength') as Uniform<number>).value = v
+  }
 
-  get trackingError() { return (this.uniforms.get('uTrackingError') as Uniform<number>).value }
-  set trackingError(v: number) { (this.uniforms.get('uTrackingError') as Uniform<number>).value = v }
+  get trackingError() {
+    return (this.uniforms.get('uTrackingError') as Uniform<number>).value
+  }
+  set trackingError(v: number) {
+    ;(this.uniforms.get('uTrackingError') as Uniform<number>).value = v
+  }
 
-  get barrelDistortion() { return (this.uniforms.get('uBarrelDistortion') as Uniform<number>).value }
-  set barrelDistortion(v: number) { (this.uniforms.get('uBarrelDistortion') as Uniform<number>).value = v }
+  get barrelDistortion() {
+    return (this.uniforms.get('uBarrelDistortion') as Uniform<number>).value
+  }
+  set barrelDistortion(v: number) {
+    ;(this.uniforms.get('uBarrelDistortion') as Uniform<number>).value = v
+  }
 
-  get handheldStrength() { return (this.uniforms.get('uHandheldStrength') as Uniform<number>).value }
-  set handheldStrength(v: number) { (this.uniforms.get('uHandheldStrength') as Uniform<number>).value = v }
+  get handheldStrength() {
+    return (this.uniforms.get('uHandheldStrength') as Uniform<number>).value
+  }
+  set handheldStrength(v: number) {
+    ;(this.uniforms.get('uHandheldStrength') as Uniform<number>).value = v
+  }
 
-  get tapeSpeed() { return (this.uniforms.get('uTapeSpeed') as Uniform<number>).value }
-  set tapeSpeed(v: number) { (this.uniforms.get('uTapeSpeed') as Uniform<number>).value = v }
+  get tapeSpeed() {
+    return (this.uniforms.get('uTapeSpeed') as Uniform<number>).value
+  }
+  set tapeSpeed(v: number) {
+    ;(this.uniforms.get('uTapeSpeed') as Uniform<number>).value = v
+  }
 
   override setSize(width: number, height: number): void {
     ;(this.uniforms.get('uResolution') as Uniform<Vector2>).value.set(width, height)

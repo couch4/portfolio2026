@@ -217,7 +217,14 @@
     "accent": "primary",
     "modelSettings": {
       "scale": 0.13,
-      "position": [1.5, -1.3, 0]
+      "position": [1.5, -1.3, 0],
+      "matcaps": [
+        {
+          "src": "/textures/matcaps/paintGrey.jpg",
+          "intensity": 0.1,
+          "meshes": ["mainBody"]
+        }
+      ]
     },
     "align": "right",
     "background": "/images/morris-je.webp",

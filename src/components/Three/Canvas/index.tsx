@@ -24,6 +24,16 @@ const glWebGPU = async ({ canvas }: { canvas: HTMLCanvasElement }) => {
   return renderer
 }
 
+const CanvasRegistrar = () => {
+  const gl = useThree((s) => s.gl)
+  const setGlCanvas = useSceneStore((s) => s.setGlCanvas)
+  useEffect(() => {
+    setGlCanvas(gl.domElement)
+    return () => setGlCanvas(null)
+  }, [gl, setGlCanvas])
+  return null
+}
+
 const ThreeCanvas = ({
   children,
   gl = 'webgl',
@@ -61,6 +71,7 @@ const ThreeCanvas = ({
       eventPrefix={eventPrefix}
       {...props}
     >
+      <CanvasRegistrar />
       {children}
       {effects && <Effects />}
       {/* <DprMonitor /> */}

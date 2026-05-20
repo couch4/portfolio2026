@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react'
-import { useFrame, useThree } from '@react-three/fiber'
+import { useThree } from '@react-three/fiber'
 import { BackdropMaterial } from '@/components/Three/Shaders/BackdropMaterial'
 import { blurImageToDataURL } from '@/utilities/blurImage'
 import { geometry } from 'maath'
@@ -35,10 +35,49 @@ const MAP_KEYS = [
   'anisotropyMap',
 ] as const
 
+// Scalar / color properties that WebGPU's fromMaterial() can drop or reset on
+// clone(). Re-assigning them post-clone forces the node builder to pick up the
+// originals, so the cloned material lights identically to its source.
+const SCALAR_KEYS = [
+  'envMapIntensity',
+  'aoMapIntensity',
+  'lightMapIntensity',
+  'normalScale',
+  'displacementScale',
+  'displacementBias',
+  'emissiveIntensity',
+  'metalness',
+  'roughness',
+  'clearcoat',
+  'clearcoatRoughness',
+  'sheen',
+  'sheenRoughness',
+  'transmission',
+  'thickness',
+  'attenuationDistance',
+  'ior',
+  'iridescence',
+  'iridescenceIOR',
+  'anisotropy',
+  'anisotropyRotation',
+  'specularIntensity',
+  'opacity',
+  'reflectivity',
+] as const
+
+const COLOR_KEYS = ['color', 'emissive', 'sheenColor', 'attenuationColor', 'specularColor'] as const
+
 function cloneMaterialWebGPUSafe(source: Material): Material {
   const clone = source.clone()
   for (const key of MAP_KEYS) {
     if (key in source) (clone as any)[key] = (source as any)[key]
+  }
+  for (const key of SCALAR_KEYS) {
+    if (key in source) (clone as any)[key] = (source as any)[key]
+  }
+  for (const key of COLOR_KEYS) {
+    const v = (source as any)[key]
+    if (v && typeof v.clone === 'function') (clone as any)[key] = v.clone()
   }
   return clone
 }
@@ -57,6 +96,45 @@ interface ProjectTemplate {
   clipBottomOffset: number
 }
 
+export interface MatcapConfig {
+  src: string
+  intensity: number
+  meshes: string[]
+}
+
+function applyMatcapOverlays(
+  group: Group,
+  matcaps: MatcapConfig[],
+  textures: Texture[],
+  clippingPlanes: Plane[] | null,
+) {
+  matcaps.forEach(({ meshes, intensity }, i) => {
+    const tex = textures[i]
+    if (!tex) return
+    const material = new THREE.MeshMatcapMaterial({ matcap: tex })
+    material.transparent = true
+    material.opacity = intensity
+    material.depthWrite = false
+    material.polygonOffset = true
+    material.polygonOffsetFactor = -1
+    material.polygonOffsetUnits = -1
+    if (clippingPlanes && clippingPlanes.length) {
+      material.clippingPlanes = clippingPlanes
+      material.clipShadows = true
+    }
+    material.needsUpdate = true
+    group.traverse((obj) => {
+      const mesh = obj as Mesh
+      if (!mesh.isMesh || !mesh.name || !meshes.includes(mesh.name)) return
+      const overlay = new THREE.Mesh(mesh.geometry, material)
+      overlay.renderOrder = mesh.renderOrder + 1
+      overlay.castShadow = false
+      overlay.receiveShadow = false
+      mesh.add(overlay)
+    })
+  })
+}
+
 // Module-scope caches survive across hook instances.
 const projectTemplateCache = new Map<string, ProjectTemplate>()
 const pmremCache = new Map<string, THREE.RenderTarget>()
@@ -72,6 +150,8 @@ export function getOrBuildProjectTemplate(
   clipBottom: boolean,
   clipBottomOffset: number,
   bottomY: number,
+  matcaps: MatcapConfig[] = [],
+  matcapTextures: Texture[] = [],
 ): ProjectTemplate {
   const cached = projectTemplateCache.get(gltfUrl)
   if (cached) {
@@ -114,6 +194,11 @@ export function getOrBuildProjectTemplate(
 
   const portal = sourceScene.clone(true) as Group
 
+  if (matcaps.length && matcapTextures.length) {
+    applyMatcapOverlays(clipped, matcaps, matcapTextures, clippingPlanes)
+    applyMatcapOverlays(portal, matcaps, matcapTextures, null)
+  }
+
   const entry: ProjectTemplate = {
     clipped,
     portal,
@@ -131,13 +216,12 @@ export function getOrBuildProjectTemplate(
  * WebGPU path. Shared across every PortalScene instance — without this, every
  * portal generates its own PMREM each mount.
  */
-export function getOrBuildPMREM(envMap: Texture, gl: any): THREE.RenderTarget {
+export async function getOrBuildPMREM(envMap: Texture, gl: any): Promise<THREE.RenderTarget> {
   const key = (envMap as any).uuid
   const existing = pmremCache.get(key)
   if (existing) return existing
   // Dynamic import to avoid loading WebGPU module in WebGL mode
-  // @ts-ignore - Dynamic import for WebGPU-only module
-  const { PMREMGenerator: PMREMGeneratorWebGPU } = require('three/webgpu')
+  const { PMREMGenerator: PMREMGeneratorWebGPU } = await import('three/webgpu')
   const pmremGen = new PMREMGeneratorWebGPU(gl)
   const rt = (envMap as any).isCubeTexture
     ? pmremGen.fromCubemap(envMap as any)
@@ -198,6 +282,14 @@ export function useCarouselResources(items: any[], cardWidth: number, cardHeight
     })
   }
 
+  // GPU cleanup on unmount
+  useEffect(() => {
+    return () => {
+      sharedGeoRef.current?.dispose()
+      placeholderMatRef.current?.dispose()
+    }
+  }, [])
+
   // Backdrop material cache
   const backdropCacheRef = useRef<Map<string, BackdropResources>>(new Map())
 
@@ -208,42 +300,43 @@ export function useCarouselResources(items: any[], cardWidth: number, cardHeight
       if (item.background) uniqueUrls.add(item.background)
     })
 
-    uniqueUrls.forEach((textureUrl) => {
-      if (!textureUrl) return
-      if (!backdropCacheRef.current.has(textureUrl)) {
-        const material = gpu
-          ? // Dynamic import to avoid loading WebGPU module in WebGL mode
-            // @ts-ignore - Dynamic import for WebGPU-only module
-            (() => {
-              const {
-                createBackdropNodeMaterial,
-              } = require('@/components/Three/Shaders/BackdropMaterialWebGPU')
-              // @ts-ignore
-              return createBackdropNodeMaterial()
-            })()
-          : new BackdropMaterial()
-        backdropCacheRef.current.set(textureUrl, {
-          material,
-          blurredDataUrl: null,
-        })
+    const cancelledRef = { current: false }
 
-        blurImageToDataURL(textureUrl, 5)
-          .then((blurredDataUrl) => {
-            const entry = backdropCacheRef.current.get(textureUrl)
-            if (entry && blurredDataUrl) {
-              entry.blurredDataUrl = blurredDataUrl
-              const texture = new THREE.TextureLoader().load(blurredDataUrl)
-              texture.flipY = false
-              ;(material as any).uTexture = texture
-            }
+    ;(async () => {
+      for (const textureUrl of uniqueUrls) {
+        if (!textureUrl) continue
+        if (!backdropCacheRef.current.has(textureUrl)) {
+          const material = gpu
+            ? // Dynamic import to avoid loading WebGPU module in WebGL mode
+              (
+                await import('@/components/Three/Shaders/BackdropMaterialWebGPU')
+              ).createBackdropNodeMaterial()
+            : new BackdropMaterial()
+          backdropCacheRef.current.set(textureUrl, {
+            material,
+            blurredDataUrl: null,
           })
-          .catch((err) => {
-            console.error('Failed to blur backdrop image:', textureUrl, err)
-          })
+
+          blurImageToDataURL(textureUrl, 5)
+            .then((blurredDataUrl) => {
+              if (cancelledRef.current) return
+              const entry = backdropCacheRef.current.get(textureUrl)
+              if (entry && blurredDataUrl) {
+                entry.blurredDataUrl = blurredDataUrl
+                const texture = new THREE.TextureLoader().load(blurredDataUrl)
+                texture.flipY = false
+                ;(material as any).uTexture = texture
+              }
+            })
+            .catch((err) => {
+              console.error('Failed to blur backdrop image:', textureUrl, err)
+            })
+        }
       }
-    })
+    })()
 
     return () => {
+      cancelledRef.current = true
       backdropCacheRef.current.clear()
     }
   }, [items, gpu])

@@ -1,16 +1,15 @@
-import { memo, useEffect, useLayoutEffect } from 'react'
+import { memo } from 'react'
 import type { RefObject } from 'react'
-import { useThree } from '@react-three/fiber'
-import type { Group, Material, Texture } from 'three'
+import { useFrame, useThree } from '@react-three/fiber'
+import type { Group, Material, Scene } from 'three'
 import Project from '@/components/Three/Project'
-import { getOrBuildPMREM } from '@/hooks/useCarouselResources'
 
 type PortalSceneProps = {
   data: any
   heroGroupRef: RefObject<Group | null>
   posX: number
   isCentral?: boolean
-  envMap?: Texture
+  outerScene: Scene
   getBackdropResources?: (url: string) => {
     material: Material | null
     blurredDataUrl: string | null
@@ -22,33 +21,32 @@ const PortalScene = ({
   heroGroupRef,
   posX,
   isCentral,
-  envMap,
+  outerScene,
   getBackdropResources,
 }: PortalSceneProps) => {
-  const gl = useThree((s) => s.gl)
-  const scene = useThree((s) => s.scene)
-  const isWebGPU = (gl as any)?.isWebGPURenderer === true
+  const innerScene = useThree((s) => s.scene) as Scene
 
-  // WebGL: equirectangular envMap directly — pipeline does PMREM internally.
-  useLayoutEffect(() => {
-    if (isWebGPU || !envMap) return
-    scene.environment = envMap
-    return () => {
-      scene.environment = null
+  // Mirror the outer scene's IBL onto the portal's inner scene so lighting
+  // is identical inside and outside. Texture/PMREM is a reference copy —
+  // no extra memory, no extra GPU work, no recompilation.
+  useFrame(() => {
+    if (innerScene === outerScene) return
+    if (innerScene.environment !== outerScene.environment) {
+      innerScene.environment = outerScene.environment
     }
-  }, [scene, envMap, isWebGPU])
-
-  // WebGPU: PMREM is generated once per envMap and cached at module scope.
-  // Without the cache, every PortalScene mount runs PMREMGenerator over the
-  // same envMap and disposes a fresh RenderTarget on unmount.
-  useEffect(() => {
-    if (!isWebGPU || !envMap) return
-    const rt = getOrBuildPMREM(envMap, gl)
-    scene.environment = rt.texture
-    return () => {
-      scene.environment = null
+    if (innerScene.environmentIntensity !== outerScene.environmentIntensity) {
+      innerScene.environmentIntensity = outerScene.environmentIntensity
     }
-  }, [isWebGPU, envMap, gl, scene])
+    if (outerScene.environmentRotation) {
+      innerScene.environmentRotation.copy(outerScene.environmentRotation)
+    }
+    if (innerScene.backgroundBlurriness !== outerScene.backgroundBlurriness) {
+      innerScene.backgroundBlurriness = outerScene.backgroundBlurriness
+    }
+    if (innerScene.backgroundIntensity !== outerScene.backgroundIntensity) {
+      innerScene.backgroundIntensity = outerScene.backgroundIntensity
+    }
+  })
 
   return (
     <Project

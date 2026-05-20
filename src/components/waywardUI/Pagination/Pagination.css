@@ -41,6 +41,7 @@
         left-0
         w-full
         h-full
+        min-w-3
         bg-copy/90
         rounded-2xl
         pointer-events-none;

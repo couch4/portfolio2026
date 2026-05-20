@@ -38,6 +38,7 @@ interface ViewerProps {
   showDepthMap?: boolean
   mouseInteraction?: boolean
   mouseIntensity?: number
+  recaptureKey?: number
   [key: string]: any
 }
 
@@ -50,6 +51,7 @@ const Viewer: FC<ViewerProps> = ({
   showDepthMap = false,
   mouseInteraction = false,
   mouseIntensity = 0.1,
+  recaptureKey = 0,
   ...props
 }) => {
   const [currentIndex, setCurrentIndex] = useState(activeIndex)
@@ -128,7 +130,7 @@ const Viewer: FC<ViewerProps> = ({
 
   return (
     <Motion ref={wrapperRef} className="viewer__wrapper" {...props}>
-      <LiquidGlass blurRadius={80} className="viewer__glass" />
+      <LiquidGlass blurRadius={80} className="viewer__glass" recaptureKey={recaptureKey} />
       <Motion className="viewer__container">
         <CarouselCanvas
           data={data}
@@ -201,7 +203,6 @@ const Viewer: FC<ViewerProps> = ({
         </AnimatePresence>
       </Motion>
       <ViewerCaption data={data[currentIndex]?.caption} />
-      {/* </LiquidGlass> */}
     </Motion>
   )
 }
