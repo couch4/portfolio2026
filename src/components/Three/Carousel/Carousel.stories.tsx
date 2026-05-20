@@ -8,12 +8,16 @@ import Carousel from './index'
 import ProjectItem from '../Project/chunks/ProjectItem'
 import mock from '@/components/Three/Project/mock.json'
 import carouselMock from './mock.json'
+import { globals } from '.storybook/preview'
 
 const meta: Meta = {
   title: '3D/Carousel',
   component: Carousel,
   parameters: {
     layout: 'fullscreen',
+  },
+  globals: {
+    renderer: 'webgl',
   },
   decorators: [
     (Story, context) => {
@@ -57,6 +61,9 @@ const CarouselLoopStory = (args: Record<string, unknown>) => {
 }
 
 export const CarouselLoop: StoryObj = {
+  globals: {
+    orbit: false,
+  },
   render: (args) => <CarouselLoopStory {...args} />,
   argTypes: {
     debug: { control: 'boolean' },

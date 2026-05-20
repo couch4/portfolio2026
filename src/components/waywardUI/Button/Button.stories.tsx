@@ -74,19 +74,19 @@ export const TertiaryOutline: Story = {
   },
 }
 
-export const Large: Story = {
-  args: {
-    size: 'lg',
-    children: 'Button',
-  },
-}
+// export const Large: Story = {
+//   args: {
+//     size: 'lg',
+//     children: 'Button',
+//   },
+// }
 
-export const Small: Story = {
-  args: {
-    size: 'sm',
-    children: 'Button',
-  },
-}
+// export const Small: Story = {
+//   args: {
+//     size: 'sm',
+//     children: 'Button',
+//   },
+// }
 
 export const Link: Story = {
   args: {
@@ -115,11 +115,11 @@ export const LinkWithIcon: Story = {
   },
 }
 
-export const IconButton: Story = {
-  args: {
-    variant: 'icon',
-    icons: {
-      icon: <ArrowBox />,
-    },
-  },
-}
+// export const IconButton: Story = {
+//   args: {
+//     variant: 'icon',
+//     icons: {
+//       icon: <ArrowBox />,
+//     },
+//   },
+// }

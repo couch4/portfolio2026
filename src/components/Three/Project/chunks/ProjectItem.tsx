@@ -99,8 +99,9 @@ const ProjectItem = ({
     }
   }
 
-  const { itemIndex, isNearby, distance } = carouselSlot
-  const isPre = distance <= 2
+  const { itemIndex, isNearby: _isNearby, distance } = carouselSlot
+  const isPre = distance <= 1
+  const isNearby = _isNearby && distance <= 1
   const isCentral = distance === 0 || isActive
 
   useEffect(() => {

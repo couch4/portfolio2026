@@ -29,48 +29,50 @@ const withRendererContext: Decorator = (Story, { globals }) => {
   )
 }
 
-const preview: Preview = {
-  globalTypes: {
-    renderer: {
-      name: 'Renderer',
-      description: 'R3F renderer backend',
-      defaultValue: 'webgl',
-      toolbar: {
-        icon: 'cpu',
-        items: [
-          { value: 'webgl', title: 'WebGL' },
-          { value: 'webgpu', title: 'WebGPU' },
-        ],
-        dynamicTitle: true,
-      },
-    },
-    stats: {
-      name: 'Show Stats',
-      description: 'perf stats overlay',
-      defaultValue: false,
-      toolbar: {
-        icon: 'graphbar',
-        items: [
-          { value: true, title: 'Stats On' },
-          { value: false, title: 'Stats Off' },
-        ] as any,
-        dynamicTitle: true,
-      },
-    },
-    orbit: {
-      name: 'Show Orbit Controls',
-      description: 'Show orbit controls',
-      defaultValue: false,
-      toolbar: {
-        icon: 'camera',
-        items: [
-          { value: true, title: 'Orbit On' },
-          { value: false, title: 'Orbit Off' },
-        ] as any,
-        dynamicTitle: true,
-      },
+export const globals = {
+  renderer: {
+    name: 'Renderer',
+    description: 'R3F renderer backend',
+    defaultValue: 'webgl',
+    toolbar: {
+      icon: 'cpu',
+      items: [
+        { value: 'webgl', title: 'WebGL' },
+        { value: 'webgpu', title: 'WebGPU' },
+      ],
+      dynamicTitle: true,
     },
   },
+  stats: {
+    name: 'Show Stats',
+    description: 'perf stats overlay',
+    defaultValue: false,
+    toolbar: {
+      icon: 'graphbar',
+      items: [
+        { value: true, title: 'Stats On' },
+        { value: false, title: 'Stats Off' },
+      ] as any,
+      dynamicTitle: true,
+    },
+  },
+  orbit: {
+    name: 'Show Orbit Controls',
+    description: 'Show orbit controls',
+    defaultValue: false,
+    toolbar: {
+      icon: 'camera',
+      items: [
+        { value: true, title: 'Orbit On' },
+        { value: false, title: 'Orbit Off' },
+      ] as any,
+      dynamicTitle: true,
+    },
+  },
+}
+
+const preview: Preview = {
+  globalTypes: globals,
   decorators: [withRendererContext],
   parameters: {
     controls: {

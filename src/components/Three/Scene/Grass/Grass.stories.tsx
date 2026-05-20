@@ -8,6 +8,10 @@ import type { Meta } from '@storybook/react'
 
 const meta: Meta = {
   title: '3D/Main Scene/Grass',
+  globals: {
+    orbit: true,
+    renderer: 'webgl',
+  },
   decorators: [
     (Story, context) => {
       const { renderer, stats = false, orbit = false } = context.globals
@@ -240,11 +244,11 @@ export const GrassGroundShader = {
     col2: '#373d0d',
     col3: '#ffff19',
     col4: '#ff66b3',
-    ambient: 0.8,
-    gScale: 15.0,
-    gHeight: 1.5,
-    terrainScale: 0.05,
-    terrainHeight: 6.0,
+    ambient: 0.85,
+    gScale: 24,
+    gHeight: 4,
+    terrainScale: 0.07,
+    terrainHeight: 1.5,
   },
   argTypes: {
     size: {
